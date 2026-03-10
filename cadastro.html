@@ -1,0 +1,174 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastro de Admissão — SND</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Cadastro de Novos Colaboradores — SND</h1>
+    <p>Preencha os dados nas três etapas e assine a declaração para concluir o envio.</p>
+  </header>
+
+  <main class="container">
+    <ol id="steps" class="steps">
+      <li class="active">1. Dados pessoais</li>
+      <li>2. Dados complementares</li>
+      <li>3. Declaração e assinatura</li>
+    </ol>
+
+    <form id="cadastro-form">
+      <section class="step" data-step="1">
+        <fieldset>
+          <legend>Dados Pessoais</legend>
+          <div class="grid">
+            <label>Nome completo*<input required name="nomeCompleto" type="text" autocomplete="name"/></label>
+            <label>Data de nascimento*<input required name="dataNascimento" type="date"/></label>
+            <label>Local de nascimento<input name="localNascimento" type="text"/></label>
+            <label>Estado civil<select name="estadoCivil">
+              <option value="">Selecione…</option>
+              <option>Solteiro(a)</option>
+              <option>Casado(a)</option>
+              <option>Divorciado(a)</option>
+              <option>Viúvo(a)</option>
+              <option>União estável</option>
+            </select></label>
+            <label>Grau de escolaridade<select name="grauEscolaridade">
+              <option value="">Selecione…</option>
+              <option>Fundamental</option>
+              <option>Médio</option>
+              <option>Técnico</option>
+              <option>Superior</option>
+              <option>Pós-graduação</option>
+              <option>Mestrado</option>
+              <option>Doutorado</option>
+            </select></label>
+            <label>Raça/Cor<select name="racaCor">
+              <option value="">Selecione…</option>
+              <option>Parda</option>
+              <option>Branca</option>
+              <option>Negra</option>
+              <option>Asiático</option>
+              <option>Indígena</option>
+            </select></label>
+            <label>Nome do(a) cônjuge/companheiro(a)<input name="conjuge" type="text"/></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Contatos</legend>
+          <div class="grid">
+            <label>E-mail*<input required name="email" type="email"/></label>
+            <label>Telefone celular*<input required name="telCel" type="text" inputmode="numeric"/></label>
+            <label>Telefone fixo<input name="telFixo" type="text" inputmode="numeric"/></label>
+          </div>
+        </fieldset>
+        <div class="actions">
+          <a class="btn-secondary" href="index.html">Voltar à capa</a>
+          <button type="button" class="btn-primary next">Próximo</button>
+        </div>
+      </section>
+
+      <section class="step hidden" data-step="2">
+        <fieldset>
+          <legend>Documentos</legend>
+          <div class="grid">
+            <label>RG*<input required name="rgNumero" type="text"/></label>
+            <label>Órgão emissor/UF<input name="rgOrgaoUf" type="text" placeholder="ex.: SSP/SP"/></label>
+            <label>Data de emissão<input name="rgData" type="date"/></label>
+            <label>CPF*<input required name="cpf" type="text" inputmode="numeric"/></label>
+            <label>PIS<input name="pis" type="text" inputmode="numeric"/></label>
+            <label>CTPS — Número<input name="ctpsNumero" type="text"/></label>
+            <label>CTPS — Série<input name="ctpsSerie" type="text"/></label>
+            <label>Registro Profissional Nº<input name="registroProfissional" type="text"/></label>
+            <label>Órgão emissor/UF<input name="regProfOrgaoUf" type="text"/></label>
+            <label>Data de expedição<input name="regProfData" type="date"/></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Endereço</legend>
+          <div class="grid">
+            <label>Endereço (Rua/Av.)*<input required name="endereco" type="text"/></label>
+            <label>Número*<input required name="numero" type="text"/></label>
+            <label>Complemento<input name="complemento" type="text"/></label>
+            <label>Bairro*<input required name="bairro" type="text"/></label>
+            <label>Cidade*<input required name="cidade" type="text"/></label>
+            <label>Estado*<input required name="estado" type="text" maxlength="2" placeholder="UF"/></label>
+            <label>CEP*<input required name="cep" type="text" inputmode="numeric"/></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Informações Complementares</legend>
+          <div class="grid">
+            <label>Possui outro emprego?
+              <select name="outroEmprego">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+            <label id="cnpjEmpresaWrapper" class="hidden">CNPJ da empresa<input name="cnpjEmpresa" type="text" inputmode="numeric"/></label>
+            <label>É aposentado(a)?
+              <select name="aposentado">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+            <label id="dataAposentadoriaWrapper" class="hidden">Data da aposentadoria<input name="dataAposentadoria" type="date"/></label>
+            <label>Tem parente/familiar na SND?
+              <select name="temParenteSnd">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+            <label id="parentescoWrapper" class="hidden">Nome e grau de parentesco<input name="parentesco" type="text"/></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Anexos</legend>
+          <p>Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG (até 10 MB cada).</p>
+          <input type="file" id="anexos" name="anexos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"/>
+        </fieldset>
+        <div class="actions">
+          <button type="button" class="btn-secondary prev">Voltar</button>
+          <button type="button" class="btn-primary next">Próximo</button>
+        </div>
+      </section>
+
+      <section class="step hidden" data-step="3">
+        <fieldset>
+          <legend>Declaração</legend>
+          <div class="declaracao">
+            <p>“Declaramos para os devidos fins que as informações constantes desse formulário são fiéis a verdade e condizentes com a realidade dos fatos à época.
+            Declaro que todas as informações mencionadas nesse formulário foram extraídas dos meus documentos e são da minha inteira responsabilidade.
+            Além disso, fui informado que se houver qualquer alteração nos dados desta Declaração, a mesma deverá ser modificada junto ao Departamento Pessoal.
+            Por fim, fico ciente das responsabilidades pelas declarações prestada e firmo a presente.”</p>
+          </div>
+          <label class="checkbox">
+            <input type="checkbox" id="consentimento" required/>
+            <span>Li e concordo com a declaração acima.</span>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Assinatura digital</legend>
+          <div class="signature-wrap">
+            <canvas id="signature" width="600" height="180" aria-label="Área para assinatura"></canvas>
+            <div class="sig-actions">
+              <button type="button" id="limparAssinatura" class="btn-secondary">Limpar</button>
+            </div>
+          </div>
+          <small>Assine com mouse (PC) ou dedo/caneta (mobile).</small>
+        </fieldset>
+        <div class="actions">
+          <button type="button" class="btn-secondary prev">Voltar</button>
+          <button type="submit" id="enviar" class="btn-primary">Enviar cadastro</button>
+        </div>
+        <output id="resultado" role="status" aria-live="polite"></output>
+      </section>
+    </form>
+  </main>
+  <footer class="container"><small>© SND — RH</small></footer>
+  <script src="app.js"></script>
+</body>
+</html>

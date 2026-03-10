@@ -1,0 +1,30 @@
+
+:root{--primary:#243B55;--accent:#FA5B2F;--bg:#f7f9fc;--card:#ffffff;--text:#1f2937;--muted:#50627a;--border:#e5e9f2}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;color:var(--text);background:var(--bg)}
+.container{max-width:1000px;margin:24px auto;padding:0 16px}
+header h1{margin:0 0 6px 0;color:var(--primary)}
+header p{margin:0;color:var(--muted)}
+.steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0;margin:16px 0}
+.steps li{background:var(--card);border:1px solid var(--border);padding:10px 12px;border-radius:10px;color:var(--muted);text-align:center;font-weight:600}
+.steps li.active{border-color:var(--primary);color:var(--primary);box-shadow:0 2px 8px rgba(36,59,85,.12)}
+form{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:0 8px 30px rgba(36,59,85,.06)}
+fieldset{border:1px solid var(--border);border-radius:10px;margin:16px 0;padding:12px}
+legend{padding:0 6px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:flex;flex-direction:column;font-size:14px;gap:6px}
+input,select{padding:10px 12px;border:1px solid #cdd6e1;border-radius:8px;background:#fff;color:var(--text)}
+input:focus,select:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+.checkbox{flex-direction:row;align-items:flex-start;gap:10px}
+.checkbox input{margin-top:3px}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:10px}
+.btn-primary{background:linear-gradient(90deg,var(--accent),#ff7a58);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700}
+.btn-secondary{background:#eef2f8;color:var(--primary);border:1px solid #d7e0ec;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+button[disabled]{opacity:.6;cursor:not-allowed}
+.hidden{display:none}
+#resultado{display:block;margin-top:10px;color:var(--muted)}
+.declaracao{background:#fbfdff;border:1px dashed #cfe0f0;border-radius:8px;padding:12px;color:#334155}
+.signature-wrap{border:1px solid var(--border);border-radius:10px;background:#fff;padding:8px}
+#signature{width:100%;max-width:100%;height:180px;border-radius:6px;border:1px dashed #cbd5e1;background:repeating-linear-gradient(0deg,#fff,#fff 29px,#f1f5f9 30px)}
+.sig-actions{margin-top:8px;display:flex;justify-content:flex-end}
