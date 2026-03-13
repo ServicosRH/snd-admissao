@@ -9,18 +9,18 @@
 <body>
   <header class="container">
     <h1>Cadastro de Novos Colaboradores — SND</h1>
-    <p>Preencha os dados nas três etapas e assine a declaração para concluir o envio.</p>
+    <p>Preencha as três etapas, anexe os <strong>documentos obrigatórios</strong> e assine a declaração para concluir.</p>
   </header>
 
   <main class="container">
     <ol id="steps" class="steps">
       <li class="active">1. Dados pessoais</li>
-      <li>2. Dados complementares</li>
+      <li>2. Dados e Documentos</li>
       <li>3. Declaração e assinatura</li>
     </ol>
 
     <form id="cadastro-form">
-      <!-- ETAPA 1 -->
+      <!-- ========== ETAPA 1 ========== -->
       <section class="step" data-step="1">
         <fieldset>
           <legend>Dados Pessoais</legend>
@@ -67,7 +67,7 @@
             <label>Nome do Pai<input name="nomePai" type="text" /></label>
             <label>Nome da Mãe<input name="nomeMae" type="text" /></label>
 
-            <!-- Cônjuge: aparece quando Casado/União estável -->
+            <!-- Exibição apenas informativa; o upload para casados é controlado por pergunta específica na Etapa 2 -->
             <label id="conjugeWrapper" class="hidden">
               Nome do(a) cônjuge/companheiro(a)
               <input name="conjuge" type="text"/>
@@ -90,10 +90,10 @@
         </div>
       </section>
 
-      <!-- ETAPA 2 -->
+      <!-- ========== ETAPA 2 ========== -->
       <section class="step hidden" data-step="2">
         <fieldset>
-          <legend>Documentos</legend>
+          <legend>Documentos (dados básicos)</legend>
           <div class="grid">
             <label>RG*<input required name="rgNumero" type="text"/></label>
             <label>Órgão emissor/UF<input name="rgOrgaoUf" type="text" placeholder="ex.: SSP/SP"/></label>
@@ -103,22 +103,11 @@
             <label>PIS<input name="pis" type="text" inputmode="numeric"/></label>
 
             <label>CTPS — Número<input name="ctpsNumero" type="text"/></label>
-            <!-- Série: aparece apenas quando houver Número -->
-            <label id="ctpsSerieWrapper" class="hidden">
-              CTPS — Série
-              <input name="ctpsSerie" type="text"/>
-            </label>
+            <label id="ctpsSerieWrapper" class="hidden">CTPS — Série<input name="ctpsSerie" type="text"/></label>
 
             <label>Registro Profissional Nº<input name="registroProfissional" type="text"/></label>
-            <!-- Aparecem se houver número de RP -->
-            <label id="regProfOrgaoUfWrapper" class="hidden">
-              Órgão emissor/UF
-              <input name="regProfOrgaoUf" type="text"/>
-            </label>
-            <label id="regProfDataWrapper" class="hidden">
-              Data de expedição
-              <input name="regProfData" type="date"/>
-            </label>
+            <label id="regProfOrgaoUfWrapper" class="hidden">Órgão emissor/UF<input name="regProfOrgaoUf" type="text"/></label>
+            <label id="regProfDataWrapper" class="hidden">Data de expedição<input name="regProfData" type="date"/></label>
           </div>
         </fieldset>
 
@@ -169,34 +158,34 @@
           </div>
         </fieldset>
 
-        <!-- ===================== DOCUMENTOS OBRIGATÓRIOS (tipo Forms) ===================== -->
+        <!-- ===================== DOCUMENTOS OBRIGATÓRIOS (estilo Forms) ===================== -->
         <fieldset>
           <legend>Documentos Obrigatórios</legend>
-          <p>Nesta seção, cada documento obrigatório tem seu próprio campo de upload. O envio só é permitido quando todos os documentos exigidos (e condicionais) estiverem anexados.</p>
+          <p>O envio só é permitido quando todos os documentos exigidos (e condicionais) abaixo estiverem anexados.</p>
 
-          <!-- 44. Carteira de Trabalho (CTPS) — obrigatório (1 arquivo) -->
+          <!-- CTPS -->
           <div id="up_ctps_wrapper">
             <label>Carteira de Trabalho <strong>*</strong> (1 arquivo)
               <input type="file" id="up_ctps" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
-            <small>Se for digital, gerar um PDF com todos os dados da carteira (ou anexar 1 arquivo consolidado).</small>
+            <small>Se digital: gere um PDF com todas as páginas/dados.</small>
           </div>
 
-          <!-- 45. Documento de Identidade (RG) — obrigatório (até 2 arquivos: frente e verso) -->
+          <!-- RG (frente/verso) -->
           <div id="up_rg_wrapper">
-            <label>Documento de Identidade (frente e verso) <strong>*</strong> (até 2 arquivos)
+            <label>Documento de Identidade — Frente e Verso <strong>*</strong> (até 2 arquivos)
               <input type="file" id="up_rg" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="2" />
             </label>
           </div>
 
-          <!-- 46. CPF — obrigatório (1 arquivo) -->
+          <!-- CPF -->
           <div id="up_cpf_wrapper">
             <label>CPF <strong>*</strong> (1 arquivo)
               <input type="file" id="up_cpf" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- 47-48. Reservista (condicional) -->
+          <!-- Reservista -->
           <div class="grid">
             <label>Possui certificado de Reservista? <strong>*</strong>
               <select name="reservistaTem">
@@ -211,14 +200,14 @@
             </label>
           </div>
 
-          <!-- 49. Título de Eleitor — obrigatório (1 arquivo) -->
+          <!-- Título de Eleitor -->
           <div id="up_titulo_wrapper">
             <label>Título de Eleitor <strong>*</strong> (1 arquivo)
               <input type="file" id="up_titulo" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- 50-51. PIS (condicional) -->
+          <!-- PIS -->
           <div class="grid">
             <label>Possui cadastro de PIS? <strong>*</strong>
               <select name="pisTem">
@@ -233,14 +222,22 @@
             </label>
           </div>
 
-          <!-- 52. Comprovante de Residência — obrigatório (1 arquivo) -->
+          <!-- Comprovante de Residência -->
           <div id="up_comprov_resid_wrapper">
             <label>Comprovante de Residência <strong>*</strong> (1 arquivo)
               <input type="file" id="up_comprov_resid" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- 54-55. Casamento — condicional a Estado Civil (Casado/União estável) -->
+          <!-- Casamento -->
+          <div class="grid">
+            <label>Você é Casado(a)? <strong>*</strong>
+              <select name="casadoDoc">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
           <div id="up_cert_casamento_wrapper" class="hidden">
             <label>Certidão de Casamento (1 arquivo) <strong>*</strong>
               <input type="file" id="up_cert_casamento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
@@ -252,7 +249,7 @@
             </label>
           </div>
 
-          <!-- 56-58. Filhos — condicional -->
+          <!-- Filhos -->
           <div class="grid">
             <label>Possui Filhos? <strong>*</strong>
               <select name="filhosTem">
@@ -272,7 +269,7 @@
             </label>
           </div>
 
-          <!-- 59-60. Emprego Anterior — condicional -->
+          <!-- Emprego Anterior -->
           <div class="grid">
             <label>Possui Emprego Anterior? <strong>*</strong>
               <select name="empregoAnteriorTem">
@@ -287,14 +284,14 @@
             </label>
           </div>
 
-          <!-- 61. Diploma/Declaração de Escolaridade — obrigatório -->
+          <!-- Diploma/Escolaridade -->
           <div id="up_diploma_wrapper">
             <label>Diploma de Conclusão ou Declaração de Escolaridade <strong>*</strong> (1 arquivo)
               <input type="file" id="up_diploma" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- 62-63. Conta Bancária -->
+          <!-- Conta Bancária -->
           <div class="grid">
             <label>Possui Conta Corrente no Banco Itaú? <strong>*</strong>
               <select name="contaItauTem">
@@ -307,12 +304,20 @@
             <label>Dados da Conta Bancária <strong>*</strong> (1 arquivo)
               <input type="file" id="up_dados_conta" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
-            <small>Pode ser Extrato, foto do cartão (com agência e conta legíveis), etc.</small>
+            <small>Extrato, ou foto do cartão (agência e conta visíveis), etc.</small>
           </div>
 
-          <!-- 64. Carteira de Registro Profissional — condicional ao número informado -->
+          <!-- Carteira de Registro Profissional -->
+          <div class="grid">
+            <label>Possui Carteira de Registro Profissional?
+              <select name="regProfCarteiraTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
           <div id="up_carteira_regprof_wrapper" class="hidden">
-            <label>Carteira de Registro Profissional (caso possua) (1 arquivo)
+            <label>Carteira de Registro Profissional (1 arquivo) <strong>*</strong>
               <input type="file" id="up_carteira_regprof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
@@ -324,7 +329,7 @@
         </div>
       </section>
 
-      <!-- ETAPA 3 -->
+      <!-- ========== ETAPA 3 ========== -->
       <section class="step hidden" data-step="3">
         <fieldset>
           <legend>Declaração</legend>
