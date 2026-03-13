@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Minha Área — SND</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .readonly span{display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card)}
+    .readonly label{font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="container">
+    <h1>Minha Área — Envio adicional de documentos</h1>
+    <p>Informe o <strong>e‑mail</strong> utilizado no cadastro para visualizar seus dados e enviar arquivos adicionais.</p>
+  </header>
+
+  <main class="container">
+    <!-- Passo A: Login por e-mail -->
+    <section id="loginSection">
+      <form id="loginForm">
+        <div class="grid">
+          <label>E‑mail* <input required type="email" name="email"/></label>
+        </div>
+        <div class="actions">
+          <a class="btn-secondary" href="index.html">Voltar</a>
+          <button class="btn-primary" type="submit">Acessar Minha Área</button>
+        </div>
+        <output id="loginMsg" role="status" aria-live="polite"></output>
+      </form>
+    </section>
+
+    <!-- Passo B: Área do candidato -->
+    <section id="areaSection" class="hidden">
+      <h2>Seus dados (resumo da Tela 1)</h2>
+      <div class="grid readonly" id="resumoTela1">
+        <!-- preenchido via JS -->
+      </div>
+
+      <h3>Enviar novos documentos</h3>
+      <p>Tipos aceitos: PDF, Word, Excel, PowerPoint, JPG/PNG. Tamanho máx.: 10 MB por arquivo.</p>
+      <form id="uploadForm">
+        <input type="hidden" name="email"/>
+        <div class="grid">
+          <label>Outros documentos (múltiplos)
+            <input type="file" id="up_extra" multiple
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"/>
+          </label>
+        </div>
+        <div class="actions">
+          <a class="btn-secondary" href="index.html">Sair</a>
+          <button class="btn-primary" type="submit">Enviar arquivos</button>
+        </div>
+        <output id="uploadMsg" role="status" aria-live="polite"></output>
+      </form>
+    </section>
+  </main>
+
+  <footer class="container"><small>© SND — RH</small></footer>
+  <script src="minha-area.js"></script>
+</body>
+</html>
