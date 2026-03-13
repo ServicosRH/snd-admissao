@@ -1,65 +1,36 @@
 (function(){
   let ENDPOINT_URL = null;
 
-  // Carrega a URL do fluxo do config.json
-  fetch('config.json')
-    .then(r => r.ok ? r.json() : null)
-    .then(cfg => { if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl; });
+  // Lê a URL do Flow
+  fetch('config.json').then(r=>r.ok?r.json():null).then(cfg=>{
+    if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl;
+  });
 
+  // ---------- Navegação entre etapas ----------
   const steps = Array.from(document.querySelectorAll('.step'));
   const stepsHeader = Array.from(document.querySelectorAll('#steps li'));
   let current = 0;
-
   function updateStep(i){
     steps.forEach((s,idx)=>s.classList.toggle('hidden', idx!==i));
     stepsHeader.forEach((li,idx)=>li.classList.toggle('active', idx===i));
-    current = i;
+    current=i;
   }
+  document.querySelectorAll('.next').forEach(btn=>btn.addEventListener('click',()=>{
+    const sec=steps[current];
+    const req=sec.querySelectorAll('[required]');
+    for(const el of req){ if(!el.checkValidity()){ el.reportValidity(); return; } }
+    updateStep(Math.min(current+1, steps.length-1));
+  }));
+  document.querySelectorAll('.prev').forEach(btn=>btn.addEventListener('click',()=>updateStep(Math.max(current-1,0))));
 
-  document.querySelectorAll('.next').forEach(btn =>
-    btn.addEventListener('click', () => {
-      const sec = steps[current];
-      const req = sec.querySelectorAll('[required]');
-      for(const el of req){
-        if(!el.checkValidity()){
-          el.reportValidity();
-          return;
-        }
-      }
-      updateStep(Math.min(current + 1, steps.length - 1));
-    })
-  );
+  const form=document.getElementById('cadastro-form');
+  if(!form){ return; }
 
-  document.querySelectorAll('.prev').forEach(btn =>
-    btn.addEventListener('click', () => updateStep(Math.max(current - 1, 0)))
-  );
-
-  const form = document.getElementById('cadastro-form');
-  if(!form){ return; } // só na página de cadastro
-
-  // Elementos já existentes
-  const outroEmprego = form.querySelector('[name=outroEmprego]');
-  const cnpjWrapper = document.getElementById('cnpjEmpresaWrapper');
-  const aposentado = form.querySelector('[name=aposentado]');
-  const aposentWrapper = document.getElementById('dataAposentadoriaWrapper');
-  const temParente = form.querySelector('[name=temParenteSnd]');
-  const parentescoWrapper = document.getElementById('parentescoWrapper');
-
-  // Novos wrappers/controles
-  const estadoCivil = form.querySelector('[name=estadoCivil]');
-  const conjugeWrapper = document.getElementById('conjugeWrapper');
-  const ctpsNumero = form.querySelector('[name=ctpsNumero]');
-  const ctpsSerieWrapper = document.getElementById('ctpsSerieWrapper');
-  const registroProf = form.querySelector('[name=registroProfissional]');
-  const regProfOrgaoUfWrapper = document.getElementById('regProfOrgaoUfWrapper');
-  const regProfDataWrapper = document.getElementById('regProfDataWrapper');
-
-  // Helpers de visibilidade + required dinâmico
+  // ---------- Helpers visibilidade/obrigatoriedade ----------
   function setRequiredIn(wrapperEl, on){
     if(!wrapperEl) return;
     wrapperEl.querySelectorAll('input, select, textarea').forEach(el=>{
-      if(on){ el.setAttribute('required','required'); }
-      else { el.removeAttribute('required'); }
+      if(on) el.setAttribute('required','required'); else el.removeAttribute('required');
     });
   }
   function toggleWrapper(wrapperEl, show, makeRequired=false){
@@ -68,81 +39,153 @@
     setRequiredIn(wrapperEl, show && makeRequired);
   }
 
-  // Estado civil -> cônjuge
-  function onEstadoCivilChange(){
-    const v = (estadoCivil?.value||'').toLowerCase();
-    const precisaConjuge = (v.includes('casado') || v.includes('união'));
-    toggleWrapper(conjugeWrapper, precisaConjuge, true);
-  }
-  if(estadoCivil){
-    estadoCivil.addEventListener('change', onEstadoCivilChange);
-    onEstadoCivilChange();
-  }
+  const onlyDigits=v=>(v||'').replace(/\D+/g,'');
 
-  // CTPS: série quando houver número
-  function onCtpsNumeroInput(){
-    const hasNum = !!(ctpsNumero && ctpsNumero.value.trim());
-    toggleWrapper(ctpsSerieWrapper, hasNum, hasNum);
-  }
-  if(ctpsNumero){
-    ctpsNumero.addEventListener('input', onCtpsNumeroInput);
-    onCtpsNumeroInput();
-  }
+  // ---------- Campos já existentes (ramificações de dados) ----------
+  const outroEmprego=form.querySelector('[name=outroEmprego]');
+  const cnpjWrapper=document.getElementById('cnpjEmpresaWrapper');
+  const aposentado=form.querySelector('[name=aposentado]');
+  const aposentWrapper=document.getElementById('dataAposentadoriaWrapper');
+  const temParente=form.querySelector('[name=temParenteSnd]');
+  const parentescoWrapper=document.getElementById('parentescoWrapper');
 
-  // Registro Profissional: órgão/UF e data quando houver número
-  function onRegProfChange(){
-    const hasReg = !!(registroProf && registroProf.value.trim());
-    toggleWrapper(regProfOrgaoUfWrapper, hasReg, hasReg);
-    toggleWrapper(regProfDataWrapper, hasReg, hasReg);
-  }
-  if(registroProf){
-    registroProf.addEventListener('input', onRegProfChange);
-    onRegProfChange();
-  }
-
-  // Complementares: mostram + tornam required quando SIM
   if(outroEmprego){
     outroEmprego.addEventListener('change', e=>{
-      const show = (e.target.value === 'sim');
+      const show=(e.target.value==='sim');
       toggleWrapper(cnpjWrapper, show, show);
     });
     toggleWrapper(cnpjWrapper, (outroEmprego.value==='sim'), (outroEmprego.value==='sim'));
   }
-
   if(aposentado){
     aposentado.addEventListener('change', e=>{
-      const show = (e.target.value === 'sim');
+      const show=(e.target.value==='sim');
       toggleWrapper(aposentWrapper, show, show);
     });
     toggleWrapper(aposentWrapper, (aposentado.value==='sim'), (aposentado.value==='sim'));
   }
-
   if(temParente){
     temParente.addEventListener('change', e=>{
-      const show = (e.target.value === 'sim');
+      const show=(e.target.value==='sim');
       toggleWrapper(parentescoWrapper, show, show);
     });
     toggleWrapper(parentescoWrapper, (temParente.value==='sim'), (temParente.value==='sim'));
   }
 
-  // Assinatura
-  const canvas = document.getElementById('signature');
-  const ctx = canvas ? canvas.getContext('2d') : null;
+  // ---------- Regras adicionais (Estado civil, CTPS, RP) ----------
+  const estadoCivil=form.querySelector('[name=estadoCivil]');
+  const conjugeWrapper=document.getElementById('conjugeWrapper');
+  function onEstadoCivilChange(){
+    const v=(estadoCivil?.value||'').toLowerCase();
+    const precisaConjuge=(v.includes('casado')||v.includes('união'));
+    toggleWrapper(conjugeWrapper, precisaConjuge, true);
+    // também controla uploads condicionais de casamento (mais abaixo em updateUploadsUI)
+    updateUploadsUI();
+  }
+  if(estadoCivil){ estadoCivil.addEventListener('change', onEstadoCivilChange); onEstadoCivilChange(); }
+
+  const ctpsNumero=form.querySelector('[name=ctpsNumero]');
+  const ctpsSerieWrapper=document.getElementById('ctpsSerieWrapper');
+  function onCtpsNumeroInput(){
+    const hasNum=!!(ctpsNumero && ctpsNumero.value.trim());
+    toggleWrapper(ctpsSerieWrapper, hasNum, hasNum);
+  }
+  if(ctpsNumero){ ctpsNumero.addEventListener('input', onCtpsNumeroInput); onCtpsNumeroInput(); }
+
+  const registroProf=form.querySelector('[name=registroProfissional]');
+  const regProfOrgaoUfWrapper=document.getElementById('regProfOrgaoUfWrapper');
+  const regProfDataWrapper=document.getElementById('regProfDataWrapper');
+  const up_carteira_regprof_wrapper=document.getElementById('up_carteira_regprof_wrapper');
+  function onRegProfChange(){
+    const hasReg=!!(registroProf && registroProf.value.trim());
+    toggleWrapper(regProfOrgaoUfWrapper, hasReg, hasReg);
+    toggleWrapper(regProfDataWrapper, hasReg, hasReg);
+    toggleWrapper(up_carteira_regprof_wrapper, hasReg, false); // upload condicional (validação tratará obrigatoriedade)
+  }
+  if(registroProf){ registroProf.addEventListener('input', onRegProfChange); onRegProfChange(); }
+
+  // ---------- Uploads por documento (tipo Forms) ----------
+  const selects = {
+    reservistaTem: form.querySelector('[name=reservistaTem]'),
+    pisTem:        form.querySelector('[name=pisTem]'),
+    filhosTem:     form.querySelector('[name=filhosTem]'),
+    empregoAnteriorTem: form.querySelector('[name=empregoAnteriorTem]')
+  };
+
+  const wrappers = {
+    up_reservista_wrapper: document.getElementById('up_reservista_wrapper'),
+    up_pis_wrapper:        document.getElementById('up_pis_wrapper'),
+    up_cert_casamento_wrapper: document.getElementById('up_cert_casamento_wrapper'),
+    up_cpf_conjuge_wrapper:    document.getElementById('up_cpf_conjuge_wrapper'),
+    up_certidao_filhos_wrapper: document.getElementById('up_certidao_filhos_wrapper'),
+    up_cpf_filhos_wrapper:      document.getElementById('up_cpf_filhos_wrapper'),
+    up_carta_referencia_wrapper: document.getElementById('up_carta_referencia_wrapper')
+  };
+
+  function isCasado(){
+    const v=(estadoCivil?.value||'').toLowerCase();
+    return (v.includes('casado')||v.includes('união'));
+  }
+
+  function updateUploadsUI(){
+    // Reservista
+    const showReservista = (selects.reservistaTem?.value==='sim');
+    toggleWrapper(wrappers.up_reservista_wrapper, showReservista, showReservista);
+
+    // PIS
+    const showPIS = (selects.pisTem?.value==='sim');
+    toggleWrapper(wrappers.up_pis_wrapper, showPIS, showPIS);
+
+    // Casamento (deriva do Estado Civil)
+    const showCasamento = isCasado();
+    toggleWrapper(wrappers.up_cert_casamento_wrapper, showCasamento, showCasamento);
+    toggleWrapper(wrappers.up_cpf_conjuge_wrapper, showCasamento, showCasamento);
+
+    // Filhos
+    const showFilhos = (selects.filhosTem?.value==='sim');
+    toggleWrapper(wrappers.up_certidao_filhos_wrapper, showFilhos, showFilhos);
+    toggleWrapper(wrappers.up_cpf_filhos_wrapper, showFilhos, showFilhos);
+
+    // Emprego anterior
+    const showCartaRef = (selects.empregoAnteriorTem?.value==='sim');
+    toggleWrapper(wrappers.up_carta_referencia_wrapper, showCartaRef, showCartaRef);
+  }
+
+  Object.values(selects).forEach(sel=>{
+    if(sel){ sel.addEventListener('change', updateUploadsUI); }
+  });
+  updateUploadsUI();
+
+  // Mapa de uploads (id, rótulo para nome do arquivo, obrigatoriedade e limites)
+  const uploadMap = [
+    { id:'up_ctps',             label:'CTPS',                       required: ()=>true,             max:1 },
+    { id:'up_rg',               label:'RG',                         required: ()=>true,             max:2 },
+    { id:'up_cpf',              label:'CPF',                        required: ()=>true,             max:1 },
+    { id:'up_reservista',       label:'Certificado_Reservista',     required: ()=>selects.reservistaTem?.value==='sim', max:1, wrapperId:'up_reservista_wrapper' },
+    { id:'up_titulo',           label:'Titulo_Eleitor',             required: ()=>true,             max:1 },
+    { id:'up_pis',              label:'PIS',                        required: ()=>selects.pisTem?.value==='sim',        max:1, wrapperId:'up_pis_wrapper' },
+    { id:'up_comprov_resid',    label:'Comprovante_Residencia',     required: ()=>true,             max:1 },
+    { id:'up_cert_casamento',   label:'Certidao_Casamento',         required: ()=>isCasado(),       max:1, wrapperId:'up_cert_casamento_wrapper' },
+    { id:'up_cpf_conjuge',      label:'CPF_Conjuge',                required: ()=>isCasado(),       max:1, wrapperId:'up_cpf_conjuge_wrapper' },
+    { id:'up_certidao_filhos',  label:'Certidao_Nascimento_Filho',  required: ()=>selects.filhosTem?.value==='sim',     max:10, wrapperId:'up_certidao_filhos_wrapper' },
+    { id:'up_cpf_filhos',       label:'CPF_Filho',                  required: ()=>selects.filhosTem?.value==='sim',     max:10, wrapperId:'up_cpf_filhos_wrapper' },
+    { id:'up_carta_referencia', label:'Carta_Referencia',           required: ()=>selects.empregoAnteriorTem?.value==='sim', max:1, wrapperId:'up_carta_referencia_wrapper' },
+    { id:'up_diploma',          label:'Diploma_Escolaridade',       required: ()=>true,             max:1 },
+    { id:'up_dados_conta',      label:'Dados_Conta_Bancaria',       required: ()=>true,             max:1 },
+    { id:'up_carteira_regprof', label:'Carteira_Registro_Prof',     required: ()=>!!(registroProf && registroProf.value.trim()), max:1, wrapperId:'up_carteira_regprof_wrapper' }
+  ];
+
+  // ---------- Assinatura ----------
+  const canvas=document.getElementById('signature');
+  const ctx=canvas?canvas.getContext('2d'):null;
   let drawing=false,lastX=0,lastY=0, emptySignature=true;
 
-  function pos(e){
-    const r=canvas.getBoundingClientRect();
-    const t=(e.touches?e.touches[0]:e);
-    return {
-      x:(t.clientX-r.left)*(canvas.width/r.width),
-      y:(t.clientY-r.top)*(canvas.height/r.height)
-    };
+  function pos(e){ const r=canvas.getBoundingClientRect(); const t=(e.touches?e.touches[0]:e);
+    return {x:(t.clientX-r.left)*(canvas.width/r.width), y:(t.clientY-r.top)*(canvas.height/r.height)};
   }
   function start(e){ drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; e.preventDefault(); }
   function move(e){
     if(!drawing) return;
-    const p=pos(e);
-    ctx.strokeStyle='#111'; ctx.lineWidth=2; ctx.lineCap='round';
+    const p=pos(e); ctx.strokeStyle='#111'; ctx.lineWidth=2; ctx.lineCap='round';
     ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke();
     lastX=p.x; lastY=p.y; emptySignature=false; e.preventDefault();
   }
@@ -154,11 +197,10 @@
     canvas.addEventListener('touchstart',start,{passive:false});
     canvas.addEventListener('touchmove',move,{passive:false});
     canvas.addEventListener('touchend',end);
-    document.getElementById('limparAssinatura')
-      .addEventListener('click',()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); emptySignature=true; });
+    document.getElementById('limparAssinatura').addEventListener('click',()=>{
+      ctx.clearRect(0,0,canvas.width,canvas.height); emptySignature=true;
+    });
   }
-
-  const onlyDigits = v => (v||'').replace(/\D+/g,'');
 
   async function fileToBase64(f){
     return new Promise((resolve,reject)=>{
@@ -168,66 +210,98 @@
         const mime=/data:(.*?);base64/.exec(meta)?.[1]||'application/octet-stream';
         resolve({fileName:f.name, contentType:mime, contentBase64:b64, size:f.size});
       };
-      r.onerror=reject;
-      r.readAsDataURL(f);
+      r.onerror=reject; r.readAsDataURL(f);
     });
   }
 
+  // ---------- SUBMIT ----------
   form.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
     const out=document.getElementById('resultado'); out.textContent='';
 
     if(!document.getElementById('consentimento').checked){
-      out.textContent='Você deve ler e concordar com a declaração.';
-      return;
+      out.textContent='Você deve ler e concordar com a declaração.'; return;
     }
     if(canvas && emptySignature){
-      out.textContent='Por favor, assine no campo de assinatura.';
-      return;
+      out.textContent='Por favor, assine no campo de assinatura.'; return;
     }
     if(!ENDPOINT_URL){
-      out.textContent='Erro: config.json não encontrado ou endpointUrl ausente.';
-      return;
+      out.textContent='Erro: config.json não encontrado ou endpointUrl ausente.'; return;
     }
 
-    const dados = Object.fromEntries(new FormData(form).entries());
+    // Validação de uploads obrigatórios e coleta dos anexos
+    const anexos=[];
+    for(const item of uploadMap){
+      const input=document.getElementById(item.id);
+      if(!input) continue;
 
-    // Checklist -> objeto booleano
-    dados.checklist = {
-      rg: !!dados.docRg,
-      cpf: !!dados.docCpf,
-      comprovEndereco: !!dados.docComprovEndereco,
-      carteiraTrabalho: !!dados.docCarteiraTrabalho,
-      certidao: !!dados.docCertidao,
-      comprovEscolaridade: !!dados.docComprovEscolaridade
-    };
-    delete dados.docRg; delete dados.docCpf; delete dados.docComprovEndereco;
-    delete dados.docCarteiraTrabalho; delete dados.docCertidao; delete dados.docComprovEscolaridade;
+      const files=input.files;
+      const isRequired=item.required();
+      const max=parseInt(input.dataset.max||item.max||1,10);
+
+      // Mostrar/ou ocultar wrapper (caso haja) — sincroniza com regras
+      if(item.wrapperId){
+        const w=document.getElementById(item.wrapperId);
+        toggleWrapper(w, isRequired, isRequired);
+      }
+
+      // Validação: se obrigatório, precisa ter ao menos 1 arquivo
+      if(isRequired && (!files || files.length===0)){
+        out.textContent=`Anexe o documento obrigatório: ${item.label}.`;
+        input.focus();
+        return;
+      }
+
+      // Validação: limite de quantidade
+      if(files && files.length>max){
+        out.textContent=`O documento "${item.label}" permite no máximo ${max} arquivo(s).`;
+        input.focus();
+        return;
+      }
+
+      // Empacota arquivos (com prefixo amigável no nome)
+      if(files && files.length){
+        let idx=1;
+        for(const f of files){
+          if(f.size>10*1024*1024){
+            out.textContent=`O arquivo ${f.name} excede 10 MB.`; return;
+          }
+          const b64=await fileToBase64(f);
+          // Monta nome padronizado: <Prefixo>[_N].<ext>
+          const ext=(f.name.split('.').pop()||'').toLowerCase();
+          const safeName = ext ? `${item.label}${(files.length>1?`_${idx}`:'')}.${ext}` : `${item.label}${(files.length>1?`_${idx}`:'')}`;
+          anexos.push({
+            fileName: safeName,
+            contentType: b64.contentType || f.type || 'application/octet-stream',
+            contentBase64: b64.contentBase64,
+            size: f.size
+          });
+          idx++;
+        }
+      }
+    }
+
+    // Coleta e sanitiza os dados do formulário (campos de texto)
+    const dados=Object.fromEntries(new FormData(form).entries());
+
+    // Mantemos um "checklist" neutro (não usado para validação) só para compatibilidade de schema no Flow, se existir
+    dados.checklist = { rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false };
 
     // Sanitização
-    dados.cpf = onlyDigits(dados.cpf);
-    dados.cep = onlyDigits(dados.cep);
-    dados.pis = onlyDigits(dados.pis);
-    dados.ctpsNumero = onlyDigits(dados.ctpsNumero);
-    dados.ctpsSerie = onlyDigits(dados.ctpsSerie);
-    dados.telFixo = onlyDigits(dados.telFixo);
-    dados.telCel = onlyDigits(dados.telCel);
-    if(dados.cnpjEmpresa) dados.cnpjEmpresa = onlyDigits(dados.cnpjEmpresa);
-
-    // Arquivos
-    const files = document.getElementById('anexos').files;
-    const anexos=[];
-    for(const f of files){
-      if(f.size > 10*1024*1024){ out.textContent=`O arquivo ${f.name} excede 10 MB.`; return; }
-      anexos.push(await fileToBase64(f));
-    }
+    dados.cpf=onlyDigits(dados.cpf);
+    dados.cep=onlyDigits(dados.cep);
+    dados.pis=onlyDigits(dados.pis);
+    dados.ctpsNumero=onlyDigits(dados.ctpsNumero);
+    dados.ctpsSerie=onlyDigits(dados.ctpsSerie);
+    dados.telFixo=onlyDigits(dados.telFixo);
+    dados.telCel=onlyDigits(dados.telCel);
+    if(dados.cnpjEmpresa) dados.cnpjEmpresa=onlyDigits(dados.cnpjEmpresa);
 
     // Assinatura (PNG base64)
-    let assinaturaBase64='';
-    if(canvas){ assinaturaBase64 = canvas.toDataURL('image/png').split(',')[1]; }
+    let assinaturaBase64=''; if(canvas){ assinaturaBase64=canvas.toDataURL('image/png').split(',')[1]; }
 
-    const payload = {
-      metadata:{fonte:'form-web-snd',versao:'2.4.0',enviadoEm:new Date().toISOString()},
+    const payload={
+      metadata:{fonte:'form-web-snd',versao:'2.5.0',enviadoEm:new Date().toISOString()},
       dados,
       anexos,
       declaracao:{
@@ -245,17 +319,13 @@ Por fim, fico ciente das responsabilidades pelas declarações prestada e firmo 
     btn.disabled=true; btn.textContent='Enviando…';
 
     try{
-      const resp=await fetch(ENDPOINT_URL,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-      });
+      const resp=await fetch(ENDPOINT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       const ok=resp.ok;
-      out.textContent = ok ? 'Cadastro enviado com sucesso. Caso falte algum documento, utilize a página "Envio Complementar".' : 'Falha ao enviar.';
+      document.getElementById('resultado').textContent = ok ? 'Cadastro enviado com sucesso. Obrigado!' : 'Falha ao enviar.';
       if(ok) form.reset();
     }catch(e){
       console.error(e);
-      out.textContent='Erro de rede.';
+      document.getElementById('resultado').textContent='Erro de rede.';
     }finally{
       btn.disabled=false; btn.textContent='Enviar cadastro';
       updateStep(0);
