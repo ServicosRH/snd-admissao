@@ -169,24 +169,153 @@
           </div>
         </fieldset>
 
-        <!-- CHECKLIST (sem duplicações) -->
+        <!-- ===================== DOCUMENTOS OBRIGATÓRIOS (tipo Forms) ===================== -->
         <fieldset>
-          <legend>Checklist de Documentos Obrigatórios</legend>
-          <p>Marque o que você enviará agora. O restante poderá ser enviado depois na tela “Envio Complementar”.</p>
-          <div class="grid">
-            <label class="checkbox"><input type="checkbox" name="docRg" /> RG (frente e verso)</label>
-            <label class="checkbox"><input type="checkbox" name="docCpf" /> CPF</label>
-            <label class="checkbox"><input type="checkbox" name="docComprovEndereco" /> Comprovante de endereço</label>
-            <label class="checkbox"><input type="checkbox" name="docCarteiraTrabalho" /> CTPS (páginas de identificação)</label>
-            <label class="checkbox"><input type="checkbox" name="docCertidao" /> Certidão (nascimento/casamento)</label>
-            <label class="checkbox"><input type="checkbox" name="docComprovEscolaridade" /> Comprovante de escolaridade</label>
-          </div>
-        </fieldset>
+          <legend>Documentos Obrigatórios</legend>
+          <p>Nesta seção, cada documento obrigatório tem seu próprio campo de upload. O envio só é permitido quando todos os documentos exigidos (e condicionais) estiverem anexados.</p>
 
-        <fieldset>
-          <legend>Anexos</legend>
-          <p>Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG (até 10 MB cada).</p>
-          <input type="file" id="anexos" name="anexos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"/>
+          <!-- 44. Carteira de Trabalho (CTPS) — obrigatório (1 arquivo) -->
+          <div id="up_ctps_wrapper">
+            <label>Carteira de Trabalho <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_ctps" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+            <small>Se for digital, gerar um PDF com todos os dados da carteira (ou anexar 1 arquivo consolidado).</small>
+          </div>
+
+          <!-- 45. Documento de Identidade (RG) — obrigatório (até 2 arquivos: frente e verso) -->
+          <div id="up_rg_wrapper">
+            <label>Documento de Identidade (frente e verso) <strong>*</strong> (até 2 arquivos)
+              <input type="file" id="up_rg" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="2" />
+            </label>
+          </div>
+
+          <!-- 46. CPF — obrigatório (1 arquivo) -->
+          <div id="up_cpf_wrapper">
+            <label>CPF <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_cpf" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 47-48. Reservista (condicional) -->
+          <div class="grid">
+            <label>Possui certificado de Reservista? <strong>*</strong>
+              <select name="reservistaTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="up_reservista_wrapper" class="hidden">
+            <label>Certificado de Reservista (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_reservista" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 49. Título de Eleitor — obrigatório (1 arquivo) -->
+          <div id="up_titulo_wrapper">
+            <label>Título de Eleitor <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_titulo" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 50-51. PIS (condicional) -->
+          <div class="grid">
+            <label>Possui cadastro de PIS? <strong>*</strong>
+              <select name="pisTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="up_pis_wrapper" class="hidden">
+            <label>PIS (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_pis" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 52. Comprovante de Residência — obrigatório (1 arquivo) -->
+          <div id="up_comprov_resid_wrapper">
+            <label>Comprovante de Residência <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_comprov_resid" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 54-55. Casamento — condicional a Estado Civil (Casado/União estável) -->
+          <div id="up_cert_casamento_wrapper" class="hidden">
+            <label>Certidão de Casamento (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_cert_casamento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+          <div id="up_cpf_conjuge_wrapper" class="hidden">
+            <label>CPF do Cônjuge (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_cpf_conjuge" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 56-58. Filhos — condicional -->
+          <div class="grid">
+            <label>Possui Filhos? <strong>*</strong>
+              <select name="filhosTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="up_certidao_filhos_wrapper" class="hidden">
+            <label>Certidão de Nascimento (Filhos) <strong>*</strong> (até 10 arquivos)
+              <input type="file" id="up_certidao_filhos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="10" />
+            </label>
+          </div>
+          <div id="up_cpf_filhos_wrapper" class="hidden">
+            <label>CPF (Filhos) <strong>*</strong> (até 10 arquivos)
+              <input type="file" id="up_cpf_filhos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="10" />
+            </label>
+          </div>
+
+          <!-- 59-60. Emprego Anterior — condicional -->
+          <div class="grid">
+            <label>Possui Emprego Anterior? <strong>*</strong>
+              <select name="empregoAnteriorTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="up_carta_referencia_wrapper" class="hidden">
+            <label>Carta de Referência do Último Emprego (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_carta_referencia" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 61. Diploma/Declaração de Escolaridade — obrigatório -->
+          <div id="up_diploma_wrapper">
+            <label>Diploma de Conclusão ou Declaração de Escolaridade <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_diploma" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <!-- 62-63. Conta Bancária -->
+          <div class="grid">
+            <label>Possui Conta Corrente no Banco Itaú? <strong>*</strong>
+              <select name="contaItauTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="up_dados_conta_wrapper">
+            <label>Dados da Conta Bancária <strong>*</strong> (1 arquivo)
+              <input type="file" id="up_dados_conta" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+            <small>Pode ser Extrato, foto do cartão (com agência e conta legíveis), etc.</small>
+          </div>
+
+          <!-- 64. Carteira de Registro Profissional — condicional ao número informado -->
+          <div id="up_carteira_regprof_wrapper" class="hidden">
+            <label>Carteira de Registro Profissional (caso possua) (1 arquivo)
+              <input type="file" id="up_carteira_regprof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
         </fieldset>
 
         <div class="actions">
