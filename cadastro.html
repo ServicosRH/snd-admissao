@@ -74,6 +74,47 @@
 
             <label>Nome do Pai*<input required name="nomePai" type="text" placeholder="Se não houver, digite: Não declarado"/></label>
             <label>Nome da Mãe*<input required name="nomeMae" type="text"/></label>
+
+            <label>Possui Filhos?*
+              <select name="filhosTem" required>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+
+            <label id="qtdFilhosWrapper" class="hidden">Quantos?*
+              <input name="qtdFilhos" type="number" min="1" max="10" />
+            </label>
+
+            <!-- Linhas dinâmicas: Nome completo / Dt. Nasc. / CPF de cada filho -->
+            <div id="filhosDetalhesWrapper" class="hidden"></div>
+          </div>
+        </fieldset>
+
+        <!-- Endereço moveu para TELA 1 -->
+        <fieldset>
+          <legend>Endereço</legend>
+          <div class="grid">
+            <label>Endereço (Rua/Av.)*<input required name="endereco" type="text" placeholder="Ex.: Av. Copacabana"/></label>
+            <label>Número*<input required name="numero" type="text"/></label>
+            <label>Complemento<input name="complemento" type="text"/></label>
+            <label>Bairro*<input required name="bairro" type="text"/></label>
+            <label>Cidade*<input required name="cidade" type="text"/></label>
+
+            <label>Estado*
+              <select name="estado" required>
+                <option value="">UF…</option>
+                <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                <option>SP</option><option>SE</option><option>TO</option>
+              </select>
+            </label>
+
+            <label>CEP*<input required name="cep" type="text" inputmode="numeric" placeholder="Somente números"/></label>
           </div>
         </fieldset>
 
@@ -88,7 +129,7 @@
         <fieldset>
           <legend>Documentação Admissional</legend>
           <div class="grid">
-            <!-- Sexo / Reservista (regra BR) -->
+            <!-- Sexo / Reservista -->
             <label>Sexo Biológico*
               <select name="sexoBiologico" required>
                 <option value="">Selecione…</option>
@@ -116,16 +157,23 @@
               <input name="dispensaMotivo" type="text" placeholder="Ex.: Excedente de Contingente"/>
             </label>
 
-            <!-- RG / CPF / PIS -->
+            <!-- RG / CPF -->
             <label>Doc. Identidade (RG)*<input required name="rgNumero" type="text"/></label>
             <label>Órgão Emissor*<input required name="rgOrgaoUf" type="text" placeholder="Ex.: SSP/SP"/></label>
             <label>Data de Emissão (RG)*<input required name="rgData" type="date"/></label>
 
             <label>CPF*<input required name="cpf" type="text" inputmode="numeric"/></label>
 
-            <label>PIS*<input required name="pis" type="text" placeholder="Se não possuir, digite: NAO POSSUI"/></label>
+            <!-- PIS (dropdown + número) -->
+            <label>Possui PIS?*
+              <select name="possuiPis" required>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+            <label id="pisNumeroWrapper" class="hidden">PIS Nº*<input name="pisNumero" type="text" inputmode="numeric"/></label>
 
-            <!-- CTPS -->
+            <!-- CTPS (tipo) -->
             <label>CTPS (TIPO)*
               <select name="ctpsTipo" required>
                 <option value="">Selecione…</option>
@@ -133,7 +181,6 @@
                 <option>Digital</option>
               </select>
             </label>
-
             <label id="ctpsNumeroWrapper" class="hidden">CTPS Nº*<input name="ctpsNumero" type="text"/></label>
             <label id="ctpsSerieWrapper" class="hidden">CTPS Série*<input name="ctpsSerie" type="text"/></label>
 
@@ -148,36 +195,11 @@
             <label id="regProfOrgaoUfWrapper" class="hidden">Órgão Emissor/Estado (RP)*<input name="regProfOrgaoUf" type="text" placeholder="Ex.: CREA/SP"/></label>
             <label id="regProfDataWrapper" class="hidden">Data de Emissão (RP)*<input name="regProfData" type="date"/></label>
 
-            <!-- Título de Eleitor (dados) -->
+            <!-- Título de Eleitor (dados + Nº) -->
+            <label>Nº do Título de Eleitor*<input required name="tituloNumero" type="text" inputmode="numeric"/></label>
             <label>Zona Eleitoral*<input required name="tituloZona" type="text" inputmode="numeric"/></label>
             <label>Seção Eleitoral*<input required name="tituloSecao" type="text" inputmode="numeric"/></label>
             <label>Data de Emissão (Título)*<input required name="tituloData" type="date"/></label>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Endereço</legend>
-          <div class="grid">
-            <label>Endereço (Rua/Av.)*<input required name="endereco" type="text" placeholder="Ex.: Av. Copacabana"/></label>
-            <label>Número*<input required name="numero" type="text"/></label>
-            <label>Complemento<input name="complemento" type="text"/></label>
-            <label>Bairro*<input required name="bairro" type="text"/></label>
-            <label>Cidade*<input required name="cidade" type="text"/></label>
-
-            <label>Estado*
-              <select name="estado" required>
-                <option value="">UF…</option>
-                <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-                <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-                <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
-                <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-                <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-                <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-                <option>SP</option><option>SE</option><option>TO</option>
-              </select>
-            </label>
-
-            <label>CEP*<input required name="cep" type="text" inputmode="numeric" placeholder="Somente números"/></label>
           </div>
         </fieldset>
 
@@ -255,7 +277,7 @@
             </label>
           </div>
 
-          <!-- Itaú (Item 61/62): se SIM => Agência/Conta + upload obrigatório -->
+          <!-- Itaú: se SIM => Agência/Conta + upload obrigatório -->
           <div class="grid">
             <label>Possui Conta Corrente no Banco Itaú? <strong>*</strong>
               <select name="contaItauTem" required>
@@ -275,55 +297,29 @@
             <small>Pode ser Extrato Bancário, ou Foto do Cartão da Conta (com Agência e Conta‑Corrente visíveis).</small>
           </div>
 
-          <!-- Condicionais diversas -->
-          <!-- Reservista: visível p/ Masculino, obrigatório upload só se Possui=Sim -->
+          <!-- Condicionais baseadas em Tela 2 / Tela 1 -->
+          <!-- Reservista: upload visível p/ Masculino; obrigatório só quando Possui=Sim -->
           <div id="reservistaUploadWrapper" class="hidden">
             <label>Certificado de Reservista (1 arquivo)
               <input type="file" id="up_reservista" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <div class="grid">
-            <label>Possui cadastro de PIS? <strong>*</strong>
-              <select name="pisTem" required>
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
+          <!-- PIS upload: somente se possuiPis=sim -->
           <div id="up_pis_wrapper" class="hidden">
             <label>PIS (1 arquivo) <strong>*</strong>
               <input type="file" id="up_pis" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <div class="grid">
-            <label>Você é Casado(a)? <strong>*</strong>
-              <select name="casadoDoc" required>
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
+          <!-- Casado: somente Certidão de Casamento -->
           <div id="up_cert_casamento_wrapper" class="hidden">
             <label>Certidão de Casamento (1 arquivo) <strong>*</strong>
               <input type="file" id="up_cert_casamento" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
-          <div id="up_cpf_conjuge_wrapper" class="hidden">
-            <label>CPF do Cônjuge (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_cpf_conjuge" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
-            </label>
-          </div>
 
-          <div class="grid">
-            <label>Possui Filhos? <strong>*</strong>
-              <select name="filhosTem" required>
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
+          <!-- Filhos: uploads quando filhosTem=sim -->
           <div id="up_certidao_filhos_wrapper" class="hidden">
             <label>Certidão de Nascimento (Filhos) — até 10 <strong>*</strong>
               <input type="file" id="up_certidao_filhos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="10" />
@@ -335,6 +331,7 @@
             </label>
           </div>
 
+          <!-- Emprego anterior -->
           <div class="grid">
             <label>Possui Emprego Anterior? <strong>*</strong>
               <select name="empregoAnteriorTem" required>
