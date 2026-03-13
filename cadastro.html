@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -21,6 +20,7 @@
     </ol>
 
     <form id="cadastro-form">
+      <!-- ETAPA 1 -->
       <section class="step" data-step="1">
         <fieldset>
           <legend>Dados Pessoais</legend>
@@ -28,37 +28,53 @@
             <label>Nome completo*<input required name="nomeCompleto" type="text" autocomplete="name"/></label>
             <label>Data de nascimento*<input required name="dataNascimento" type="date"/></label>
             <label>Local de nascimento<input name="localNascimento" type="text"/></label>
-            <label>Estado civil<select name="estadoCivil">
-              <option value="">Selecione…</option>
-              <option>Solteiro(a)</option>
-              <option>Casado(a)</option>
-              <option>Divorciado(a)</option>
-              <option>Viúvo(a)</option>
-              <option>União estável</option>
-            </select></label>
-            <label>Grau de escolaridade<select name="grauEscolaridade">
-              <option value="">Selecione…</option>
-              <option>Fundamental</option>
-              <option>Médio</option>
-              <option>Técnico</option>
-              <option>Superior</option>
-              <option>Pós-graduação</option>
-              <option>Mestrado</option>
-              <option>Doutorado</option>
-            </select></label>
-            <label>Raça/Cor<select name="racaCor">
-              <option value="">Selecione…</option>
-              <option>Parda</option>
-              <option>Branca</option>
-              <option>Negra</option>
-              <option>Asiático</option>
-              <option>Indígena</option>
-            </select></label> 
+
+            <label>Estado civil
+              <select name="estadoCivil">
+                <option value="">Selecione…</option>
+                <option>Solteiro(a)</option>
+                <option>Casado(a)</option>
+                <option>Divorciado(a)</option>
+                <option>Viúvo(a)</option>
+                <option>União estável</option>
+              </select>
+            </label>
+
+            <label>Grau de escolaridade
+              <select name="grauEscolaridade">
+                <option value="">Selecione…</option>
+                <option>Fundamental</option>
+                <option>Médio</option>
+                <option>Técnico</option>
+                <option>Superior</option>
+                <option>Pós-graduação</option>
+                <option>Mestrado</option>
+                <option>Doutorado</option>
+              </select>
+            </label>
+
+            <label>Raça/Cor
+              <select name="racaCor">
+                <option value="">Selecione…</option>
+                <option>Parda</option>
+                <option>Branca</option>
+                <option>Negra</option>
+                <option>Asiático</option>
+                <option>Indígena</option>
+              </select>
+            </label>
+
             <label>Nome do Pai<input name="nomePai" type="text" /></label>
-            <label>Nome da Mãe<input name="nomeMae" type="text" /></label>         
-            <label>Nome do(a) cônjuge/companheiro(a)<input name="conjuge" type="text"/></label>
+            <label>Nome da Mãe<input name="nomeMae" type="text" /></label>
+
+            <!-- Cônjuge: aparece quando Casado/União estável -->
+            <label id="conjugeWrapper" class="hidden">
+              Nome do(a) cônjuge/companheiro(a)
+              <input name="conjuge" type="text"/>
+            </label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Contatos</legend>
           <div class="grid">
@@ -67,12 +83,14 @@
             <label>Telefone fixo<input name="telFixo" type="text" inputmode="numeric"/></label>
           </div>
         </fieldset>
+
         <div class="actions">
           <a class="btn-secondary" href="index.html">Voltar à capa</a>
           <button type="button" class="btn-primary next">Próximo</button>
         </div>
       </section>
 
+      <!-- ETAPA 2 -->
       <section class="step hidden" data-step="2">
         <fieldset>
           <legend>Documentos</legend>
@@ -80,15 +98,30 @@
             <label>RG*<input required name="rgNumero" type="text"/></label>
             <label>Órgão emissor/UF<input name="rgOrgaoUf" type="text" placeholder="ex.: SSP/SP"/></label>
             <label>Data de emissão<input name="rgData" type="date"/></label>
+
             <label>CPF*<input required name="cpf" type="text" inputmode="numeric"/></label>
             <label>PIS<input name="pis" type="text" inputmode="numeric"/></label>
+
             <label>CTPS — Número<input name="ctpsNumero" type="text"/></label>
-            <label>CTPS — Série<input name="ctpsSerie" type="text"/></label>
+            <!-- Série: aparece apenas quando houver Número -->
+            <label id="ctpsSerieWrapper" class="hidden">
+              CTPS — Série
+              <input name="ctpsSerie" type="text"/>
+            </label>
+
             <label>Registro Profissional Nº<input name="registroProfissional" type="text"/></label>
-            <label>Órgão emissor/UF<input name="regProfOrgaoUf" type="text"/></label>
-            <label>Data de expedição<input name="regProfData" type="date"/></label>
+            <!-- Aparecem se houver número de RP -->
+            <label id="regProfOrgaoUfWrapper" class="hidden">
+              Órgão emissor/UF
+              <input name="regProfOrgaoUf" type="text"/>
+            </label>
+            <label id="regProfDataWrapper" class="hidden">
+              Data de expedição
+              <input name="regProfData" type="date"/>
+            </label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Endereço</legend>
           <div class="grid">
@@ -101,6 +134,7 @@
             <label>CEP*<input required name="cep" type="text" inputmode="numeric"/></label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Informações Complementares</legend>
           <div class="grid">
@@ -111,6 +145,7 @@
               </select>
             </label>
             <label id="cnpjEmpresaWrapper" class="hidden">CNPJ da empresa<input name="cnpjEmpresa" type="text" inputmode="numeric"/></label>
+
             <label>É aposentado(a)?
               <select name="aposentado">
                 <option value="nao">Não</option>
@@ -118,6 +153,7 @@
               </select>
             </label>
             <label id="dataAposentadoriaWrapper" class="hidden">Data da aposentadoria<input name="dataAposentadoria" type="date"/></label>
+
             <label>Tem parente/familiar na SND?
               <select name="temParenteSnd">
                 <option value="nao">Não</option>
@@ -132,17 +168,34 @@
             </label>
           </div>
         </fieldset>
+
+        <!-- CHECKLIST (sem duplicações) -->
+        <fieldset>
+          <legend>Checklist de Documentos Obrigatórios</legend>
+          <p>Marque o que você enviará agora. O restante poderá ser enviado depois na tela “Envio Complementar”.</p>
+          <div class="grid">
+            <label class="checkbox"><input type="checkbox" name="docRg" /> RG (frente e verso)</label>
+            <label class="checkbox"><input type="checkbox" name="docCpf" /> CPF</label>
+            <label class="checkbox"><input type="checkbox" name="docComprovEndereco" /> Comprovante de endereço</label>
+            <label class="checkbox"><input type="checkbox" name="docCarteiraTrabalho" /> CTPS (páginas de identificação)</label>
+            <label class="checkbox"><input type="checkbox" name="docCertidao" /> Certidão (nascimento/casamento)</label>
+            <label class="checkbox"><input type="checkbox" name="docComprovEscolaridade" /> Comprovante de escolaridade</label>
+          </div>
+        </fieldset>
+
         <fieldset>
           <legend>Anexos</legend>
           <p>Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG (até 10 MB cada).</p>
           <input type="file" id="anexos" name="anexos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"/>
         </fieldset>
+
         <div class="actions">
           <button type="button" class="btn-secondary prev">Voltar</button>
           <button type="button" class="btn-primary next">Próximo</button>
         </div>
       </section>
 
+      <!-- ETAPA 3 -->
       <section class="step hidden" data-step="3">
         <fieldset>
           <legend>Declaração</legend>
@@ -157,6 +210,7 @@
             <span>Li e concordo com a declaração acima.</span>
           </label>
         </fieldset>
+
         <fieldset>
           <legend>Assinatura digital</legend>
           <div class="signature-wrap">
@@ -167,6 +221,7 @@
           </div>
           <small>Assine com mouse (PC) ou dedo/caneta (mobile).</small>
         </fieldset>
+
         <div class="actions">
           <button type="button" class="btn-secondary prev">Voltar</button>
           <button type="submit" id="enviar" class="btn-primary">Enviar cadastro</button>
@@ -175,6 +230,7 @@
       </section>
     </form>
   </main>
+
   <footer class="container"><small>© SND — RH</small></footer>
   <script src="app.js"></script>
 </body>
