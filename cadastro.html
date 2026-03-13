@@ -15,7 +15,7 @@
   <main class="container">
     <ol id="steps" class="steps">
       <li class="active">1. Dados pessoais</li>
-      <li>2. Dados e Documentos</li>
+      <li>2. Documentos e Complementares</li>
       <li>3. Declaração e assinatura</li>
     </ol>
 
@@ -23,14 +23,17 @@
       <!-- ========== ETAPA 1 ========== -->
       <section class="step" data-step="1">
         <fieldset>
-          <legend>Dados Pessoais</legend>
+          <legend>Informações Pessoais</legend>
           <div class="grid">
             <label>Nome completo*<input required name="nomeCompleto" type="text" autocomplete="name"/></label>
-            <label>Data de nascimento*<input required name="dataNascimento" type="date"/></label>
-            <label>Local de nascimento<input name="localNascimento" type="text"/></label>
+            <label>E-mail*<input required name="email" type="email"/></label>
+            <label>Telefone*<input required name="telCel" type="text" inputmode="numeric"/></label>
 
-            <label>Estado civil
-              <select name="estadoCivil">
+            <label>Data de Nascimento*<input required name="dataNascimento" type="date"/></label>
+            <label>Local de Nascimento*<input required name="localNascimento" type="text"/></label>
+
+            <label>Estado civil*
+              <select name="estadoCivil" required>
                 <option value="">Selecione…</option>
                 <option>Solteiro(a)</option>
                 <option>Casado(a)</option>
@@ -40,8 +43,13 @@
               </select>
             </label>
 
-            <label>Grau de escolaridade
-              <select name="grauEscolaridade">
+            <label id="conjugeWrapper" class="hidden">
+              Nome do(a) cônjuge/companheiro(a)*
+              <input name="conjuge" type="text"/>
+            </label>
+
+            <label>Escolaridade*
+              <select name="grauEscolaridade" required>
                 <option value="">Selecione…</option>
                 <option>Fundamental</option>
                 <option>Médio</option>
@@ -53,8 +61,8 @@
               </select>
             </label>
 
-            <label>Raça/Cor
-              <select name="racaCor">
+            <label>Raça/Cor*
+              <select name="racaCor" required>
                 <option value="">Selecione…</option>
                 <option>Parda</option>
                 <option>Branca</option>
@@ -64,23 +72,8 @@
               </select>
             </label>
 
-            <label>Nome do Pai<input name="nomePai" type="text" /></label>
-            <label>Nome da Mãe<input name="nomeMae" type="text" /></label>
-
-            <!-- Exibição apenas informativa; o upload para casados é controlado por pergunta específica na Etapa 2 -->
-            <label id="conjugeWrapper" class="hidden">
-              Nome do(a) cônjuge/companheiro(a)
-              <input name="conjuge" type="text"/>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Contatos</legend>
-          <div class="grid">
-            <label>E-mail*<input required name="email" type="email"/></label>
-            <label>Telefone celular*<input required name="telCel" type="text" inputmode="numeric"/></label>
-            <label>Telefone fixo<input name="telFixo" type="text" inputmode="numeric"/></label>
+            <label>Nome do Pai*<input required name="nomePai" type="text" placeholder="Se não houver, digite: Não declarado"/></label>
+            <label>Nome da Mãe*<input required name="nomeMae" type="text"/></label>
           </div>
         </fieldset>
 
@@ -93,124 +86,180 @@
       <!-- ========== ETAPA 2 ========== -->
       <section class="step hidden" data-step="2">
         <fieldset>
-          <legend>Documentos (dados básicos)</legend>
+          <legend>Documentação Admissional</legend>
           <div class="grid">
-            <label>RG*<input required name="rgNumero" type="text"/></label>
-            <label>Órgão emissor/UF<input name="rgOrgaoUf" type="text" placeholder="ex.: SSP/SP"/></label>
-            <label>Data de emissão<input name="rgData" type="date"/></label>
+            <!-- Sexo Biológico e Reservista (regra corrigida) -->
+            <label>Sexo Biológico*
+              <select name="sexoBiologico" required>
+                <option value="">Selecione…</option>
+                <option>Masculino</option>
+                <option>Feminino</option>
+                <option>Outro</option>
+              </select>
+            </label>
+
+            <label id="reservistaPerguntaWrapper" class="hidden">
+              Possui Certificado de Reservista?*
+              <select name="reservistaTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+
+            <!-- Se possui = SIM, Código + Motivo tornam-se obrigatórios -->
+            <label id="reservistaCodigoWrapper" class="hidden">
+              Código do Certificado de Reservista*
+              <input name="reservistaCodigo" type="text" placeholder="Ex.: RA-123456-7"/>
+            </label>
+
+            <label id="dispensaMotivoWrapper" class="hidden">
+              Motivo da Dispensa*
+              <input name="dispensaMotivo" type="text" placeholder="Ex.: Excedente de Contingente"/>
+            </label>
+
+            <!-- RG / CPF / PIS / CTPS / Registro Profissional -->
+            <label>Doc. Identidade (RG)*<input required name="rgNumero" type="text"/></label>
+            <label>Órgão Emissor*<input required name="rgOrgaoUf" type="text" placeholder="Ex.: SSP/SP"/></label>
+            <label>Data de Emissão (RG)*<input required name="rgData" type="date"/></label>
 
             <label>CPF*<input required name="cpf" type="text" inputmode="numeric"/></label>
-            <label>PIS<input name="pis" type="text" inputmode="numeric"/></label>
 
-            <label>CTPS — Número<input name="ctpsNumero" type="text"/></label>
-            <label id="ctpsSerieWrapper" class="hidden">CTPS — Série<input name="ctpsSerie" type="text"/></label>
+            <label>PIS*<input required name="pis" type="text" placeholder="Se não possuir, digite: NAO POSSUI"/></label>
 
-            <label>Registro Profissional Nº<input name="registroProfissional" type="text"/></label>
-            <label id="regProfOrgaoUfWrapper" class="hidden">Órgão emissor/UF<input name="regProfOrgaoUf" type="text"/></label>
-            <label id="regProfDataWrapper" class="hidden">Data de expedição<input name="regProfData" type="date"/></label>
+            <label>CTPS Nº*<input required name="ctpsNumero" type="text"/></label>
+            <label id="ctpsSerieWrapper">
+              CTPS Série*<input required name="ctpsSerie" type="text"/>
+            </label>
+
+            <label>Registro Profissional (nº)<input name="registroProfissional" type="text" placeholder="Opcional"/></label>
+            <label id="regProfOrgaoUfWrapper" class="hidden">Órgão Emissor/Estado*<input name="regProfOrgaoUf" type="text" placeholder="Ex.: CREA/SP"/></label>
+            <label id="regProfDataWrapper" class="hidden">Data de Emissão (RP)*<input name="regProfData" type="date"/></label>
+
+            <!-- Título de Eleitor (dados) -->
+            <label>Zona Eleitoral*<input required name="tituloZona" type="text" inputmode="numeric"/></label>
+            <label>Seção Eleitoral*<input required name="tituloSecao" type="text" inputmode="numeric"/></label>
+            <label>Data de Emissão (Título)*<input required name="tituloData" type="date"/></label>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Endereço</legend>
           <div class="grid">
-            <label>Endereço (Rua/Av.)*<input required name="endereco" type="text"/></label>
+            <label>Endereço (Rua/Av.)*<input required name="endereco" type="text" placeholder="Ex.: Av. Copacabana"/></label>
             <label>Número*<input required name="numero" type="text"/></label>
             <label>Complemento<input name="complemento" type="text"/></label>
             <label>Bairro*<input required name="bairro" type="text"/></label>
             <label>Cidade*<input required name="cidade" type="text"/></label>
-            <label>Estado*<input required name="estado" type="text" maxlength="2" placeholder="UF"/></label>
-            <label>CEP*<input required name="cep" type="text" inputmode="numeric"/></label>
+
+            <label>Estado*
+              <select name="estado" required>
+                <option value="">UF…</option>
+                <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                <option>SP</option><option>SE</option><option>TO</option>
+              </select>
+            </label>
+
+            <label>CEP*<input required name="cep" type="text" inputmode="numeric" placeholder="Somente números"/></label>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Informações Complementares</legend>
           <div class="grid">
-            <label>Possui outro emprego?
-              <select name="outroEmprego">
+            <label>Possui outro Emprego?*
+              <select name="outroEmprego" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
             </label>
-            <label id="cnpjEmpresaWrapper" class="hidden">CNPJ da empresa<input name="cnpjEmpresa" type="text" inputmode="numeric"/></label>
+            <label id="cnpjEmpresaWrapper" class="hidden">CNPJ da Empresa*<input name="cnpjEmpresa" type="text" inputmode="numeric"/></label>
 
-            <label>É aposentado(a)?
-              <select name="aposentado">
+            <label>Possui Aposentadoria?*
+              <select name="aposentado" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
             </label>
-            <label id="dataAposentadoriaWrapper" class="hidden">Data da aposentadoria<input name="dataAposentadoria" type="date"/></label>
+            <label id="dataAposentadoriaWrapper" class="hidden">Data da Concessão da Aposentadoria*<input name="dataAposentadoria" type="date"/></label>
 
-            <label>Tem parente/familiar na SND?
-              <select name="temParenteSnd">
+            <label>Possui Algum Parente na SND?*
+              <select name="temParenteSnd" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
             </label>
             <label id="parentescoWrapper" class="hidden">
-              Nome do Parente
-              <input name="nomeParente" type="text" />
-              Grau de Parentesco
-              <input name="parentesco" type="text" />
+              Nome do Parente*<input name="nomeParente" type="text"/>
+              Grau de Parentesco*<input name="parentesco" type="text"/>
             </label>
           </div>
         </fieldset>
 
-        <!-- ===================== DOCUMENTOS OBRIGATÓRIOS (estilo Forms) ===================== -->
+        <!-- ===================== Documentos Obrigatórios (Uploads) ===================== -->
         <fieldset>
-          <legend>Documentos Obrigatórios</legend>
-          <p>O envio só é permitido quando todos os documentos exigidos (e condicionais) abaixo estiverem anexados.</p>
+          <legend>Documentos Obrigatórios (Uploads)</legend>
+          <p>Tipos aceitos: PDF, Word, Excel, PowerPoint, JPG/PNG. Tamanho máx.: 10 MB por arquivo.</p>
 
-          <!-- CTPS -->
+          <!-- Sempre obrigatórios -->
           <div id="up_ctps_wrapper">
-            <label>Carteira de Trabalho <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_ctps" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            <label>Carteira de Trabalho (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_ctps" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
-            <small>Se digital: gere um PDF com todas as páginas/dados.</small>
           </div>
 
-          <!-- RG (frente/verso) -->
           <div id="up_rg_wrapper">
-            <label>Documento de Identidade — Frente e Verso <strong>*</strong> (até 2 arquivos)
-              <input type="file" id="up_rg" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="2" />
+            <label>Documento de Identidade — Frente e Verso (até 2 arquivos) <strong>*</strong>
+              <input type="file" id="up_rg" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="2" />
             </label>
           </div>
 
-          <!-- CPF -->
           <div id="up_cpf_wrapper">
-            <label>CPF <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_cpf" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            <label>CPF (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_cpf" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- Reservista -->
-          <div class="grid">
-            <label>Possui certificado de Reservista? <strong>*</strong>
-              <select name="reservistaTem">
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
-          <div id="up_reservista_wrapper" class="hidden">
-            <label>Certificado de Reservista (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_reservista" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
-            </label>
-          </div>
-
-          <!-- Título de Eleitor -->
           <div id="up_titulo_wrapper">
-            <label>Título de Eleitor <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_titulo" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            <label>Título de Eleitor (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_titulo" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- PIS -->
+          <div id="up_comprov_resid_wrapper">
+            <label>Comprovante de Residência (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_comprov_resid" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <div id="up_diploma_wrapper">
+            <label>Diploma/Declaração de Escolaridade (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_diploma" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
+          <div id="up_dados_conta_wrapper">
+            <label>Dados da Conta Bancária (1 arquivo) <strong>*</strong>
+              <input type="file" id="up_dados_conta" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+            <small>Extrato ou foto do cartão (agência e conta legíveis).</small>
+          </div>
+
+          <!-- Condicionais -->
+          <!-- Upload do Certificado de Reservista: sempre VISÍVEL para Sexo=Masculino; OBRIGATÓRIO apenas se "Possui=Sim" -->
+          <div id="reservistaUploadWrapper" class="hidden">
+            <label>Certificado de Reservista (1 arquivo)
+              <input type="file" id="up_reservista" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
+            </label>
+          </div>
+
           <div class="grid">
             <label>Possui cadastro de PIS? <strong>*</strong>
-              <select name="pisTem">
+              <select name="pisTem" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
@@ -218,21 +267,13 @@
           </div>
           <div id="up_pis_wrapper" class="hidden">
             <label>PIS (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_pis" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+              <input type="file" id="up_pis" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- Comprovante de Residência -->
-          <div id="up_comprov_resid_wrapper">
-            <label>Comprovante de Residência <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_comprov_resid" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
-            </label>
-          </div>
-
-          <!-- Casamento -->
           <div class="grid">
             <label>Você é Casado(a)? <strong>*</strong>
-              <select name="casadoDoc">
+              <select name="casadoDoc" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
@@ -240,85 +281,52 @@
           </div>
           <div id="up_cert_casamento_wrapper" class="hidden">
             <label>Certidão de Casamento (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_cert_casamento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+              <input type="file" id="up_cert_casamento" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
           <div id="up_cpf_conjuge_wrapper" class="hidden">
             <label>CPF do Cônjuge (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_cpf_conjuge" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+              <input type="file" id="up_cpf_conjuge" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- Filhos -->
           <div class="grid">
             <label>Possui Filhos? <strong>*</strong>
-              <select name="filhosTem">
+              <select name="filhosTem" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
             </label>
           </div>
           <div id="up_certidao_filhos_wrapper" class="hidden">
-            <label>Certidão de Nascimento (Filhos) <strong>*</strong> (até 10 arquivos)
-              <input type="file" id="up_certidao_filhos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="10" />
+            <label>Certidão de Nascimento (Filhos) — até 10 <strong>*</strong>
+              <input type="file" id="up_certidao_filhos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="10" />
             </label>
           </div>
           <div id="up_cpf_filhos_wrapper" class="hidden">
-            <label>CPF (Filhos) <strong>*</strong> (até 10 arquivos)
-              <input type="file" id="up_cpf_filhos" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="10" />
+            <label>CPF (Filhos) — até 10 <strong>*</strong>
+              <input type="file" id="up_cpf_filhos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="10" />
             </label>
           </div>
 
-          <!-- Emprego Anterior -->
           <div class="grid">
             <label>Possui Emprego Anterior? <strong>*</strong>
-              <select name="empregoAnteriorTem">
+              <select name="empregoAnteriorTem" required>
                 <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
             </label>
           </div>
           <div id="up_carta_referencia_wrapper" class="hidden">
-            <label>Carta de Referência do Último Emprego (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_carta_referencia" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+            <label>Carta de Referência do Último Emprego (1) <strong>*</strong>
+              <input type="file" id="up_carta_referencia" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
 
-          <!-- Diploma/Escolaridade -->
-          <div id="up_diploma_wrapper">
-            <label>Diploma de Conclusão ou Declaração de Escolaridade <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_diploma" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
-            </label>
-          </div>
-
-          <!-- Conta Bancária -->
-          <div class="grid">
-            <label>Possui Conta Corrente no Banco Itaú? <strong>*</strong>
-              <select name="contaItauTem">
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
-          <div id="up_dados_conta_wrapper">
-            <label>Dados da Conta Bancária <strong>*</strong> (1 arquivo)
-              <input type="file" id="up_dados_conta" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
-            </label>
-            <small>Extrato, ou foto do cartão (agência e conta visíveis), etc.</small>
-          </div>
-
-          <!-- Carteira de Registro Profissional -->
-          <div class="grid">
-            <label>Possui Carteira de Registro Profissional?
-              <select name="regProfCarteiraTem">
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </label>
-          </div>
-          <div id="up_carteira_regprof_wrapper" class="hidden">
-            <label>Carteira de Registro Profissional (1 arquivo) <strong>*</strong>
-              <input type="file" id="up_carteira_regprof" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" data-max="1" />
+          <!-- Carteira de Registro Profissional (opcional) — SEM exigência -->
+          <div id="up_carteira_regprof_wrapper">
+            <label>Carteira de Registro Profissional (1) — opcional
+              <input type="file" id="up_carteira_regprof" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
           </div>
         </fieldset>
@@ -349,9 +357,7 @@
           <legend>Assinatura digital</legend>
           <div class="signature-wrap">
             <canvas id="signature" width="600" height="180" aria-label="Área para assinatura"></canvas>
-            <div class="sig-actions">
-              <button type="button" id="limparAssinatura" class="btn-secondary">Limpar</button>
-            </div>
+            <div class="sig-actions"><button type="button" id="limparAssinatura" class="btn-secondary">Limpar</button></div>
           </div>
           <small>Assine com mouse (PC) ou dedo/caneta (mobile).</small>
         </fieldset>
