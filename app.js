@@ -4,7 +4,7 @@
     if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl;
   });
 
-  // --- navegação entre etapas ---
+  // --------- steps ----------
   const steps = Array.from(document.querySelectorAll('.step'));
   const stepsHeader = Array.from(document.querySelectorAll('#steps li'));
   let current = 0;
@@ -21,10 +21,14 @@
   }));
   document.querySelectorAll('.prev').forEach(btn=>btn.addEventListener('click',()=>updateStep(Math.max(current-1,0))));
 
-  const form=document.getElementById('cadastro-form'); if(!form) return;
+  const form=document.getElementById('cadastro-form');
+  if(!form) return;
 
-  // --- helpers ---
+  // --------- helpers ----------
   const onlyDigits=v=>(v||'').replace(/\D+/g,'');
+  const q = sel => form.querySelector(sel);
+  const gid = id => document.getElementById(id);
+
   function setRequiredIn(wrapperEl, on){
     if(!wrapperEl) return;
     wrapperEl.querySelectorAll('input, select, textarea').forEach(el=>{
@@ -37,121 +41,129 @@
     setRequiredIn(wrapperEl, show && makeRequired);
   }
 
-  // --- dados condicionais já existentes ---
-  const outroEmprego=form.querySelector('[name=outroEmprego]');
-  const cnpjWrapper=document.getElementById('cnpjEmpresaWrapper');
+  // --------- Ramificações de dados (Etapa 1/2) ----------
+  const estadoCivil=q('[name=estadoCivil]'); const conjugeWrapper=gid('conjugeWrapper');
+  function onEstadoCivilChange(){
+    const v=(estadoCivil?.value||'').toLowerCase();
+    toggleWrapper(conjugeWrapper, v.includes('casado')||v.includes('união'), true);
+  }
+  if(estadoCivil){ estadoCivil.addEventListener('change', onEstadoCivilChange); onEstadoCivilChange(); }
+
+  const outroEmprego=q('[name=outroEmprego]'); const cnpjWrapper=gid('cnpjEmpresaWrapper');
   if(outroEmprego){
     outroEmprego.addEventListener('change', e=>{
-      const show=(e.target.value==='sim');
-      toggleWrapper(cnpjWrapper, show, show);
+      const show=(e.target.value==='sim'); toggleWrapper(cnpjWrapper, show, show);
     });
     toggleWrapper(cnpjWrapper, (outroEmprego.value==='sim'), (outroEmprego.value==='sim'));
   }
 
-  const aposentado=form.querySelector('[name=aposentado]');
-  const aposentWrapper=document.getElementById('dataAposentadoriaWrapper');
+  const aposentado=q('[name=aposentado]'); const aposentWrapper=gid('dataAposentadoriaWrapper');
   if(aposentado){
     aposentado.addEventListener('change', e=>{
-      const show=(e.target.value==='sim');
-      toggleWrapper(aposentWrapper, show, show);
+      const show=(e.target.value==='sim'); toggleWrapper(aposentWrapper, show, show);
     });
     toggleWrapper(aposentWrapper, (aposentado.value==='sim'), (aposentado.value==='sim'));
   }
 
-  const temParente=form.querySelector('[name=temParenteSnd]');
-  const parentescoWrapper=document.getElementById('parentescoWrapper');
+  const temParente=q('[name=temParenteSnd]'); const parentescoWrapper=gid('parentescoWrapper');
   if(temParente){
     temParente.addEventListener('change', e=>{
-      const show=(e.target.value==='sim');
-      toggleWrapper(parentescoWrapper, show, show);
+      const show=(e.target.value==='sim'); toggleWrapper(parentescoWrapper, show, show);
     });
     toggleWrapper(parentescoWrapper, (temParente.value==='sim'), (temParente.value==='sim'));
   }
 
-  const estadoCivil=form.querySelector('[name=estadoCivil]');
-  const conjugeWrapper=document.getElementById('conjugeWrapper');
-  function onEstadoCivilChange(){
-    const v=(estadoCivil?.value||'').toLowerCase();
-    const precisaConjuge=(v.includes('casado')||v.includes('união'));
-    toggleWrapper(conjugeWrapper, precisaConjuge, true);
+  // Registro Profissional -> ramificação
+  const regNum=q('[name=registroProfissional]'); const regOrgao=gid('regProfOrgaoUfWrapper'); const regData=gid('regProfDataWrapper');
+  function onRegChange(){
+    const has=!!(regNum && regNum.value.trim());
+    toggleWrapper(regOrgao, has, has);
+    toggleWrapper(regData, has, has);
   }
-  if(estadoCivil){ estadoCivil.addEventListener('change', onEstadoCivilChange); onEstadoCivilChange(); }
+  if(regNum){ regNum.addEventListener('input', onRegChange); onRegChange(); }
 
-  const ctpsNumero=form.querySelector('[name=ctpsNumero]');
-  const ctpsSerieWrapper=document.getElementById('ctpsSerieWrapper');
-  function onCtpsNumeroInput(){
-    const hasNum=!!(ctpsNumero && ctpsNumero.value.trim());
-    toggleWrapper(ctpsSerieWrapper, hasNum, hasNum);
+  // --------- Sexo Biológico & Reservista (regra corrigida) ----------
+  const sexo=q('[name=sexoBiologico]');
+  const reservistaPerguntaWrapper=gid('reservistaPerguntaWrapper');
+  const reservistaCodigoWrapper=gid('reservistaCodigoWrapper');
+  const dispensaMotivoWrapper=gid('dispensaMotivoWrapper');
+  const reservistaTem = q('[name=reservistaTem]');
+
+  function updateReservistaBlocks(){
+    const isMasc=(sexo?.value||'').toLowerCase()==='masculino';
+
+    // Pergunta "Possui certificado?" só para Masculino
+    toggleWrapper(reservistaPerguntaWrapper, isMasc, isMasc);
+
+    const tem=(reservistaTem?.value||'nao');
+    const precisaDados = isMasc && (tem==='sim');
+
+    // Se possui = SIM => obriga Código + Motivo
+    toggleWrapper(reservistaCodigoWrapper, precisaDados, precisaDados);
+    toggleWrapper(dispensaMotivoWrapper, precisaDados, precisaDados);
+
+    // Upload fica visível apenas para Masculino; obrigatório só quando tem=sim (feito no uploadMap)
+    toggleWrapper(gid('reservistaUploadWrapper'), isMasc, false);
   }
-  if(ctpsNumero){ ctpsNumero.addEventListener('input', onCtpsNumeroInput); onCtpsNumeroInput(); }
+  if(sexo){ sexo.addEventListener('change', updateReservistaBlocks); }
+  if(reservistaTem){ reservistaTem.addEventListener('change', updateReservistaBlocks); }
+  updateReservistaBlocks();
 
-  const registroProf=form.querySelector('[name=registroProfissional]');
-  const regProfOrgaoUfWrapper=document.getElementById('regProfOrgaoUfWrapper');
-  const regProfDataWrapper=document.getElementById('regProfDataWrapper');
-  function onRegProfChange(){
-    const hasReg=!!(registroProf && registroProf.value.trim());
-    toggleWrapper(regProfOrgaoUfWrapper, hasReg, hasReg);
-    toggleWrapper(regProfDataWrapper, hasReg, hasReg);
+  // PIS obrigatório (texto) com instrução
+  const pisInput=q('[name=pis]');
+  if(pisInput){
+    pisInput.addEventListener('blur', ()=>{
+      if(!pisInput.value.trim()){
+        pisInput.setCustomValidity('Campo obrigatório. Se não possuir, digite: NAO POSSUI.');
+      }else{
+        pisInput.setCustomValidity('');
+      }
+    });
   }
-  if(registroProf){ registroProf.addEventListener('input', onRegProfChange); onRegProfChange(); }
 
-  // --- controles de documentos (ramificações) ---
-  const selects = {
-    reservistaTem: form.querySelector('[name=reservistaTem]'),
-    pisTem:        form.querySelector('[name=pisTem]'),
-    casadoDoc:     form.querySelector('[name=casadoDoc]'),
-    filhosTem:     form.querySelector('[name=filhosTem]'),
-    empregoAnteriorTem: form.querySelector('[name=empregoAnteriorTem]'),
-    contaItauTem:  form.querySelector('[name=contaItauTem]'),
-    regProfCarteiraTem: form.querySelector('[name=regProfCarteiraTem]')
-  };
-  const wrappers = {
-    up_reservista_wrapper: document.getElementById('up_reservista_wrapper'),
-    up_pis_wrapper:        document.getElementById('up_pis_wrapper'),
-    up_cert_casamento_wrapper: document.getElementById('up_cert_casamento_wrapper'),
-    up_cpf_conjuge_wrapper:    document.getElementById('up_cpf_conjuge_wrapper'),
-    up_certidao_filhos_wrapper: document.getElementById('up_certidao_filhos_wrapper'),
-    up_cpf_filhos_wrapper:      document.getElementById('up_cpf_filhos_wrapper'),
-    up_carta_referencia_wrapper: document.getElementById('up_carta_referencia_wrapper'),
-    up_carteira_regprof_wrapper: document.getElementById('up_carteira_regprof_wrapper')
-  };
-  function updateUploadsUI(){
-    toggleWrapper(wrappers.up_reservista_wrapper, (selects.reservistaTem?.value==='sim'), true);
-    toggleWrapper(wrappers.up_pis_wrapper,        (selects.pisTem?.value==='sim'),        true);
-    toggleWrapper(wrappers.up_cert_casamento_wrapper, (selects.casadoDoc?.value==='sim'), true);
-    toggleWrapper(wrappers.up_cpf_conjuge_wrapper,    (selects.casadoDoc?.value==='sim'), true);
-    toggleWrapper(wrappers.up_certidao_filhos_wrapper,(selects.filhosTem?.value==='sim'), true);
-    toggleWrapper(wrappers.up_cpf_filhos_wrapper,     (selects.filhosTem?.value==='sim'), true);
-    toggleWrapper(wrappers.up_carta_referencia_wrapper,(selects.empregoAnteriorTem?.value==='sim'), true);
-    toggleWrapper(wrappers.up_carteira_regprof_wrapper,(selects.regProfCarteiraTem?.value==='sim'), true);
-  }
-  Object.values(selects).forEach(sel=>{ if(sel) sel.addEventListener('change', updateUploadsUI); });
-  updateUploadsUI();
-
-  // --- mapa dos uploads (id, rótulo e regras) ---
+  // --------- Uploads (mapa + validação) ----------
   const uploadMap = [
-    { id:'up_ctps',             label:'CTPS',                       required: ()=>true, max:1 },
-    { id:'up_rg',               label:'RG',                         required: ()=>true, max:2 },
-    { id:'up_cpf',              label:'CPF',                        required: ()=>true, max:1 },
-    { id:'up_reservista',       label:'Certificado_Reservista',     required: ()=>selects.reservistaTem?.value==='sim', max:1, wrapperId:'up_reservista_wrapper' },
-    { id:'up_titulo',           label:'Titulo_Eleitor',             required: ()=>true, max:1 },
-    { id:'up_pis',              label:'PIS',                        required: ()=>selects.pisTem?.value==='sim',        max:1, wrapperId:'up_pis_wrapper' },
-    { id:'up_comprov_resid',    label:'Comprovante_Residencia',     required: ()=>true, max:1 },
-    { id:'up_cert_casamento',   label:'Certidao_Casamento',         required: ()=>selects.casadoDoc?.value==='sim',     max:1, wrapperId:'up_cert_casamento_wrapper' },
-    { id:'up_cpf_conjuge',      label:'CPF_Conjuge',                required: ()=>selects.casadoDoc?.value==='sim',     max:1, wrapperId:'up_cpf_conjuge_wrapper' },
-    { id:'up_certidao_filhos',  label:'Certidao_Nascimento_Filho',  required: ()=>selects.filhosTem?.value==='sim',     max:10, wrapperId:'up_certidao_filhos_wrapper' },
-    { id:'up_cpf_filhos',       label:'CPF_Filho',                  required: ()=>selects.filhosTem?.value==='sim',     max:10, wrapperId:'up_cpf_filhos_wrapper' },
-    { id:'up_carta_referencia', label:'Carta_Referencia',           required: ()=>selects.empregoAnteriorTem?.value==='sim', max:1, wrapperId:'up_carta_referencia_wrapper' },
-    { id:'up_diploma',          label:'Diploma_Escolaridade',       required: ()=>true, max:1 },
-    { id:'up_dados_conta',      label:'Dados_Conta_Bancaria',       required: ()=>true, max:1 },
-    { id:'up_carteira_regprof', label:'Carteira_Registro_Prof',     required: ()=>selects.regProfCarteiraTem?.value==='sim', max:1, wrapperId:'up_carteira_regprof_wrapper' }
+    // sempre obrigatórios
+    { id:'up_ctps',            label:'CTPS',                      required:()=>true, max:1 },
+    { id:'up_rg',              label:'RG',                        required:()=>true, max:2 },
+    { id:'up_cpf',             label:'CPF',                       required:()=>true, max:1 },
+    { id:'up_titulo',          label:'Titulo_Eleitor',            required:()=>true, max:1 },
+    { id:'up_comprov_resid',   label:'Comprovante_Residencia',    required:()=>true, max:1 },
+    { id:'up_diploma',         label:'Diploma_Escolaridade',      required:()=>true, max:1 },
+    { id:'up_dados_conta',     label:'Dados_Conta_Bancaria',      required:()=>true, max:1 },
+
+    // condicionais
+    { id:'up_reservista',
+      label:'Certificado_Reservista',
+      required:()=> ( (sexo?.value||'').toLowerCase()==='masculino' && (reservistaTem?.value||'nao')==='sim' ),
+      max:1,
+      wrapperId:'reservistaUploadWrapper'
+    },
+
+    { id:'up_pis',             label:'PIS',                       required:()=> (q('[name=pisTem]')?.value==='sim'), max:1, wrapperId:'up_pis_wrapper' },
+
+    { id:'up_cert_casamento',  label:'Certidao_Casamento',        required:()=> (q('[name=casadoDoc]')?.value==='sim'), max:1, wrapperId:'up_cert_casamento_wrapper' },
+    { id:'up_cpf_conjuge',     label:'CPF_Conjuge',               required:()=> (q('[name=casadoDoc]')?.value==='sim'), max:1, wrapperId:'up_cpf_conjuge_wrapper' },
+
+    { id:'up_certidao_filhos', label:'Certidao_Nascimento_Filho', required:()=> (q('[name=filhosTem]')?.value==='sim'), max:10, wrapperId:'up_certidao_filhos_wrapper' },
+    { id:'up_cpf_filhos',      label:'CPF_Filho',                 required:()=> (q('[name=filhosTem]')?.value==='sim'), max:10, wrapperId:'up_cpf_filhos_wrapper' },
+
+    { id:'up_carta_referencia',label:'Carta_Referencia',          required:()=> (q('[name=empregoAnteriorTem]')?.value==='sim'), max:1, wrapperId:'up_carta_referencia_wrapper' },
+
+    // opcional — carteira de registro profissional
+    { id:'up_carteira_regprof',label:'Carteira_Registro_Prof',    required:()=>false, max:1 }
   ];
 
-  // --- assinatura ---
-  const canvas=document.getElementById('signature');
-  const ctx=canvas?canvas.getContext('2d'):null;
+  // Alguns selects alteram uploads condicionais
+  ['pisTem','casadoDoc','filhosTem','empregoAnteriorTem'].forEach(n=>{
+    const sel=q(`[name=${n}]`); if(sel){ sel.addEventListener('change', ()=>{/* wrappers são tratados no submit e na UI inicial */}); }
+  });
+
+  // --------- Assinatura ----------
+  const canvas=gid('signature'); const ctx=canvas?canvas.getContext('2d'):null;
   let drawing=false,lastX=0,lastY=0, emptySignature=true;
-  function pos(e){ const r=canvas.getBoundingClientRect(); const t=(e.touches?e.touches[0]:e);
+  function pos(e){
+    const r=canvas.getBoundingClientRect(); const t=(e.touches?e.touches[0]:e);
     return {x:(t.clientX-r.left)*(canvas.width/r.width), y:(t.clientY-r.top)*(canvas.height/r.height)};
   }
   function start(e){ drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; e.preventDefault(); }
@@ -165,7 +177,7 @@
     canvas.addEventListener('touchstart',start,{passive:false});
     canvas.addEventListener('touchmove',move,{passive:false});
     canvas.addEventListener('touchend',end);
-    document.getElementById('limparAssinatura')?.addEventListener('click',()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); emptySignature=true; });
+    gid('limparAssinatura')?.addEventListener('click',()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); emptySignature=true; });
   }
 
   async function fileToBase64(f){
@@ -180,29 +192,30 @@
     });
   }
 
-  // --- SUBMIT ---
+  // --------- SUBMIT ----------
   form.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
-    const out=document.getElementById('resultado'); out.textContent='';
+    const out=gid('resultado'); out.textContent='';
 
-    if(!document.getElementById('consentimento').checked){ out.textContent='Você deve ler e concordar com a declaração.'; return; }
+    if(!gid('consentimento').checked){ out.textContent='Você deve ler e concordar com a declaração.'; return; }
     if(canvas && emptySignature){ out.textContent='Por favor, assine no campo de assinatura.'; return; }
     if(!ENDPOINT_URL){ out.textContent='Erro: config.json não encontrado ou endpointUrl ausente.'; return; }
 
     // 1) valida uploads e empacota anexos
     const anexos=[];
     for(const item of uploadMap){
-      const input=document.getElementById(item.id);
-      if(!input) continue;
+      const input=gid(item.id); if(!input) continue;
+
+      // (Re)sinaliza wrappers condicionais
+      if(item.wrapperId){
+        const need=item.required();
+        toggleWrapper(gid(item.wrapperId), need || input.closest('#reservistaUploadWrapper')!==null ? !0 : need, need);
+        // ^ para reservista: mantém visível em Masc mesmo quando não obrigatório (logica já tratada)
+      }
 
       const files=input.files;
       const isRequired=item.required();
       const max=parseInt(input.dataset.max||item.max||1,10);
-
-      if(item.wrapperId){
-        const w=document.getElementById(item.wrapperId);
-        toggleWrapper(w, isRequired, isRequired);
-      }
 
       if(isRequired && (!files || files.length===0)){
         out.textContent=`Anexe o documento obrigatório: ${item.label}.`; input.focus(); return;
@@ -226,23 +239,24 @@
 
     // 2) coleta/sanitiza dados
     const dados=Object.fromEntries(new FormData(form).entries());
-    // checklist "neutro" apenas p/ compatibilidade de schema (não usado p/ validar)
-    dados.checklist = { rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false };
 
+    // Sanitização básica
     dados.cpf=onlyDigits(dados.cpf);
     dados.cep=onlyDigits(dados.cep);
-    dados.pis=onlyDigits(dados.pis);
     dados.ctpsNumero=onlyDigits(dados.ctpsNumero);
     dados.ctpsSerie=onlyDigits(dados.ctpsSerie);
-    dados.telFixo=onlyDigits(dados.telFixo);
     dados.telCel=onlyDigits(dados.telCel);
+    if(dados.telFixo) dados.telFixo=onlyDigits(dados.telFixo);
     if(dados.cnpjEmpresa) dados.cnpjEmpresa=onlyDigits(dados.cnpjEmpresa);
 
-    // 3) assinatura
+    // Compatibilidade (não usamos checklist para validar, deixo neutro)
+    dados.checklist = { rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false };
+
+    // 3) assinatura (PNG base64)
     let assinaturaBase64=''; if(canvas){ assinaturaBase64=canvas.toDataURL('image/png').split(',')[1]; }
 
     const payload={
-      metadata:{fonte:'form-web-snd',versao:'2.6.0',enviadoEm:new Date().toISOString()},
+      metadata:{fonte:'form-web-snd',versao:'2.8.0',enviadoEm:new Date().toISOString()},
       dados,
       anexos,
       declaracao:{
@@ -256,7 +270,7 @@ Por fim, fico ciente das responsabilidades pelas declarações prestada e firmo 
       }
     };
 
-    const btn=document.getElementById('enviar'); btn.disabled=true; btn.textContent='Enviando…';
+    const btn=gid('enviar'); btn.disabled=true; btn.textContent='Enviando…';
     try{
       const resp=await fetch(ENDPOINT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       out.textContent = resp.ok ? 'Cadastro enviado com sucesso. Obrigado!' : 'Falha ao enviar.';
