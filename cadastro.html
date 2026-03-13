@@ -88,7 +88,7 @@
         <fieldset>
           <legend>Documentação Admissional</legend>
           <div class="grid">
-            <!-- Sexo Biológico e Reservista (regra corrigida) -->
+            <!-- Sexo / Reservista (regra BR) -->
             <label>Sexo Biológico*
               <select name="sexoBiologico" required>
                 <option value="">Selecione…</option>
@@ -106,7 +106,6 @@
               </select>
             </label>
 
-            <!-- Se possui = SIM, Código + Motivo tornam-se obrigatórios -->
             <label id="reservistaCodigoWrapper" class="hidden">
               Código do Certificado de Reservista*
               <input name="reservistaCodigo" type="text" placeholder="Ex.: RA-123456-7"/>
@@ -117,7 +116,7 @@
               <input name="dispensaMotivo" type="text" placeholder="Ex.: Excedente de Contingente"/>
             </label>
 
-            <!-- RG / CPF / PIS / CTPS / Registro Profissional -->
+            <!-- RG / CPF / PIS -->
             <label>Doc. Identidade (RG)*<input required name="rgNumero" type="text"/></label>
             <label>Órgão Emissor*<input required name="rgOrgaoUf" type="text" placeholder="Ex.: SSP/SP"/></label>
             <label>Data de Emissão (RG)*<input required name="rgData" type="date"/></label>
@@ -126,13 +125,27 @@
 
             <label>PIS*<input required name="pis" type="text" placeholder="Se não possuir, digite: NAO POSSUI"/></label>
 
-            <label>CTPS Nº*<input required name="ctpsNumero" type="text"/></label>
-            <label id="ctpsSerieWrapper">
-              CTPS Série*<input required name="ctpsSerie" type="text"/>
+            <!-- CTPS -->
+            <label>CTPS (TIPO)*
+              <select name="ctpsTipo" required>
+                <option value="">Selecione…</option>
+                <option>Físico</option>
+                <option>Digital</option>
+              </select>
             </label>
 
-            <label>Registro Profissional (nº)<input name="registroProfissional" type="text" placeholder="Opcional"/></label>
-            <label id="regProfOrgaoUfWrapper" class="hidden">Órgão Emissor/Estado*<input name="regProfOrgaoUf" type="text" placeholder="Ex.: CREA/SP"/></label>
+            <label id="ctpsNumeroWrapper" class="hidden">CTPS Nº*<input name="ctpsNumero" type="text"/></label>
+            <label id="ctpsSerieWrapper" class="hidden">CTPS Série*<input name="ctpsSerie" type="text"/></label>
+
+            <!-- Registro Profissional -->
+            <label>Possui Registro Profissional?
+              <select name="regProfTem">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+            <label id="regProfNumeroWrapper" class="hidden">Registro Profissional (nº)*<input name="registroProfissional" type="text"/></label>
+            <label id="regProfOrgaoUfWrapper" class="hidden">Órgão Emissor/Estado (RP)*<input name="regProfOrgaoUf" type="text" placeholder="Ex.: CREA/SP"/></label>
             <label id="regProfDataWrapper" class="hidden">Data de Emissão (RP)*<input name="regProfData" type="date"/></label>
 
             <!-- Título de Eleitor (dados) -->
@@ -242,15 +255,28 @@
             </label>
           </div>
 
-          <div id="up_dados_conta_wrapper">
+          <!-- Itaú (Item 61/62): se SIM => Agência/Conta + upload obrigatório -->
+          <div class="grid">
+            <label>Possui Conta Corrente no Banco Itaú? <strong>*</strong>
+              <select name="contaItauTem" required>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </label>
+          </div>
+          <div id="itauDadosWrapper" class="hidden">
+            <label>Agência*<input name="agencia" type="text" inputmode="numeric"/></label>
+            <label>Conta‑Corrente*<input name="contaCorrente" type="text" inputmode="numeric"/></label>
+          </div>
+          <div id="up_dados_conta_wrapper" class="hidden">
             <label>Dados da Conta Bancária (1 arquivo) <strong>*</strong>
               <input type="file" id="up_dados_conta" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
             </label>
-            <small>Extrato ou foto do cartão (agência e conta legíveis).</small>
+            <small>Pode ser Extrato Bancário, ou Foto do Cartão da Conta (com Agência e Conta‑Corrente visíveis).</small>
           </div>
 
-          <!-- Condicionais -->
-          <!-- Upload do Certificado de Reservista: sempre VISÍVEL para Sexo=Masculino; OBRIGATÓRIO apenas se "Possui=Sim" -->
+          <!-- Condicionais diversas -->
+          <!-- Reservista: visível p/ Masculino, obrigatório upload só se Possui=Sim -->
           <div id="reservistaUploadWrapper" class="hidden">
             <label>Certificado de Reservista (1 arquivo)
               <input type="file" id="up_reservista" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
@@ -323,7 +349,7 @@
             </label>
           </div>
 
-          <!-- Carteira de Registro Profissional (opcional) — SEM exigência -->
+          <!-- Carteira de Registro Profissional (opcional) -->
           <div id="up_carteira_regprof_wrapper">
             <label>Carteira de Registro Profissional (1) — opcional
               <input type="file" id="up_carteira_regprof" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" data-max="1" />
