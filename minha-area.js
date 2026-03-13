@@ -15,7 +15,6 @@
   function showArea(){ loginSection.classList.add('hidden'); areaSection.classList.remove('hidden'); }
   function showLogin(){ areaSection.classList.add('hidden'); loginSection.classList.remove('hidden'); }
 
-  // Utilitários
   const onlyDigits=v=>(v||'').replace(/\D+/g,'');
   async function fileToBase64(f){
     return new Promise((resolve,reject)=>{
@@ -45,9 +44,8 @@
     try{
       const resp=await fetch(ENDPOINT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(!resp.ok){ loginMsg.textContent='Não foi possível localizar seu cadastro. Verifique o e‑mail.'; return; }
-      const data = await resp.json(); // espera {dados:{...}, pastaArquivos:"..."} retornado pelo Flow
+      const data = await resp.json(); // {dados:{...}, pastaArquivos:"..."}
       const d = data?.dados || {};
-      // Monta resumo da Tela 1 (somente leitura)
       resumoTela1.innerHTML = `
         <label>Nome completo<span>${d.nomeCompleto||'-'}</span></label>
         <label>E‑mail<span>${d.email||email}</span></label>
@@ -70,7 +68,7 @@
     }
   });
 
-  // Upload livre na Minha Área -> envia para a mesma pasta do candidato (Flow localiza pela planilha)
+  // Upload livre -> Flow salva na mesma pasta do candidato
   uploadForm.addEventListener('submit', async (ev)=>{
     ev.preventDefault(); uploadMsg.textContent='';
     if(!ENDPOINT_URL){ uploadMsg.textContent='Erro: config.json ausente.'; return; }
@@ -82,8 +80,8 @@
     const anexos=[];
     for(const f of files){
       if(f.size>10*1024*1024){ uploadMsg.textContent=`O arquivo ${f.name} excede 10 MB.`; return; }
-      const ext = (f.name.split('.').pop()||'').toLowerCase();
-      const allowed = ['pdf','doc','docx','xls','xlsx','ppt','pptx','jpg','jpeg','png'];
+      const ext=(f.name.split('.').pop()||'').toLowerCase();
+      const allowed=['pdf','doc','docx','xls','xlsx','ppt','pptx','jpg','jpeg','png'];
       if(!allowed.includes(ext)){ uploadMsg.textContent=`Tipo de arquivo não permitido: ${f.name}`; return; }
       const b64=await fileToBase64(f);
       anexos.push({ fileName:`Outros_${f.name}`, contentType:b64.contentType||f.type||'application/octet-stream', contentBase64:b64.contentBase64, size:f.size });
@@ -104,8 +102,5 @@
       uploadMsg.textContent='Erro de rede ao enviar arquivos.';
     }
   });
-
-  // inicia
-  (function(){})();
 
 })();
