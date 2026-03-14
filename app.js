@@ -1,56 +1,45 @@
 /* SND – Portal Admissional (app.js)
-   - Navegação por etapas + validações de dados
-   - Uploads opcionais (nenhum arquivo obrigatório)
-   - Integração Flow (HTTP POST via config.json)
-   - Logins rápidos na tela inicial (Candidato / Consultor em linhas)
-   - Primeiro acesso do Consultor (cadastro) -> metadata.modo = "consultor_registrar"
+   - 8 telas: Boas-vindas, Dados Pessoais, Documentação, Complementares, Uploads,
+              Declaração & Assinatura, Minha Área (Candidato), Portal do Consultor
+   - Uploads opcionais (sem selo e sem required)
+   - Assinatura: canvas + upload de imagem (JPG/JPEG/PNG). Upload tem prioridade.
+   - Integração com Flow (config.json): cadastro, consulta, upload adicional,
+     login/primeiro acesso consultor, autocomplete, detalhe/progresso, notificação.
 */
 
 let ENDPOINT_URL = null;
 fetch('config.json').then(r=>r.ok?r.json():null).then(cfg=>{
-  if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl;
+  ENDPOINT_URL = cfg?.endpointUrl || cfg?.flowUrl || null;
 });
 
-// ===== Elementos base =====
+// ===== Elementos principais =====
 const form = document.getElementById('admissionForm');
 const steps = Array.from(document.querySelectorAll('.step-card'));
 const timelineItems = Array.from(document.querySelectorAll('#timeline .step-nav-btn'));
 const progressBar = document.getElementById('progressBar');
-const stepCounter = document.getElementById('stepCounter');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const submitBtn = document.getElementById('submitBtn');
 const saveDraftBtn = document.getElementById('saveDraftBtn');
 const previewBtn = document.getElementById('previewBtn');
 const startFlowBtn = document.getElementById('startFlowBtn');
-const footerTitle = document.getElementById('footerTitle');
-const footerText = document.getElementById('footerText');
 const toast = document.getElementById('toast');
-const childrenRows = document.getElementById('childrenRows');
-const payloadPreview = document.getElementById('payloadPreview');
-const togglePayloadBtn = document.getElementById('togglePayloadBtn');
 const summaryDialog = document.getElementById('summaryDialog');
 const summaryContent = document.getElementById('summaryContent');
 const closeSummaryBtn = document.getElementById('closeSummaryBtn');
 const successScreen = document.getElementById('successScreen');
 const restartBtn = document.getElementById('restartBtn');
-const successSummaryBtn = document.getElementById('successSummaryBtn');
 
 const ALLOWED_EXT = ['pdf','jpg','jpeg','png'];
-const stepMeta = [
-  { title:'Boas-vindas', desc:'Avance para iniciar o preenchimento do portal.' },
-  { title:'Dados pessoais', desc:'Preencha informações pessoais, dependentes e endereço.' },
-  { title:'Documentação admissional', desc:'Informe documentação civil, PIS, CTPS e dados eleitorais.' },
-  { title:'Dados complementares', desc:'Registre informações adicionais para o processo interno.' },
-  { title:'Documentos (opcionais)', desc:'Envie anexos; você poderá complementar depois pela Minha Área.' }
-];
-
 let currentStep = 0;
+
+// ===== Utilidades =====
 const q = name => form.elements[name];
 const gid = id => document.getElementById(id);
 const onlyDigits = v => (v||'').replace(/\D+/g,'');
-function showToast(m){ toast.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2600); }
+function showToast(m){ toast.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2400); }
 function isVisibleField(el){ if(!el) return false; const card=el.closest('.step-card'); const hidden=el.closest('.hidden-by-rule'); return card?.classList.contains('active') && !hidden && !el.disabled; }
+const debounce=(fn,ms)=>{let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);}};
 
 // ===== Navegação =====
 function bindEvents(){
@@ -68,22 +57,26 @@ function bindEvents(){
   });
   closeSummaryBtn?.addEventListener('click', ()=> summaryDialog.close());
   restartBtn?.addEventListener('click', restartFlow);
-  successSummaryBtn?.addEventListener('click', openSummary);
-
-  togglePayloadBtn?.addEventListener('click', ()=>{
-    payloadPreview.classList.toggle('collapsed');
-    togglePayloadBtn.textContent = payloadPreview.classList.contains('collapsed') ? 'Exibir payload' : 'Ocultar payload';
-  });
 
   form.addEventListener('input', onFieldChange);
   form.addEventListener('change', onFieldChange);
-
   form.addEventListener('submit', onSubmit);
 
-  // Logins rápidos (Tela 0)
-  bindQuickLogins();
-}
+  // Assinatura
+  bindSignature();
 
+  // Minha Área (Candidato)
+  bindCandidateArea();
+
+  // Portal do Consultor
+  bindConsultantPortal();
+
+  // Logins rápidos na tela inicial
+  bindQuickLogins();
+
+  // Inicia feedback de uploads
+  initFileUploads();
+}
 function showStep(i){
   if(successScreen) successScreen.classList.add('hidden');
   form?.classList.remove('flow-complete');
@@ -92,9 +85,6 @@ function showStep(i){
   timelineItems.forEach((it,idx)=>{ it.classList.toggle('active', idx===i); it.classList.toggle('done', idx<i); });
   const progress = ((i+1)/steps.length)*100;
   progressBar.style.width = `${progress}%`;
-  stepCounter.textContent = `${i+1}/${steps.length}`;
-  footerTitle.textContent = stepMeta[i].title;
-  footerText.textContent = stepMeta[i].desc;
   prevBtn.disabled = (i===0);
   nextBtn.classList.toggle('hidden', i===steps.length-1);
   submitBtn.classList.toggle('hidden', i!==steps.length-1);
@@ -104,10 +94,10 @@ function onFieldChange(e){
   const t=e.target;
   if(t.id==='childrenCount' || t.id==='hasChildren'){ renderChildrenRows(); }
   if(t.matches('input[type="file"]')){ updateFileFeedback(t); }
-  if(t.matches('select, input')){ refreshConditionals(); updatePayloadPreview(); }
+  if(t.matches('select, input')){ refreshConditionals(); }
 }
 
-// ===== Condicionais =====
+// ===== Condicionais/Required =====
 function refreshConditionals(){
   document.querySelectorAll('.conditional').forEach(block=>{
     const [field, expected] = (block.dataset.showWhen||'').split('=');
@@ -119,7 +109,7 @@ function refreshConditionals(){
   syncRequired();
 }
 function syncRequired(){
-  // Campos de dados que permanecem obrigatórios conforme regras
+  // Campos de dados obrigatórios por regra
   const req = {
     spouseName: q('maritalStatus')?.value==='Casado(a)',
     childrenCount: q('hasChildren')?.value==='Sim',
@@ -145,18 +135,21 @@ function syncRequired(){
 
   // Todos os inputs de arquivo NÃO são obrigatórios
   form.querySelectorAll('input[type="file"]').forEach(inp=> inp.required = false);
-  // Filhos (dados) obrigatórios apenas quando hasChildren = "Sim"
-  childrenRows.querySelectorAll('input').forEach(inp=> inp.required = (q('hasChildren')?.value==='Sim'));
+
+  // Filhos (dados) obrigatórios quando hasChildren = "Sim"
+  const childrenRows = document.getElementById('childrenRows');
+  childrenRows?.querySelectorAll('input').forEach(inp=> inp.required = (q('hasChildren')?.value==='Sim'));
 }
 function clearHiddenFields(container){
   container.querySelectorAll('input, select').forEach(input=>{
     if(input.type==='file'){ input.value=''; updateFileFeedback(input); }
-    else if(!input.name.startsWith('child')){ input.value=''; }
+    else if(!input.name?.startsWith('child')){ input.value=''; }
   });
 }
 
 // ===== Filhos =====
 function renderChildrenRows(){
+  const childrenRows = document.getElementById('childrenRows');
   const count = Math.min(Math.max(Number(q('childrenCount')?.value||0),0),10);
   childrenRows.innerHTML='';
   for(let i=0;i<count;i++){
@@ -190,11 +183,10 @@ function updateFileFeedback(input){
   const fb=card.querySelector('.file-feedback');
   const files=Array.from(input.files||[]);
   card.classList.toggle('has-file', files.length>0);
-  if(!fb) return;
-  fb.textContent = files.length ? (files.length===1?`✔ ${files[0].name}`:`✔ ${files.length} arquivo(s)`) : '';
+  if(fb) fb.textContent = files.length ? (files.length===1?`✔ ${files[0].name}`:`✔ ${files.length} arquivo(s)`) : '';
 }
 
-// ===== Validações =====
+// ===== Validação =====
 function clearErrors(panel){
   panel.querySelectorAll('.invalid').forEach(el=>el.classList.remove('invalid'));
   panel.querySelectorAll('.error-text').forEach(el=>el.remove());
@@ -214,6 +206,7 @@ function validateCurrentStep(){
   clearErrors(panel);
   let valid=true;
   const fields=Array.from(panel.querySelectorAll('input, select')).filter(isVisibleField);
+
   fields.forEach(field=>{
     if(field.disabled) return;
     if(field.type==='file'){
@@ -226,10 +219,11 @@ function validateCurrentStep(){
     }
   });
 
-  if(currentStep===1 && q('hasChildren')?.value==='Sim'){
-    childrenRows.querySelectorAll('input').forEach(inp=>{
-      if(!String(inp.value||'').trim()){ valid=false; setFieldError(inp,'Preenchimento obrigatório.'); }
-    });
+  // Tela de Declaração & Assinatura (step 5)
+  if(currentStep===5){
+    const agree = gid('declAgree');
+    if(agree && !agree.checked){ valid=false; setFieldError(agree,'É obrigatório aceitar a declaração.'); }
+    if(!hasSignatureSelected()){ valid=false; setFieldError(gid('signUpload')||gid('signPad'),'Forneça sua assinatura (desenhe ou envie imagem).'); }
   }
   return valid;
 }
@@ -246,36 +240,50 @@ function restoreDraft(){
   try{ const s=JSON.parse(raw); Object.entries(s).forEach(([n,v])=>{ const f=q(n); if(f&&f.type!=='file') f.value=v; }); }catch{}
 }
 
-// ===== Resumo técnico =====
-function openSummary(){ updatePayloadPreview(); const p=buildPayloadPreview(); summaryContent.innerHTML=buildSummaryMarkup(p); summaryDialog.showModal(); }
-function buildSummaryMarkup(p){
-  const ch=p.dadosPessoais.filhos||[];
-  return `
-  <section class="summary-block"><h4>Dados pessoais</h4><ul>
-    <li><span>Nome</span><span>${p.dadosPessoais.nomeCompleto||'-'}</span></li>
-    <li><span>E-mail</span><span>${p.dadosPessoais.email||'-'}</span></li>
-    <li><span>Telefone</span><span>${p.dadosPessoais.telefone||'-'}</span></li>
-    <li><span>Estado civil</span><span>${p.dadosPessoais.estadoCivil||'-'}</span></li>
-    <li><span>Possui filhos</span><span>${p.dadosPessoais.possuiFilhos||'-'}</span></li>
-    <li><span>Qtd. filhos</span><span>${p.dadosPessoais.quantidadeFilhos||'0'}</span></li>
-  </ul></section>
-  <section class="summary-block"><h4>Endereço</h4><ul>
-    <li><span>Logradouro</span><span>${p.dadosPessoais.endereco.logradouro||'-'}</span></li>
-    <li><span>Número</span><span>${p.dadosPessoais.endereco.numero||'-'}</span></li>
-    <li><span>Cidade/UF</span><span>${p.dadosPessoais.endereco.cidade||'-'}/${p.dadosPessoais.endereco.estado||'-'}</span></li>
-    <li><span>CEP</span><span>${p.dadosPessoais.endereco.cep||'-'}</span></li>
-  </ul></section>
-  <section class="summary-block"><h4>Documentação</h4><ul>
-    <li><span>CPF</span><span>${p.documentacaoAdmissional.cpf||'-'}</span></li>
-    <li><span>CTPS (tipo)</span><span>${p.documentacaoAdmissional.ctpsTipo||'-'}</span></li>
-    <li><span>Título de Eleitor</span><span>${p.documentacaoAdmissional.tituloEleitor||'-'}</span></li>
-    <li><span>Possui PIS</span><span>${p.documentacaoAdmissional.possuiPis||'-'}</span></li>
-    <li><span>PIS Nº</span><span>${p.documentacaoAdmissional.numeroPis||'-'}</span></li>
-  </ul></section>
-  <section class="summary-block"><h4>Dependentes</h4><ul>
-    ${ch.length? ch.map((c,i)=>`<li><span>Filho ${i+1}</span><span>${c.nomeCompleto||'-'} · ${c.dataNascimento||'-'} · ${c.cpf||'-'}</span></li>`).join('') : '<li><span>Dependentes</span><span>Não informado</span></li>'}
-  </ul></section>`;
+// ===== Resumo (opcional) =====
+function openSummary(){
+  const p = buildPayloadPreview();
+  summaryContent.innerHTML = `<pre>${JSON.stringify(p,null,2)}</pre>`;
+  summaryDialog.showModal();
 }
+
+// ===== Submit → Flow (cadastro) =====
+form.addEventListener?.('submit', onSubmit);
+async function onSubmit(ev){
+  ev.preventDefault();
+  if(!validateCurrentStep()) return;
+  if(!ENDPOINT_URL){ showToast('Erro: config.json ausente.'); return; }
+
+  submitBtn.disabled=true; submitBtn.textContent='Enviando…';
+  try{
+    const payload = await buildFlowPayload();
+    const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if(resp.ok){
+      showSuccessScreen();
+      localStorage.removeItem('sndAdmissionDraftV2');
+    }else{
+      showToast('Falha ao enviar. Tente novamente.');
+    }
+  }catch(e){
+    console.error(e);
+    showToast(e?.message||'Erro de rede.');
+  }finally{
+    submitBtn.disabled=false; submitBtn.textContent='Concluir cadastro';
+  }
+}
+
+function showSuccessScreen(){
+  successScreen?.classList.remove('hidden');
+  form?.classList.add('flow-complete');
+  steps.forEach(s=>s.classList.remove('active'));
+  timelineItems.forEach(it=>it.classList.add('done'));
+  if(progressBar) progressBar.style.width='100%';
+  document.querySelector('.footer-actions')?.classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function restartFlow(){ successScreen?.classList.add('hidden'); document.querySelector('.footer-actions')?.classList.remove('hidden'); showStep(0); }
+
+// ====== Payload ======
 function buildPayloadPreview(){
   return {
     dadosPessoais:{
@@ -298,31 +306,6 @@ function buildPayloadPreview(){
       possuiPis:q('hasPis')?.value, numeroPis:q('pisNumber')?.value
     }
   };
-}
-function updatePayloadPreview(){ payloadPreview.textContent = JSON.stringify(buildPayloadPreview(), null, 2); }
-
-// ===== Submit → Flow =====
-async function onSubmit(ev){
-  ev.preventDefault();
-  if(!validateCurrentStep()) return;
-  if(!ENDPOINT_URL){ showToast('Erro: config.json ausente.'); return; }
-
-  submitBtn.disabled=true; submitBtn.textContent='Enviando…';
-  try{
-    const payload = await buildFlowPayload();
-    const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-    if(resp.ok){
-      showSuccessScreen();
-      localStorage.removeItem('sndAdmissionDraftV2');
-    }else{
-      showToast('Falha ao enviar. Tente novamente.');
-    }
-  }catch(e){
-    console.error(e);
-    showToast(e?.message||'Erro de rede.');
-  }finally{
-    submitBtn.disabled=false; submitBtn.textContent='Concluir cadastro';
-  }
 }
 
 async function buildFlowPayload(){
@@ -391,10 +374,7 @@ async function buildFlowPayload(){
 
     contaItauTem:q('hasItauAccount')?.value==='Sim' ? 'sim':'nao',
     agencia:onlyDigits(q('itauAgency')?.value||''),
-    contaCorrente:onlyDigits(q('itauAccountNumber')?.value||''),
-
-    // Compatibilidade antiga
-    checklist:{ rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false }
+    contaCorrente:onlyDigits(q('itauAccountNumber')?.value||'')
   };
 
   // ANEXOS (todos opcionais)
@@ -419,7 +399,7 @@ async function buildFlowPayload(){
   for(const item of map){
     const input=gid(item.id); if(!input) continue;
     const files=Array.from(input.files||[]);
-    if(!files.length) continue; // opcional
+    if(!files.length) continue;
     if(files.length > (item.max||1)) throw new Error(`"${item.label}": máximo ${item.max} arquivo(s).`);
 
     let idx=1;
@@ -434,83 +414,260 @@ async function buildFlowPayload(){
     }
   }
 
-  const declaracao = { texto:'Declaro veracidade das informações.', aceito:true, assinadoEm:new Date().toISOString(), assinatura:null };
-  const payload = { metadata:{ fonte:'form-web-snd', versao:'3.3.0', enviadoEm:new Date().toISOString(), modo:'cadastro' }, dados, anexos, declaracao };
-  payloadPreview.textContent = JSON.stringify(payload, null, 2);
-  return payload;
+  // Declaração e Assinatura
+  const assinaturaDataUrl = await getSignatureDataUrl(); // pode ser null
+  const declaracao = {
+    texto: 'Declaro veracidade das informações.',
+    aceito: !!(gid('declAgree')?.checked),
+    assinadoEm: new Date().toISOString(),
+    assinatura: assinaturaDataUrl // data:image/png;base64 ou data:image/jpeg;base64 se foi upload
+  };
+
+  return { metadata:{ fonte:'form-web-snd', versao:'4.0.0', enviadoEm:new Date().toISOString(), modo:'cadastro' }, dados, anexos, declaracao };
 }
+
 async function fileToBase64(f){
   return new Promise((resolve,reject)=>{
     const r=new FileReader();
-    r.onload=()=>{ const [meta,b64]=String(r.result).split(','); const mime=/data:(.*?);base64/.exec(meta)?.[1]||'application/octet-stream'; resolve({contentType:mime, contentBase64:b64}); };
+    r.onload=()=>{ const [meta,b64]=String(r.result).split(','); const mime=/data:(.*?);base64/.exec(meta)?.[1]||'application/octet-stream'; resolve({contentType:mime, contentBase64:b64, dataUrl:String(r.result)}); };
     r.onerror=reject; r.readAsDataURL(f);
   });
 }
 
-// ===== Tela final =====
-function showSuccessScreen(){
-  if(successScreen) successScreen.classList.remove('hidden');
-  if(form) form.classList.add('flow-complete');
-  steps.forEach(s=>s.classList.remove('active'));
-  timelineItems.forEach(it=>it.classList.add('done'));
-  if(progressBar) progressBar.style.width='100%';
-  stepCounter.textContent = `${steps.length}/${steps.length}`;
-  footerTitle.textContent = 'Processo concluído';
-  footerText.textContent = 'Dados enviados para processamento institucional.';
-  document.querySelector('.footer-actions')?.classList.add('hidden');
-  window.scrollTo({top:0, behavior:'smooth'});
+// ====== Assinatura (canvas + upload) ======
+let signing=false, hasStroke=false, last=null;
+function bindSignature(){
+  const signPad = gid('signPad');
+  const clearBtn= gid('clearSignBtn');
+  if(!signPad) return;
+  const ctx = signPad.getContext('2d');
+  ctx.lineWidth = 2.0; ctx.lineCap = 'round'; ctx.strokeStyle = '#183553';
+
+  const pos = e => {
+    const rect = signPad.getBoundingClientRect();
+    const p = ('touches' in e) ? e.touches[0] : e;
+    return { x: (p.clientX - rect.left) * (signPad.width / rect.width),
+             y: (p.clientY - rect.top)  * (signPad.height / rect.height) };
+  };
+  const start = e => { signing = true; hasStroke = true; last = pos(e); e.preventDefault(); };
+  const move  = e => { if(!signing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last = p; e.preventDefault();};
+  const end   = () => { signing = false; };
+
+  signPad.addEventListener('mousedown', start);
+  signPad.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  signPad.addEventListener('touchstart', start, {passive:false});
+  signPad.addEventListener('touchmove',  move,  {passive:false});
+  signPad.addEventListener('touchend',   end);
+
+  clearBtn?.addEventListener('click', ()=>{
+    ctx.clearRect(0,0,signPad.width,signPad.height);
+    hasStroke = false;
+  });
 }
-function restartFlow(){ if(successScreen) successScreen.classList.add('hidden'); document.querySelector('.footer-actions')?.classList.remove('hidden'); showStep(0); }
 
-// ===== Logins rápidos =====
-function bindQuickLogins(){
-  // Candidato -> abre Minha Área com o e-mail
-  const qlCandForm = document.getElementById('quickLoginCandidate');
-  qlCandForm?.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const email = document.getElementById('qlCandEmail')?.value?.trim();
-    if(!email){ showToast('Informe o e‑mail do candidato.'); return; }
-    window.location.href = `minha-area.html?email=${encodeURIComponent(email)}`;
-  });
+function hasSignatureSelected(){
+  const file = gid('signUpload')?.files?.[0];
+  if(file) return true;
+  return hasStroke; // desenho no canvas
+}
 
-  // Consultor -> abre Portal do Consultor (login acontece lá)
-  const qlConsForm = document.getElementById('quickLoginConsultor');
-  qlConsForm?.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const email = document.getElementById('qlConsEmail')?.value?.trim();
-    const pass  = document.getElementById('qlConsPass')?.value||'';
-    if(!email || !pass){ showToast('Informe e‑mail e senha do consultor.'); return; }
-    window.location.href = `consultor.html?email=${encodeURIComponent(email)}`;
-  });
+async function getSignatureDataUrl(){
+  // Prioridade: upload de assinatura
+  const file = gid('signUpload')?.files?.[0];
+  if(file){
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(!['jpg','jpeg','png'].includes(ext)) throw new Error('Assinatura: envie JPG/JPEG/PNG.');
+    if(file.size>10*1024*1024) throw new Error('Assinatura: arquivo >10MB.');
+    const data = await fileToBase64(file);
+    return data.dataUrl; // data:image/...
+  }
+  // Se não houver upload, usa o canvas (se houver traço)
+  const signPad = gid('signPad');
+  if(signPad && hasStroke) return signPad.toDataURL('image/png');
+  return null;
+}
 
-  // Modal "Primeiro acesso"
-  const dlgPA = document.getElementById('dlgPrimeiroAcesso');
-  document.getElementById('btnPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.showModal());
-  document.getElementById('dlgFecharPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.close());
+// ====== Minha Área (Candidato) ======
+function bindCandidateArea(){
+  const loginForm = gid('candLoginForm'); const msg = gid('candLoginMsg');
+  const area = gid('candArea'); const resumo = gid('candResumo');
+  const upForm = gid('candUploadForm'); const upInput = gid('candUpFiles'); const upMsg = gid('candUpMsg');
 
-  // Enviar cadastro do consultor (primeiro acesso) -> Flow: consultor_registrar
-  const formPA = document.getElementById('formPrimeiroAcesso');
-  formPA?.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const paMsg = document.getElementById('paMsg');
-    paMsg.textContent = '';
-    if(!ENDPOINT_URL){ paMsg.textContent='Erro: config.json ausente.'; return; }
-    const nome = document.getElementById('paNome')?.value?.trim();
-    const email= document.getElementById('paEmail')?.value?.trim().toLowerCase();
-    const senha= document.getElementById('paSenha')?.value||'';
-    if(!nome || !email || !senha){ paMsg.textContent='Preencha nome, e‑mail e senha.'; return; }
-    const hash = await sha256Hex(senha);
-    const payload = { metadata:{ modo:'consultor_registrar', enviadoEm:new Date().toISOString() }, novo:{ nome, email, hash } };
+  loginForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault(); msg.textContent='';
+    if(!ENDPOINT_URL){ msg.textContent='Erro: config.json ausente.'; return; }
+    const email = gid('candEmail')?.value?.trim();
+    if(!email){ msg.textContent='Informe o e‑mail.'; return; }
+    const payload = { metadata:{ modo:'consulta_por_email', enviadoEm:new Date().toISOString() }, filtro:{ email } };
     try{
       const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(!resp.ok){ msg.textContent='Cadastro não localizado.'; return; }
+      const data = await resp.json();
+      const d = data?.dados || {};
+      resumo.innerHTML = `
+        <div class="field readonly"><label>Nome</label><span>${d.NomeCompleto||'-'}</span></div>
+        <div class="field readonly"><label>E‑mail</label><span>${d.Email||email}</span></div>
+        <div class="field readonly"><label>Telefone</label><span>${d.TelCel||'-'}</span></div>
+        <div class="field readonly"><label>Estado civil</label><span>${d.EstadoCivil||'-'}</span></div>
+      `;
+      upForm.elements.email.value = email;
+      area.classList.remove('hidden');
+    }catch(err){ console.error(err); msg.textContent='Erro de rede.'; }
+  });
+
+  upForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault(); upMsg.textContent='';
+    if(!ENDPOINT_URL){ upMsg.textContent='Erro: config.json ausente.'; return; }
+    const email = upForm.elements.email.value?.trim();
+    const files = Array.from(upInput?.files||[]);
+    if(files.length===0){ upMsg.textContent='Selecione ao menos um arquivo.'; return; }
+
+    const anexos=[];
+    for(const f of files){
+      const ext=(f.name.split('.').pop()||'').toLowerCase();
+      if(!ALLOWED_EXT.includes(ext)){ upMsg.textContent=`Tipo não permitido: ${f.name}`; return; }
+      if(f.size>10*1024*1024){ upMsg.textContent=`Arquivo grande: ${f.name}`; return; }
+      const b64 = await fileToBase64(f);
+      anexos.push({ fileName:`Outros_${f.name}`, contentType:b64.contentType||f.type||'application/octet-stream', contentBase64:b64.contentBase64, size:f.size });
+    }
+    const payload = { metadata:{ modo:'minha_area_upload', enviadoEm:new Date().toISOString() }, filtro:{ email }, anexos };
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(resp.ok){ upMsg.textContent='Arquivos enviados.'; upForm.reset(); } else { upMsg.textContent='Falha ao enviar.'; }
+    }catch(err){ console.error(err); upMsg.textContent='Erro de rede.'; }
+  });
+}
+
+// ====== Portal do Consultor ======
+function bindConsultantPortal(){
+  const loginForm = gid('consLoginForm2'); const msg = gid('consLoginMsg2');
+  const dash = gid('consDash'); const consTag = gid('consTag');
+  const searchBox = gid('searchBox2'); const drop = gid('drop2');
+  const candPanel = gid('candPanel2'); const candName = gid('candName2'); const candEmail = gid('candEmail2');
+  const candStatus = gid('candStatus2'); const progFill = gid('progFill2'); const progPct = gid('progPct2');
+  const chkMissing = gid('chkMissing2'); const chkPresent = gid('chkPresent2');
+  const notifyForm = gid('notifyForm2'); const notifyMsg = gid('notifyMsg2');
+
+  loginForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault(); msg.textContent='';
+    if(!ENDPOINT_URL){ msg.textContent='Erro: config.json ausente.'; return; }
+    const email = gid('consEmail2')?.value?.trim().toLowerCase();
+    const pass  = gid('consPass2')?.value||'';
+    if(!email||!pass){ msg.textContent='Preencha e‑mail e senha.'; return; }
+    const hash = await sha256Hex(pass);
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ metadata:{ modo:'consultor_login' }, cred:{ email, hash } }) });
+      const data = await resp.json().catch(()=> ({}));
+      if(!resp.ok || !data?.ok){ msg.textContent=data?.mensagem||'Credenciais inválidas.'; return; }
+      consTag.textContent = data?.nome ? `Consultor · ${data.nome}` : `Consultor · ${email}`;
+      dash.classList.remove('hidden');
+      searchBox.focus();
+    }catch(err){ console.error(err); msg.textContent='Erro de rede no login.'; }
+  });
+
+  const doSearch = debounce(async ()=>{
+    const q = (searchBox.value||'').trim();
+    if(q.length<2){ drop.innerHTML=''; drop.classList.add('hidden'); return; }
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ metadata:{ modo:'consultor_busca' }, filtro:{ q } }) });
+      const data = await resp.json().catch(()=> ({}));
+      const items = data?.items||[];
+      if(!items.length){ drop.innerHTML=''; drop.classList.add('hidden'); return; }
+      drop.innerHTML = items.map(i=>`<button type="button" data-email="${i.email}" data-nome="${i.nome}">${i.nome} · <small>${i.email}</small></button>`).join('');
+      drop.classList.remove('hidden');
+    }catch{ drop.innerHTML=''; drop.classList.add('hidden'); }
+  }, 260);
+  searchBox?.addEventListener('input', doSearch);
+  drop?.addEventListener('click',(e)=>{
+    const b=e.target.closest('button'); if(!b) return;
+    showCandidateDetail({ email:b.dataset.email, nome:b.dataset.nome });
+    drop.classList.add('hidden');
+  });
+
+  async function showCandidateDetail({email,nome}){
+    candName.textContent = nome||'—'; candEmail.textContent = email||'—';
+    chkMissing.innerHTML=''; chkPresent.innerHTML='';
+    progFill.style.width='0%'; progPct.textContent='0%'; candPanel.classList.remove('hidden');
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ metadata:{ modo:'consultor_detalhe' }, filtro:{ email } }) });
+      const d = await resp.json().catch(()=> ({}));
+      const pct = Number(d?.progresso?.percent||0);
+      progFill.style.width = `${pct}%`; progPct.textContent = `${pct}%`;
+      candStatus.textContent = pct>=100?'Concluído':'Em andamento';
+      const missing = d?.progresso?.missing||[];
+      const present = d?.progresso?.present||[];
+      chkMissing.innerHTML = missing.length ? missing.map(x=>`<li>☐ ${x}</li>`).join('') : '<li>— sem pendências —</li>';
+      chkPresent.innerHTML = present.length ? present.map(x=>`<li>✔ ${x}</li>`).join('') : '<li>—</li>';
+      notifyForm.dataset.email = email;
+      notifyForm.dataset.missing = JSON.stringify(missing);
+    }catch(err){ console.error(err); showToast('Falha ao carregar detalhes.'); }
+  }
+
+  notifyForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault(); notifyMsg.textContent='';
+    if(!ENDPOINT_URL){ notifyMsg.textContent='Erro: config.json ausente.'; return; }
+    const email = notifyForm.dataset.email||'';
+    const fd = new FormData(notifyForm);
+    const prazo = fd.get('prazo'); const remetente = fd.get('remetente'); const mensagem = fd.get('mensagem')||'';
+    if(!email||!prazo||!remetente){ notifyMsg.textContent='Preencha prazo e remetente.'; return; }
+    try{
+      const missing = JSON.parse(notifyForm.dataset.missing||'[]');
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ metadata:{ modo:'consultor_notificar', enviadoEm:new Date().toISOString() }, filtro:{ email }, notificacao:{ prazo, remetente, mensagem, missing } }) });
+      const data = await resp.json().catch(()=> ({}));
+      notifyMsg.textContent = resp.ok && data?.ok ? 'Notificação enviada.' : (data?.mensagem||'Falha ao enviar.');
+    }catch(err){ console.error(err); notifyMsg.textContent='Erro de rede.'; }
+  });
+}
+
+// ====== Logins rápidos da tela inicial (navegam para as telas internas) ======
+function bindQuickLogins(){
+  const qlCandForm = gid('quickLoginCandidate');
+  qlCandForm?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = gid('qlCandEmail')?.value?.trim();
+    if(!email){ showToast('Informe o e‑mail do candidato.'); return; }
+    gid('candEmail').value = email;
+    showStep(6); // vai para Minha Área (Candidato)
+  });
+
+  const qlConsForm = gid('quickLoginConsultor');
+  qlConsForm?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = gid('qlConsEmail')?.value?.trim();
+    const pass  = gid('qlConsPass')?.value||'';
+    if(!email || !pass){ showToast('Informe e‑mail e senha do consultor.'); return; }
+    gid('consEmail2').value = email;
+    gid('consPass2').value  = pass;
+    showStep(7); // vai para Portal do Consultor
+  });
+
+  // Modal primeiro acesso
+  const dlgPA = gid('dlgPrimeiroAcesso');
+  gid('btnPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.showModal());
+  gid('dlgFecharPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.close());
+
+  // Enviar cadastro do consultor -> Flow: consultor_registrar
+  const formPA = gid('formPrimeiroAcesso');
+  formPA?.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const paMsg = gid('paMsg'); paMsg.textContent = '';
+    if(!ENDPOINT_URL){ paMsg.textContent='Erro: config.json ausente.'; return; }
+    const nome = gid('paNome')?.value?.trim();
+    const email= gid('paEmail')?.value?.trim().toLowerCase();
+    const senha= gid('paSenha')?.value||'';
+    if(!nome || !email || !senha){ paMsg.textContent='Preencha nome, e‑mail e senha.'; return; }
+    const hash = await sha256Hex(senha);
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ metadata:{ modo:'consultor_registrar', enviadoEm:new Date().toISOString() }, novo:{ nome, email, hash } }) });
       const data = await resp.json().catch(()=> ({}));
       if(resp.ok && data?.ok){ paMsg.textContent='Conta criada com sucesso. Você já pode entrar.'; formPA.reset(); }
       else { paMsg.textContent = data?.mensagem||'Falha ao criar a conta.'; }
-    }catch(err){ console.error(err); paMsg.textContent='Erro de rede ao criar conta.'; }
+    }catch(err){ console.error(err); paMsg.textContent='Erro de rede.'; }
   });
 }
 
-// Web Crypto — SHA-256 (hex)
+// ====== Cripto SHA‑256 (hex) ======
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest('SHA-256', enc);
@@ -518,5 +675,11 @@ async function sha256Hex(text){
 }
 
 // ===== Init =====
-function init(){ bindEvents(); restoreDraft(); showStep(0); refreshConditionals(); renderChildrenRows(); initFileUploads(); updatePayloadPreview(); }
+function init(){
+  bindEvents();
+  restoreDraft();
+  showStep(0);
+  refreshConditionals();
+  renderChildrenRows();
+}
 init();
