@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SND – Portal Admissional V2.3</title>
+  <title>SND · Portal Admissional V2.3</title>
   <meta name="description" content="Portal admissional da SND com design corporativo premium e fluxo guiado para envio de dados e documentos." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -45,38 +47,23 @@
         <div class="step-nav" id="timeline">
           <button type="button" class="step-nav-btn active" data-go-step="0">
             <span>01</span>
-            <div>
-              <strong>Boas-vindas</strong>
-              <small>Tela inicial</small>
-            </div>
+            <div><strong>Boas-vindas</strong><small>Tela inicial</small></div>
           </button>
           <button type="button" class="step-nav-btn" data-go-step="1">
             <span>02</span>
-            <div>
-              <strong>Dados pessoais</strong>
-              <small>Cadastro e endereço</small>
-            </div>
+            <div><strong>Dados pessoais</strong><small>Cadastro e endereço</small></div>
           </button>
           <button type="button" class="step-nav-btn" data-go-step="2">
             <span>03</span>
-            <div>
-              <strong>Documentação</strong>
-              <small>Identificação admissional</small>
-            </div>
+            <div><strong>Documentação</strong><small>Identificação admissional</small></div>
           </button>
           <button type="button" class="step-nav-btn" data-go-step="3">
             <span>04</span>
-            <div>
-              <strong>Dados complementares</strong>
-              <small>Informações adicionais</small>
-            </div>
+            <div><strong>Dados complementares</strong><small>Informações adicionais</small></div>
           </button>
           <button type="button" class="step-nav-btn" data-go-step="4">
             <span>05</span>
-            <div>
-              <strong>Uploads</strong>
-              <small>Documentos obrigatórios</small>
-            </div>
+            <div><strong>Uploads</strong><small>Documentos obrigatórios</small></div>
           </button>
         </div>
       </div>
@@ -92,24 +79,19 @@
         <div class="topbar-progress">
           <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
           <div class="progress-legend">
-            <span>Boas-vindas</span>
-            <span>Dados Pessoais</span>
-            <span>Documentação</span>
-            <span>Complementares</span>
-            <span>Uploads</span>
+            <span>Boas-vindas</span><span>Dados Pessoais</span><span>Documentação</span><span>Complementares</span><span>Uploads</span>
           </div>
         </div>
       </header>
 
       <form id="admissionForm" novalidate>
         <div class="wizard-stage">
-
           <!-- STEP 0 -->
           <section class="step-card panel-surface active" data-step="0">
             <div class="welcome-clean">
               <span class="section-tag">Tela inicial</span>
               <h3>Seja bem-vindo(a) à SND</h3>
-              <p>Olá! Estamos felizes por ter você aqui... (texto original mantido).</p>
+              <p>Olá! Estamos felizes por ter você aqui. Para garantir velocidade, preencha os dados com atenção e anexe todos os documentos solicitados.</p>
               <div class="welcome-actions">
                 <button type="button" class="btn btn-primary" id="startFlowBtn">Iniciar preenchimento</button>
                 <button type="button" class="btn btn-ghost" id="previewBtn">Ver resumo</button>
@@ -117,66 +99,115 @@
             </div>
           </section>
 
-          <!-- STEP 1 – Dados Pessoais -->
+          <!-- STEP 1 – Dados Pessoais (SEU markup) -->
           <section class="step-card panel-surface" data-step="1">
-            <!-- (conteúdo idêntico ao seu arquivo) -->
-            <!-- ... (mantido exatamente como no seu index.html) ... -->
+            <div class="section-head">
+              <div><span class="section-tag">Tela 1</span><h3>Dados Pessoais</h3><p>Informações pessoais, dependentes e endereço.</p></div>
+              <span class="badge-soft">Cadastro principal</span>
+            </div>
+
+            <div class="grid cols-2">
+              <div class="field"><label for="fullName">Nome completo *</label><input id="fullName" name="fullName" type="text" required/></div>
+              <div class="field"><label for="email">E-mail *</label><input id="email" name="email" type="email" required/></div>
+              <div class="field"><label for="phone">Telefone *</label><input id="phone" name="phone" type="tel" inputmode="numeric" required/></div>
+              <div class="field"><label for="birthDate">Data de nascimento *</label><input id="birthDate" name="birthDate" type="date" required/></div>
+              <div class="field"><label for="birthPlace">Local de nascimento *</label><input id="birthPlace" name="birthPlace" type="text" required/></div>
+
+              <div class="field">
+                <label for="maritalStatus">Estado civil *</label>
+                <select id="maritalStatus" name="maritalStatus" required>
+                  <option value="">Selecione</option>
+                  <option>Solteiro(a)</option><option>Casado(a)</option><option>União estável</option>
+                  <option>Divorciado(a)</option><option>Viúvo(a)</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="maritalStatus=Casado(a)">
+                <label for="spouseName">Nome do cônjuge *</label>
+                <input id="spouseName" name="spouseName" type="text"/>
+              </div>
+
+              <div class="field">
+                <label for="education">Escolaridade *</label>
+                <select id="education" name="education" required>
+                  <option value="">Selecione</option>
+                  <option>Ensino Fundamental Incompleto</option><option>Ensino Fundamental Completo</option>
+                  <option>Ensino Médio Incompleto</option><option>Ensino Médio Completo</option>
+                  <option>Ensino Superior Incompleto</option><option>Ensino Superior Completo</option>
+                  <option>Pós-graduação</option><option>Mestrado</option><option>Doutorado</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="raceColor">Raça/Cor *</label>
+                <select id="raceColor" name="raceColor" required>
+                  <option value="">Selecione</option>
+                  <option>Branca</option><option>Preta</option><option>Parda</option>
+                  <option>Amarela</option><option>Indígena</option><option>Prefiro não declarar</option>
+                </select>
+              </div>
+
+              <div class="field"><label for="fatherName">Nome do pai *</label><input id="fatherName" name="fatherName" type="text" placeholder="Caso não haja registro, informar Não Declarado" required/></div>
+              <div class="field"><label for="motherName">Nome da mãe *</label><input id="motherName" name="motherName" type="text" required/></div>
+
+              <div class="field">
+                <label for="biologicalSex">Sexo biológico *</label>
+                <select id="biologicalSex" name="biologicalSex" required>
+                  <option value="">Selecione</option><option>Masculino</option><option>Feminino</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="hasChildren">Possui filhos? *</label>
+                <select id="hasChildren" name="hasChildren" required>
+                  <option value="">Selecione</option><option>Sim</option><option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasChildren=Sim">
+                <label for="childrenCount">Quantos? *</label>
+                <input id="childrenCount" name="childrenCount" type="number" min="1" max="10"/>
+              </div>
+            </div>
+
+            <div class="children-panel conditional" data-show-when="hasChildren=Sim">
+              <div class="sub-head"><div><h4>Dados dos filhos</h4><p>As linhas são geradas conforme a quantidade informada.</p></div><span class="badge-soft">Dependentes</span></div>
+              <div id="childrenRows" class="children-rows"></div>
+            </div>
+
+            <div class="sub-head top-gap"><div><h4>Endereço residencial</h4><p>Consolidado na mesma etapa para reduzir navegação.</p></div><span class="badge-soft">Localização</span></div>
+            <div class="grid cols-2">
+              <div class="field"><label for="street">Endereço residencial *</label><input id="street" name="street" type="text" placeholder="Nome completo da rua" required/></div>
+              <div class="field"><label for="number">Número *</label><input id="number" name="number" type="text" inputmode="numeric" required/></div>
+              <div class="field"><label for="complement">Complemento</label><input id="complement" name="complement" type="text"/></div>
+              <div class="field"><label for="district">Bairro *</label><input id="district" name="district" type="text" required/></div>
+              <div class="field"><label for="city">Cidade *</label><input id="city" name="city" type="text" required/></div>
+              <div class="field">
+                <label for="state">Estado *</label>
+                <select id="state" name="state" required>
+                  <option value="">Selecione</option>
+                  <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option>
+                </select>
+              </div>
+              <div class="field"><label for="zipCode">CEP *</label><input id="zipCode" name="zipCode" type="text" inputmode="numeric" required/></div>
+            </div>
           </section>
 
-          <!-- STEP 2 – Documentação Admissional -->
+          <!-- STEP 2 – Documentação Admissional (SEU markup) -->
           <section class="step-card panel-surface" data-step="2">
-            <!-- (conteúdo idêntico ao seu arquivo) -->
-            <!-- ... (mantido exatamente como no seu index.html, incluindo Nº Título) ... -->
-          </section>
+            <div class="section-head"><div><span class="section-tag">Tela 2</span><h3>Documentação Admissional</h3><p>PIS/CTPS/Reservista/Título.</p></div><span class="badge-soft">Documentais</span></div>
+            <div class="grid cols-2">
+              <div class="field conditional" data-show-when="biologicalSex=Masculino">
+                <label for="hasReservist">Possui Certificado de Reservista? *</label>
+                <select id="hasReservist" name="hasReservist"><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasReservist=Sim"><label for="reservistNumber">Nº do certificado *</label><input id="reservistNumber" name="reservistNumber" type="text" inputmode="numeric"/></div>
+              <div class="field conditional" data-show-when="hasReservist=Sim"><label for="dispenseReason">Motivo da Dispensa *</label><input id="dispenseReason" name="dispenseReason" type="text"/></div>
 
-          <!-- STEP 3 – Dados Complementares -->
-          <section class="step-card panel-surface" data-step="3">
-            <!-- (conteúdo idêntico ao seu arquivo) -->
-            <!-- ... (mantido exatamente como no seu index.html) ... -->
-          </section>
+              <div class="field"><label for="identityDoc">Doc. Identidade *</label><input id="identityDoc" name="identityDoc" type="text" required/></div>
+              <div class="field"><label for="issuer">Órgão Emissor *</label><input id="issuer" name="issuer" type="text" placeholder="Ex.: SSP/SP" required/></div>
+              <div class="field"><label for="identityIssueDate">Data de Emissão (Identidade) *</label><input id="identityIssueDate" name="identityIssueDate" type="date" required/></div>
+              <div class="field"><label for="cpf">CPF *</label><input id="cpf" name="cpf" type="text" inputmode="numeric" required/></div>
 
-          <!-- STEP 4 – Uploads -->
-          <section class="step-card panel-surface" data-step="4">
-            <!-- (conteúdo idêntico ao seu arquivo – IMPORTANTES os IDs dos inputs de upload) -->
-            <!-- ... (mantido exatamente como no seu index.html) ... -->
-          </section>
-
-        </div>
-
-        <!-- Tela final visual -->
-        <section id="successScreen" class="success-screen panel-surface hidden">
-          <!-- (conteúdo idêntico ao seu arquivo) -->
-        </section>
-
-        <!-- Rodapé de ações -->
-        <div class="footer-actions panel-surface">
-          <button type="button" class="btn btn-ghost" id="prevBtn">Voltar</button>
-          <div class="footer-info">
-            <strong id="footerTitle">Etapa inicial</strong>
-            <span id="footerText">Avance para iniciar o preenchimento do portal.</span>
-          </div>
-          <button type="button" class="btn btn-primary" id="nextBtn">Próxima etapa</button>
-          <button type="submit" class="btn btn-primary hidden" id="submitBtn">Concluir cadastro</button>
-        </div>
-      </form>
-    </main>
-  </div>
-
-  <!-- Resumo técnico -->
-  <dialog id="summaryDialog" class="summary-dialog">
-    <div class="summary-surface">
-      <div class="dialog-head">
-        <div>
-          <span class="eyebrow">Resumo consolidado</span>
-          <h3>Visão executiva do cadastro</h3>
-        </div>
-        <button type="button" class="icon-btn" id="closeSummaryBtn" aria-label="Fechar resumo">×</button>
-      </div>
-      <div class="summary-content" id="summaryContent"></div>
-    </div>
-  </dialog>
-
-  <div class="toast" id="toast"></div>
-  <script src="script.js"></script>
-</body>
-</html>
+              <div class="field"><label for="ctpsType">CTPS *</label>
+                <select id="ctpsType" name="ctpsType" required><option value="">Selecione</option><option>Físico</option><option>Digital</option></select>
+              </div>
+              <div class="field conditional" data-show-when="ctpsType=Físico"><label for="ctpsNumber">CTPS Nº *</label><input id="ctpsNumber" name="ctpsNumber" type="text" inputmode="numeric"/></div>
