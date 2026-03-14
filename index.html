@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SND · Portal Admissional V2.3</title>
-  <meta name="description" content="Portal admissional da SND com design corporativo premium e fluxo guiado para envio de dados e documentos." />
+  <title>SND · Portal Admissional</title>
+  <meta name="description" content="Portal admissional da SND com jornada guiada de dados e documentos." />
 
-  <!-- Fontes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Fontes (mantidas como no seu projeto) -->
+  https://fonts.googleapis.com
+  https://fonts.gstatic.com
+  https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap
 
   <!-- CSS -->
-  <link rel="stylesheet" href="./styles.css?v=2" />
+  ./styles.css?v=3
 </head>
 <body>
   <!-- Ornamentos de fundo -->
@@ -25,13 +25,13 @@
     <aside class="sidebar">
       <div class="brand-panel panel-surface">
         <div class="brand-media">
-          <img src="./snd-hero.png" alt="SND" class="brand-image" />
+          ./snd-hero.png
           <div class="brand-mask"></div>
         </div>
         <div class="brand-copy">
           <span class="pill">Portal institucional</span>
           <h1>Processo Admissional</h1>
-          <p>Ambiente digital para coleta de dados e envio de documentos com validação inteligente e jornada guiada.</p>
+          <p>Ambiente digital para coleta de dados e envio de documentos com aparência corporativa e jornada guiada.</p>
         </div>
       </div>
 
@@ -39,36 +39,24 @@
         <div class="panel-head compact nav-head">
           <div>
             <span class="eyebrow">Navegação</span>
-            <h3>Guia de telas</h3>
+            <h3>Telas</h3>
           </div>
-          <span class="step-chip" id="stepCounter">1/5</span>
         </div>
 
         <div class="nav-actions">
           <button type="button" class="btn btn-secondary nav-save" id="saveDraftBtn">Salvar rascunho</button>
         </div>
 
+        <!-- Sem numeração nas etapas -->
         <div class="step-nav" id="timeline">
-          <button type="button" class="step-nav-btn active" data-go-step="0">
-            <span>01</span>
-            <div><strong>Boas-vindas</strong><small>Tela inicial</small></div>
-          </button>
-          <button type="button" class="step-nav-btn" data-go-step="1">
-            <span>02</span>
-            <div><strong>Dados pessoais</strong><small>Cadastro e endereço</small></div>
-          </button>
-          <button type="button" class="step-nav-btn" data-go-step="2">
-            <span>03</span>
-            <div><strong>Documentação</strong><small>Identificação admissional</small></div>
-          </button>
-          <button type="button" class="step-nav-btn" data-go-step="3">
-            <span>04</span>
-            <div><strong>Dados complementares</strong><small>Informações adicionais</small></div>
-          </button>
-          <button type="button" class="step-nav-btn" data-go-step="4">
-            <span>05</span>
-            <div><strong>Uploads</strong><small>Documentos</small></div>
-          </button>
+          <button type="button" class="step-nav-btn active" data-go-step="0"><div><strong>Boas‑vindas</strong><small>Tela inicial</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="1"><div><strong>Dados Pessoais</strong><small>Cadastro e endereço</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="2"><div><strong>Documentação</strong><small>Identificação</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="3"><div><strong>Complementares</strong><small>Informações adicionais</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="4"><div><strong>Uploads</strong><small>Documentos</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="5"><div><strong>Declaração & Assinatura</strong><small>Aceite e assinatura</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="6"><div><strong>Minha Área (Candidato)</strong><small>Consulta e envio</small></div></button>
+          <button type="button" class="step-nav-btn" data-go-step="7"><div><strong>Portal do Consultor</strong><small>Dashboard</small></div></button>
         </div>
       </div>
     </aside>
@@ -79,38 +67,34 @@
         <div>
           <span class="eyebrow">SND · Soluções em Tecnologia</span>
           <h2>Portal de Registro de Documentos Admissionais</h2>
-          <p>Ambiente para preenchimento guiado de dados e anexos do processo admissional.</p>
+          <p>Ambiente institucional para preenchimento guiado de dados e anexos do processo admissional.</p>
         </div>
+
+        <!-- Barra de progresso sem legenda/numeração -->
         <div class="topbar-progress">
           <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
-          <div class="progress-legend">
-            <span>Boas-vindas</span>
-            <span>Dados Pessoais</span>
-            <span>Documentação</span>
-            <span>Complementares</span>
-            <span>Uploads</span>
-          </div>
         </div>
       </header>
 
       <form id="admissionForm" novalidate>
         <div class="wizard-stage">
 
-          <!-- ========== STEP 0 ========== -->
+          <!-- ========== 0. BOAS-VINDAS ========== -->
           <section class="step-card panel-surface active" data-step="0">
             <div class="welcome-clean">
               <span class="section-tag">Tela inicial</span>
               <h3>Seja bem-vindo(a) à SND</h3>
-              <p>Preencha os dados com atenção. Os documentos podem ser enviados depois pela “Minha Área”.</p>
+              <p>Preencha os dados com atenção. Os documentos podem ser enviados agora ou depois pela “Minha Área”.</p>
               <div class="welcome-actions">
                 <button type="button" class="btn btn-primary" id="startFlowBtn">Iniciar preenchimento</button>
                 <button type="button" class="btn btn-ghost" id="previewBtn">Ver resumo</button>
               </div>
 
-              <!-- ====== LOGINS RÁPIDOS ====== -->
+              <!-- LOGINS RÁPIDOS -->
               <section class="panel-surface" style="margin-top:20px; padding:18px">
                 <div class="grid cols-2" style="gap:18px">
-                  <!-- Acesso do Candidato -->
+
+                  <!-- Candidato -->
                   <div class="panel-surface" style="padding:16px">
                     <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Candidato</h4>
                     <p class="muted" style="margin:0 0 12px">Informe seu e‑mail para abrir a Minha Área.</p>
@@ -127,12 +111,11 @@
                     <small id="qlCandMsg" class="muted" role="status" aria-live="polite"></small>
                   </div>
 
-                  <!-- Acesso do Consultor (LINHAS + Primeiro acesso) -->
+                  <!-- Consultor (linhas) -->
                   <div class="panel-surface" style="padding:16px">
                     <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Consultor</h4>
                     <p class="muted" style="margin:0 0 12px">Entre com e‑mail e senha para abrir o Portal do Consultor.</p>
 
-                    <!-- LOGIN (linhas) -->
                     <form id="quickLoginConsultor" class="grid" style="gap:10px; grid-template-columns:1fr">
                       <div class="field" style="margin:0">
                         <label for="qlConsEmail">E‑mail *</label>
@@ -152,7 +135,7 @@
                       <button type="button" class="btn btn-ghost" id="btnPrimeiroAcesso">Primeiro acesso</button>
                     </div>
 
-                    <!-- MODAL de primeiro acesso -->
+                    <!-- Modal primeiro acesso -->
                     <dialog id="dlgPrimeiroAcesso" class="summary-dialog">
                       <div class="summary-surface" style="max-width:560px">
                         <div class="dialog-head">
@@ -163,23 +146,11 @@
                           </div>
                           <button type="button" class="icon-btn" id="dlgFecharPrimeiroAcesso" aria-label="Fechar">×</button>
                         </div>
-
                         <form id="formPrimeiroAcesso" class="grid" style="gap:12px">
-                          <div class="field">
-                            <label for="paNome">Nome *</label>
-                            <input id="paNome" name="nome" type="text" required placeholder="Seu nome completo"/>
-                          </div>
-                          <div class="field">
-                            <label for="paEmail">E‑mail corporativo *</label>
-                            <input id="paEmail" name="email" type="email" required placeholder="consultor@empresa.com"/>
-                          </div>
-                          <div class="field">
-                            <label for="paSenha">Senha *</label>
-                            <input id="paSenha" name="senha" type="password" required placeholder="Crie uma senha"/>
-                          </div>
-                          <div class="field">
-                            <button type="submit" class="btn btn-primary">Criar conta</button>
-                          </div>
+                          <div class="field"><label for="paNome">Nome *</label><input id="paNome" name="nome" type="text" required placeholder="Seu nome completo"/></div>
+                          <div class="field"><label for="paEmail">E‑mail corporativo *</label><input id="paEmail" name="email" type="email" required placeholder="consultor@empresa.com"/></div>
+                          <div class="field"><label for="paSenha">Senha *</label><input id="paSenha" name="senha" type="password" required placeholder="Crie uma senha"/></div>
+                          <div class="field"><button type="submit" class="btn btn-primary">Criar conta</button></div>
                           <small id="paMsg" class="muted" role="status" aria-live="polite"></small>
                         </form>
                       </div>
@@ -187,19 +158,18 @@
                   </div>
                 </div>
               </section>
-              <!-- ====== /LOGINS RÁPIDOS ====== -->
+              <!-- /LOGINS RÁPIDOS -->
             </div>
           </section>
 
-          <!-- ========== STEP 1 – DADOS PESSOAIS ========== -->
+          <!-- ========== 1. DADOS PESSOAIS ========== -->
           <section class="step-card panel-surface" data-step="1">
             <div class="section-head">
               <div>
                 <span class="section-tag">Tela 1</span>
                 <h3>Dados Pessoais</h3>
-                <p>Informações pessoais, dependentes e endereço em um bloco único.</p>
+                <p>Informações pessoais, dependentes e endereço.</p>
               </div>
-              <span class="badge-soft">Cadastro principal</span>
             </div>
 
             <div class="grid cols-2">
@@ -245,12 +215,7 @@
                 <label for="raceColor">Raça/Cor *</label>
                 <select id="raceColor" name="raceColor" required>
                   <option value="">Selecione</option>
-                  <option>Branca</option>
-                  <option>Preta</option>
-                  <option>Parda</option>
-                  <option>Amarela</option>
-                  <option>Indígena</option>
-                  <option>Prefiro não declarar</option>
+                  <option>Branca</option><option>Preta</option><option>Parda</option><option>Amarela</option><option>Indígena</option><option>Prefiro não declarar</option>
                 </select>
               </div>
 
@@ -260,18 +225,14 @@
               <div class="field">
                 <label for="biologicalSex">Sexo biológico *</label>
                 <select id="biologicalSex" name="biologicalSex" required>
-                  <option value="">Selecione</option>
-                  <option>Masculino</option>
-                  <option>Feminino</option>
+                  <option value="">Selecione</option><option>Masculino</option><option>Feminino</option>
                 </select>
               </div>
 
               <div class="field">
                 <label for="hasChildren">Possui filhos? *</label>
                 <select id="hasChildren" name="hasChildren" required>
-                  <option value="">Selecione</option>
-                  <option>Sim</option>
-                  <option>Não</option>
+                  <option value="">Selecione</option><option>Sim</option><option>Não</option>
                 </select>
               </div>
               <div class="field conditional" data-show-when="hasChildren=Sim">
@@ -315,11 +276,10 @@
             </div>
           </section>
 
-          <!-- ========== STEP 2 – DOCUMENTAÇÃO ========== -->
+          <!-- ========== 2. DOCUMENTAÇÃO ========== -->
           <section class="step-card panel-surface" data-step="2">
             <div class="section-head">
               <div><span class="section-tag">Tela 2</span><h3>Documentação Admissional</h3><p>PIS, CTPS, Reservista e Título.</p></div>
-              <span class="badge-soft">Documentais</span>
             </div>
             <div class="grid cols-2">
               <div class="field conditional" data-show-when="biologicalSex=Masculino">
@@ -370,30 +330,29 @@
             </div>
           </section>
 
-          <!-- ========== STEP 3 – COMPLEMENTARES ========== -->
+          <!-- ========== 3. COMPLEMENTARES ========== -->
           <section class="step-card panel-surface" data-step="3">
             <div class="section-head">
               <div><span class="section-tag">Tela 3</span><h3>Dados Complementares</h3></div>
-              <span class="badge-soft">Complementos</span>
             </div>
             <div class="grid cols-2">
               <div class="field"><label for="hasOtherJob">Possui outro emprego? *</label>
                 <select id="hasOtherJob" name="hasOtherJob" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
               </div>
-              <div class="field conditional" data-show-when="hasOtherJob=Sim"><label for="otherJobCnpj">Qual o CNPJ desta empresa? *</label><input id="otherJobCnpj" name="otherJobCnpj" type="text" inputmode="numeric"/></div>
+              <div class="field conditional" data-show-when="hasOtherJob=Sim"><label for="otherJobCnpj">CNPJ da outra empresa *</label><input id="otherJobCnpj" name="otherJobCnpj" type="text" inputmode="numeric"/></div>
 
               <div class="field"><label for="hasRetirement">Possui aposentadoria? *</label>
                 <select id="hasRetirement" name="hasRetirement" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
               </div>
-              <div class="field conditional" data-show-when="hasRetirement=Sim"><label for="retirementDate">Data da concessão da aposentadoria *</label><input id="retirementDate" name="retirementDate" type="date"/></div>
+              <div class="field conditional" data-show-when="hasRetirement=Sim"><label for="retirementDate">Data da concessão *</label><input id="retirementDate" name="retirementDate" type="date"/></div>
 
-              <div class="field"><label for="hasRelativeAtSnd">Possui algum parente na SND? *</label>
+              <div class="field"><label for="hasRelativeAtSnd">Possui parente na SND? *</label>
                 <select id="hasRelativeAtSnd" name="hasRelativeAtSnd" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
               </div>
               <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim"><label for="relativeName">Nome do parente *</label><input id="relativeName" name="relativeName" type="text"/></div>
               <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim"><label for="relationshipDegree">Grau de parentesco *</label><input id="relationshipDegree" name="relationshipDegree" type="text"/></div>
 
-              <div class="field"><label for="hasItauAccount">Possui conta corrente no Banco Itaú? *</label>
+              <div class="field"><label for="hasItauAccount">Possui conta corrente no Itaú? *</label>
                 <select id="hasItauAccount" name="hasItauAccount" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
               </div>
               <div class="field conditional" data-show-when="hasItauAccount=Sim"><label for="itauAgency">Agência nº *</label><input id="itauAgency" name="itauAgency" type="text" inputmode="numeric"/></div>
@@ -401,113 +360,240 @@
             </div>
           </section>
 
-          <!-- ========== STEP 4 – UPLOADS (todos OPCIONAIS) ========== -->
+          <!-- ========== 4. UPLOADS (opcionais, sem selo) ========== -->
           <section class="step-card panel-surface" data-step="4">
             <div class="section-head">
-              <div><span class="section-tag">Tela 4</span><h3>Documentos (todos opcionais)</h3></div>
-              <span class="badge-soft">Uploads</span>
+              <div><span class="section-tag">Tela 4</span><h3>Documentos</h3></div>
             </div>
 
             <div class="upload-grid upload-grid-stacked">
               <div class="upload-card" data-required="false">
-                <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho <span class="doc-badge optional">Opcional</span></label>
-                <p>Preferencialmente em PDF com os dados da carteira digital.</p>
+                <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho</label>
                 <input id="workCard" name="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="identityUpload"><span class="upload-icon">🪪</span>Documento de Identidade <span class="doc-badge optional">Opcional</span></label>
-                <p>Frente e verso. Até 2 arquivos.</p>
+                <label for="identityUpload"><span class="upload-icon">🪪</span>Documento de Identidade</label>
                 <input id="identityUpload" name="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
-                <small class="file-meta">2 arquivos · até 10MB cada</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 2 arquivos · 10MB cada</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <span class="doc-badge optional">Opcional</span></label>
+                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF</label>
                 <input id="cpfUpload" name="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card conditional" data-show-when="hasReservist=Sim" data-required="false">
-                <label for="reservistUpload"><span class="upload-icon">🎖️</span>Certificado de Reservista <span class="doc-badge optional">Opcional</span></label>
+                <label for="reservistUpload"><span class="upload-icon">🎖️</span>Certificado de Reservista</label>
                 <input id="reservistUpload" name="reservistUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="voterTitleUpload"><span class="upload-icon">🗳️</span>Título de Eleitor <span class="doc-badge optional">Opcional</span></label>
+                <label for="voterTitleUpload"><span class="upload-icon">🗳️</span>Título de Eleitor</label>
                 <input id="voterTitleUpload" name="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card conditional" data-show-when="hasPis=Sim" data-required="false">
-                <label for="pisUpload"><span class="upload-icon">📎</span>PIS <span class="doc-badge optional">Opcional</span></label>
+                <label for="pisUpload"><span class="upload-icon">📎</span>PIS</label>
                 <input id="pisUpload" name="pisUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <span class="doc-badge optional">Opcional</span></label>
+                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência</label>
                 <input id="proofOfAddress" name="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="educationUpload"><span class="upload-icon">🎓</span>Diploma/Declaração de Escolaridade <span class="doc-badge optional">Opcional</span></label>
+                <label for="educationUpload"><span class="upload-icon">🎓</span>Escolaridade (Diploma/Declaração)</label>
                 <input id="educationUpload" name="educationUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="false">
-                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <span class="doc-badge optional">Opcional</span></label>
+                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento</label>
                 <input id="marriageCertificate" name="marriageCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
               <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="false">
-                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <span class="doc-badge optional">Opcional</span></label>
+                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge</label>
                 <input id="spouseCpfUpload" name="spouseCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="false">
-                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <span class="doc-badge optional">Opcional</span></label>
+                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidões de Nascimento (Filhos)</label>
                 <input id="childrenBirthUpload" name="childrenBirthUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
-                <small class="file-meta">Múltiplos arquivos · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Múltiplos · 10MB cada</small><small class="file-feedback" aria-live="polite"></small>
               </div>
               <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="false">
-                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <span class="doc-badge optional">Opcional</span></label>
+                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPFs dos Filhos</label>
                 <input id="childrenCpfUpload" name="childrenCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
-                <small class="file-meta">Múltiplos arquivos · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Múltiplos · 10MB cada</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card conditional" data-show-when="hasItauAccount=Sim" data-required="false">
-                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <span class="doc-badge optional">Opcional</span></label>
+                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú</label>
                 <input id="itauProofUpload" name="itauProofUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="referenceLetterUpload"><span class="upload-icon">✉️</span>Carta de Referência do Último Emprego <span class="doc-badge optional">Opcional</span></label>
+                <label for="referenceLetterUpload"><span class="upload-icon">✉️</span>Carta de Referência</label>
                 <input id="referenceLetterUpload" name="referenceLetterUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
               <div class="upload-card" data-required="false">
-                <label for="professionalLicenseUpload"><span class="upload-icon">🪪</span>Carteira de Registro Profissional <span class="doc-badge optional">Opcional</span></label>
+                <label for="professionalLicenseUpload"><span class="upload-icon">🪪</span>Carteira de Registro Profissional</label>
                 <input id="professionalLicenseUpload" name="professionalLicenseUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+                <small class="file-meta">Até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
+            </div>
+          </section>
+
+          <!-- ========== 5. DECLARAÇÃO & ASSINATURA (com upload de assinatura) ========== -->
+          <section class="step-card panel-surface" data-step="5">
+            <div class="section-head">
+              <div><span class="section-tag">Tela 5</span><h3>Declaração e Assinatura</h3></div>
             </div>
 
-            <!-- Painel técnico -->
-            <div class="technical-panel">
-              <div class="sub-head">
-                <div><h4>Pré-visualização técnica</h4><p>Payload preparado para o Flow.</p></div>
-                <button type="button" class="btn btn-ghost small" id="togglePayloadBtn">Exibir payload</button>
-              </div>
-              <pre id="payloadPreview" class="collapsed">{}</pre>
+            <div class="field">
+              <label for="declAgree" style="font-weight:600">
+                <input id="declAgree" type="checkbox" /> Declaro, para os devidos fins, que as informações prestadas e documentos anexados são verdadeiros.
+              </label>
             </div>
+
+            <div class="grid cols-2">
+              <!-- Canvas de assinatura -->
+              <div class="field">
+                <label>Assinatura digital (desenhar)</label>
+                <div style="border:1px solid var(--border); border-radius:12px; background:#fff;">
+                  <canvas id="signPad" width="720" height="220" style="width:100%;height:220px;display:block;touch-action:none;cursor:crosshair"></canvas>
+                </div>
+                <div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap">
+                  <button type="button" class="btn btn-ghost" id="clearSignBtn">Limpar assinatura</button>
+                  <small style="color:var(--muted)">Assine com o mouse ou o dedo.</small>
+                </div>
+              </div>
+
+              <!-- Upload de assinatura pronta -->
+              <div class="field">
+                <label for="signUpload">Ou enviar imagem da assinatura (JPG/JPEG/PNG)</label>
+                <input id="signUpload" type="file" accept=".jpg,.jpeg,.png"/>
+                <small class="file-meta">A imagem enviada tem prioridade sobre o desenho.</small>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 6. MINHA ÁREA (CANDIDATO) ========== -->
+          <section class="step-card panel-surface" data-step="6">
+            <div class="section-head">
+              <div><span class="section-tag">Candidato</span><h3>Minha Área — Consulta e Envio</h3></div>
+            </div>
+
+            <section class="panel-surface" style="padding:18px">
+              <form id="candLoginForm" class="grid cols-2">
+                <div class="field"><label for="candEmail">E‑mail *</label><input id="candEmail" type="email" required/></div>
+                <div class="field" style="align-self:end"><button class="btn btn-primary" type="submit">Acessar</button></div>
+              </form>
+              <small id="candLoginMsg" class="muted" role="status" aria-live="polite"></small>
+            </section>
+
+            <section id="candArea" class="panel-surface hidden" style="padding:18px">
+              <h4>Resumo dos seus dados</h4>
+              <div id="candResumo" class="grid cols-2 readonly"></div>
+
+              <h4 class="top-gap">Enviar novos documentos</h4>
+              <p>Tipos aceitos: PDF, JPG, JPEG, PNG · Máx. 10MB por arquivo.</p>
+              <form id="candUploadForm" class="grid">
+                <input type="hidden" name="email"/>
+                <div class="upload-card">
+                  <label for="candUpFiles"><span class="upload-icon">📎</span>Arquivos (múltiplos)</label>
+                  <input id="candUpFiles" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                  <small class="file-meta">Múltiplos · até 10MB cada</small>
+                  <small class="file-feedback" aria-live="polite"></small>
+                </div>
+                <div><button class="btn btn-primary" type="submit">Enviar</button></div>
+                <small id="candUpMsg" class="muted" role="status" aria-live="polite"></small>
+              </form>
+            </section>
+          </section>
+
+          <!-- ========== 7. PORTAL DO CONSULTOR ========== -->
+          <section class="step-card panel-surface" data-step="7">
+            <div class="section-head">
+              <div><span class="section-tag">Consultor</span><h3>Portal do Consultor</h3></div>
+            </div>
+
+            <!-- Login -->
+            <section class="panel-surface" style="padding:18px">
+              <form id="consLoginForm2" class="grid" style="gap:10px;grid-template-columns:1fr">
+                <div class="field"><label for="consEmail2">E‑mail *</label><input id="consEmail2" type="email" required/></div>
+                <div class="field"><label for="consPass2">Senha *</label><input id="consPass2" type="password" required/></div>
+                <div class="field"><button class="btn btn-secondary" type="submit">Entrar</button></div>
+              </form>
+              <small id="consLoginMsg2" class="muted" role="status" aria-live="polite"></small>
+            </section>
+
+            <!-- Dashboard -->
+            <section id="consDash" class="panel-surface hidden" style="padding:18px">
+              <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <div class="grow"><h4>Dashboard</h4><p class="muted" id="consTag">—</p></div>
+              </div>
+
+              <!-- Busca com autocomplete -->
+              <div class="typeahead top-gap">
+                <label>Pesquisar candidato pelo nome</label>
+                <input id="searchBox2" type="text" placeholder="Digite 2+ letras..." autocomplete="off"/>
+                <div id="drop2" class="dropdown hidden"></div>
+              </div>
+
+              <!-- Painel do candidato -->
+              <div id="candPanel2" class="hidden" style="margin-top:18px">
+                <div class="row" style="display:flex;gap:10px;align-items:center">
+                  <div class="grow">
+                    <h5 id="candName2">—</h5>
+                    <div class="muted" id="candEmail2">—</div>
+                  </div>
+                  <div class="tag" id="candStatus2">Status</div>
+                </div>
+
+                <div class="top-gap">
+                  <div class="progress-track"><div id="progFill2" class="progress-fill"></div></div>
+                  <div class="row"><small class="muted">Conclusão</small><strong id="progPct2">0%</strong></div>
+                </div>
+
+                <div class="row top-gap" style="display:flex;gap:18px;flex-wrap:wrap">
+                  <div class="grow">
+                    <h5>Faltantes</h5>
+                    <ul id="chkMissing2" class="checklist" style="margin:8px 0 0;padding:0;list-style:none"></ul>
+                  </div>
+                  <div class="grow">
+                    <h5>Presentes</h5>
+                    <ul id="chkPresent2" class="list" style="margin:8px 0 0;padding:0;list-style:none"></ul>
+                  </div>
+                </div>
+
+                <!-- Notificar candidato -->
+                <form id="notifyForm2" class="top-gap">
+                  <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
+                    <div class="field"><label>Prazo *</label><input type="date" name="prazo" required/></div>
+                    <div class="field"><label>Remetente (responder para) *</label><input type="email" name="remetente" required/></div>
+                  </div>
+                  <div class="field"><label>Mensagem</label><textarea name="mensagem" rows="4" placeholder="Olá, precisamos dos itens pendentes listados..."></textarea></div>
+                  <div class="row" style="display:flex;gap:10px;align-items:center">
+                    <button class="btn btn-primary" type="submit">Enviar e‑mail</button>
+                    <small id="notifyMsg2" class="muted" role="status" aria-live="polite"></small>
+                  </div>
+                </form>
+              </div>
+            </section>
           </section>
         </div>
 
@@ -515,20 +601,15 @@
         <section id="successScreen" class="success-screen panel-surface hidden">
           <span class="section-tag">Finalização</span>
           <h3>Cadastro recebido com sucesso</h3>
-          <p>Os dados foram enviados para processamento institucional.</p>
+          <p>Se necessário, complemente seus documentos pela “Minha Área”.</p>
           <div class="success-actions">
             <button type="button" class="btn btn-secondary" id="restartBtn">Preencher novamente</button>
-            <button type="button" class="btn btn-primary" id="successSummaryBtn">Ver resumo enviado</button>
           </div>
         </section>
 
-        <!-- Rodapé -->
+        <!-- Rodapé (sem “boas‑vindas” redundante) -->
         <div class="footer-actions panel-surface">
           <button type="button" class="btn btn-ghost" id="prevBtn">Voltar</button>
-          <div class="footer-info">
-            <strong id="footerTitle">Etapa inicial</strong>
-            <span id="footerText">Avance para iniciar o preenchimento.</span>
-          </div>
           <button type="button" class="btn btn-primary" id="nextBtn">Próxima etapa</button>
           <button type="submit" class="btn btn-primary hidden" id="submitBtn">Concluir cadastro</button>
         </div>
@@ -536,12 +617,12 @@
     </main>
   </div>
 
-  <!-- Resumo (modal) -->
+  <!-- Modal genérico de resumo (mantido para seu uso futuro) -->
   <dialog id="summaryDialog" class="summary-dialog">
     <div class="summary-surface">
       <div class="dialog-head">
-        <div><span class="eyebrow">Resumo consolidado</span><h3>Visão executiva do cadastro</h3></div>
-        <button type="button" class="icon-btn" id="closeSummaryBtn" aria-label="Fechar resumo">×</button>
+        <div><span class="eyebrow">Resumo</span><h3>Visão executiva</h3></div>
+        <button type="button" class="icon-btn" id="closeSummaryBtn" aria-label="Fechar">×</button>
       </div>
       <div class="summary-content" id="summaryContent"></div>
     </div>
@@ -550,6 +631,6 @@
   <div class="toast" id="toast"></div>
 
   <!-- JS -->
-  <script src="./app.js?v=2" defer></script>
+  ./app.js?v=3</script>
 </body>
 </html>
