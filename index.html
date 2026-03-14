@@ -6,16 +6,20 @@
   <title>SND · Portal Admissional</title>
   <meta name="description" content="Portal admissional da SND com jornada guiada de dados e documentos." />
 
-  <!-- Fontes (mantidas como no seu projeto) -->
-  https://fonts.googleapis.com
-  https://fonts.gstatic.com
-  https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap
+  <!-- Favicon usando o seu arquivo -->
+  <link rel="icon" type="image/png" href="./snd-hero.png" />
+  <link rel="apple-touch-icon" href="./snd-hero.png" />
 
-  <!-- CSS -->
-  ./styles.css?v=3
+  <!-- Fontes (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="./styles.css?v=3" />
 </head>
 <body>
-  <!-- Ornamentos de fundo -->
+  <!-- Ornamentos de fundo (opcional) -->
   <div class="bg-orb orb-a"></div>
   <div class="bg-orb orb-b"></div>
   <div class="bg-grid"></div>
@@ -25,7 +29,7 @@
     <aside class="sidebar">
       <div class="brand-panel panel-surface">
         <div class="brand-media">
-          ./snd-hero.png
+          <img src="./snd-hero.png" alt="SND" />
           <div class="brand-mask"></div>
         </div>
         <div class="brand-copy">
@@ -47,7 +51,7 @@
           <button type="button" class="btn btn-secondary nav-save" id="saveDraftBtn">Salvar rascunho</button>
         </div>
 
-        <!-- Sem numeração nas etapas -->
+        <!-- Navegação sem numeração -->
         <div class="step-nav" id="timeline">
           <button type="button" class="step-nav-btn active" data-go-step="0"><div><strong>Boas‑vindas</strong><small>Tela inicial</small></div></button>
           <button type="button" class="step-nav-btn" data-go-step="1"><div><strong>Dados Pessoais</strong><small>Cadastro e endereço</small></div></button>
@@ -70,7 +74,7 @@
           <p>Ambiente institucional para preenchimento guiado de dados e anexos do processo admissional.</p>
         </div>
 
-        <!-- Barra de progresso sem legenda/numeração -->
+        <!-- Progresso sem legenda/numeração -->
         <div class="topbar-progress">
           <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
         </div>
@@ -111,7 +115,7 @@
                     <small id="qlCandMsg" class="muted" role="status" aria-live="polite"></small>
                   </div>
 
-                  <!-- Consultor (linhas) -->
+                  <!-- Consultor (linhas + primeiro acesso) -->
                   <div class="panel-surface" style="padding:16px">
                     <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Consultor</h4>
                     <p class="muted" style="margin:0 0 12px">Entre com e‑mail e senha para abrir o Portal do Consultor.</p>
@@ -135,7 +139,7 @@
                       <button type="button" class="btn btn-ghost" id="btnPrimeiroAcesso">Primeiro acesso</button>
                     </div>
 
-                    <!-- Modal primeiro acesso -->
+                    <!-- Modal: primeiro acesso -->
                     <dialog id="dlgPrimeiroAcesso" class="summary-dialog">
                       <div class="summary-surface" style="max-width:560px">
                         <div class="dialog-head">
@@ -457,7 +461,7 @@
             </div>
           </section>
 
-          <!-- ========== 5. DECLARAÇÃO & ASSINATURA (com upload de assinatura) ========== -->
+          <!-- ========== 5. DECLARAÇÃO & ASSINATURA ========== -->
           <section class="step-card panel-surface" data-step="5">
             <div class="section-head">
               <div><span class="section-tag">Tela 5</span><h3>Declaração e Assinatura</h3></div>
@@ -617,7 +621,7 @@
     </main>
   </div>
 
-  <!-- Modal genérico de resumo (mantido para seu uso futuro) -->
+  <!-- Modal genérico de resumo (mantido caso queira) -->
   <dialog id="summaryDialog" class="summary-dialog">
     <div class="summary-surface">
       <div class="dialog-head">
@@ -631,6 +635,6 @@
   <div class="toast" id="toast"></div>
 
   <!-- JS -->
-  ./app.js?v=3</script>
+  <script src="./app.js?v=3" defer></script>
 </body>
 </html>
