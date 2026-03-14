@@ -4,58 +4,52 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Minha Área — SND</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    .readonly span{display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card)}
-    .readonly label{font-weight:600}
-  </style>
+  <link rel="stylesheet" href="style.css" />
+  <style>.readonly span{display:block;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface)}</style>
 </head>
 <body>
-  <header class="container">
-    <h1>Minha Área — Envio adicional de documentos</h1>
-    <p>Informe o <strong>e‑mail</strong> utilizado no cadastro para visualizar seus dados e enviar arquivos adicionais.</p>
-  </header>
-
-  <main class="container">
-    <!-- Passo A: Login por e-mail -->
-    <section id="loginSection">
-      <form id="loginForm">
-        <div class="grid">
-          <label>E‑mail* <input required type="email" name="email"/></label>
+  <div class="shell">
+    <main class="main-area">
+      <header class="topbar panel-surface">
+        <div>
+          <span class="eyebrow">SND</span>
+          <h2>Minha Área — Envio adicional</h2>
+          <p>Informe seu e‑mail do cadastro para visualizar seus dados e enviar arquivos adicionais.</p>
         </div>
-        <div class="actions">
-          <a class="btn-secondary" href="index.html">Voltar</a>
-          <button class="btn-primary" type="submit">Acessar Minha Área</button>
-        </div>
-        <output id="loginMsg" role="status" aria-live="polite"></output>
-      </form>
-    </section>
+      </header>
 
-    <!-- Passo B: Área do candidato -->
-    <section id="areaSection" class="hidden">
-      <h2>Seus dados (resumo da Tela 1)</h2>
-      <div class="grid readonly" id="resumoTela1"></div>
+      <section class="panel-surface" id="loginSection" style="padding:24px">
+        <form id="loginForm" class="grid cols-2">
+          <div class="field"><label>E‑mail*<input required type="email" name="email"/></label></div>
+          <div class="field"><label>&nbsp;<button class="btn btn-primary" type="submit">Acessar</button></label></div>
+          <output id="loginMsg" role="status" aria-live="polite"></output>
+        </form>
+      </section>
 
-      <h3>Enviar novos documentos</h3>
-      <p>Tipos aceitos: PDF, Word, Excel, PowerPoint, JPG/PNG. Tamanho máx.: 10 MB por arquivo.</p>
-      <form id="uploadForm">
-        <input type="hidden" name="email"/>
-        <div class="grid">
-          <label>Outros documentos (múltiplos)
-            <input type="file" id="up_extra" multiple
-                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"/>
-          </label>
-        </div>
-        <div class="actions">
-          <a class="btn-secondary" href="index.html">Sair</a>
-          <button class="btn-primary" type="submit">Enviar arquivos</button>
-        </div>
-        <output id="uploadMsg" role="status" aria-live="polite"></output>
-      </form>
-    </section>
-  </main>
+      <section class="panel-surface hidden" id="areaSection" style="padding:24px">
+        <h3>Seus dados (resumo da Tela 1)</h3>
+        <div class="grid cols-2 readonly" id="resumoTela1"></div>
 
-  <footer class="container"><small>© SND — RH</small></footer>
+        <h3 class="top-gap">Enviar novos documentos</h3>
+        <p>Tipos aceitos: PDF, JPG, JPEG, PNG. Máx. 10 MB por arquivo.</p>
+        <form id="uploadForm" class="grid">
+          <input type="hidden" name="email"/>
+          <div class="upload-card">
+            <label for="up_extra"><span class="upload-icon">📎</span>Outros documentos (múltiplos)</label>
+            <input id="up_extra" name="up_extra" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+            <small class="file-meta">Múltiplos arquivos · até 10MB cada</small>
+            <small class="file-feedback" aria-live="polite"></small>
+          </div>
+          <div>
+            <button class="btn btn-primary" type="submit">Enviar arquivos</button>
+            <a class="btn btn-ghost" href="index.html">Voltar ao cadastro</a>
+          </div>
+          <output id="uploadMsg" role="status" aria-live="polite"></output>
+        </form>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
   <script src="minha-area.js"></script>
 </body>
 </html>
