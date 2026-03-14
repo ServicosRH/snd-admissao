@@ -244,7 +244,7 @@ function restoreDraft(){
 function openSummary(){
   const p = buildPayloadPreview();
   summaryContent.innerHTML = `<pre>${JSON.stringify(p,null,2)}</pre>`;
-  summaryDialog.showModal();
+  summaryDialog?.showModal();
 }
 
 // ===== Submit → Flow (cadastro) =====
@@ -392,6 +392,7 @@ async function buildFlowPayload(){
     { id:'childrenCpfUpload', label:'CPF_Filho', max:10 },
     { id:'itauProofUpload', label:'Dados_Conta_Bancaria', max:1 },
     { id:'referenceLetterUpload', label:'Carta_Referencia', max:1 },
+    { id:'diplomaUpload', label:'Diploma_Declaracao_Escolaridade', max:1 },
     { id:'professionalLicenseUpload', label:'Carteira_Registro_Prof', max:1 }
   ];
 
@@ -423,7 +424,7 @@ async function buildFlowPayload(){
     assinatura: assinaturaDataUrl // data:image/png;base64 ou data:image/jpeg;base64 se foi upload
   };
 
-  return { metadata:{ fonte:'form-web-snd', versao:'4.0.0', enviadoEm:new Date().toISOString(), modo:'cadastro' }, dados, anexos, declaracao };
+  return { metadata:{ fonte:'form-web-snd', versao:'5.0.0', enviadoEm:new Date().toISOString(), modo:'cadastro' }, dados, anexos, declaracao };
 }
 
 async function fileToBase64(f){
