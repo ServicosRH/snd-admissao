@@ -211,3 +211,188 @@
                 <select id="ctpsType" name="ctpsType" required><option value="">Selecione</option><option>Físico</option><option>Digital</option></select>
               </div>
               <div class="field conditional" data-show-when="ctpsType=Físico"><label for="ctpsNumber">CTPS Nº *</label><input id="ctpsNumber" name="ctpsNumber" type="text" inputmode="numeric"/></div>
+              <div class="field conditional" data-show-when="ctpsType=Físico"><label for="ctpsSeries">CTPS Série *</label><input id="ctpsSeries" name="ctpsSeries" type="text"/></div>
+
+              <div class="field"><label for="hasProfessionalRecord">Possui Registro Profissional</label>
+                <select id="hasProfessionalRecord" name="hasProfessionalRecord"><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim"><label for="professionalRecord">Registro Profissional</label><input id="professionalRecord" name="professionalRecord" type="text" inputmode="numeric"/></div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim"><label for="professionalIssuer">Órgão Emissor/Estado</label><input id="professionalIssuer" name="professionalIssuer" type="text" placeholder="Ex.: CREA/SP"/></div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim"><label for="professionalIssueDate">Data da Emissão</label><input id="professionalIssueDate" name="professionalIssueDate" type="date"/></div>
+
+              <div class="field"><label for="voterTitle">Nº do Título de Eleitor *</label><input id="voterTitle" name="voterTitle" type="text" inputmode="numeric" required/></div>
+              <div class="field"><label for="voterZone">Zona Eleitoral *</label><input id="voterZone" name="voterZone" type="text" inputmode="numeric" required/></div>
+              <div class="field"><label for="voterSection">Seção Eleitoral *</label><input id="voterSection" name="voterSection" type="text" inputmode="numeric" required/></div>
+              <div class="field"><label for="voterIssueDate">Data de Emissão (Título) *</label><input id="voterIssueDate" name="voterIssueDate" type="date" required/></div>
+
+              <div class="field">
+                <label for="hasPis">Possui PIS? *</label>
+                <select id="hasPis" name="hasPis" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasPis=Sim"><label for="pisNumber">PIS Nº *</label><input id="pisNumber" name="pisNumber" type="text" inputmode="numeric"/></div>
+            </div>
+          </section>
+
+          <!-- STEP 3 – Complementares -->
+          <section class="step-card panel-surface" data-step="3">
+            <div class="section-head"><div><span class="section-tag">Tela 3</span><h3>Dados Complementares</h3></div><span class="badge-soft">Complementos</span></div>
+            <div class="grid cols-2">
+              <div class="field"><label for="hasOtherJob">Possui outro emprego? *</label>
+                <select id="hasOtherJob" name="hasOtherJob" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasOtherJob=Sim"><label for="otherJobCnpj">Qual o CNPJ desta empresa? *</label><input id="otherJobCnpj" name="otherJobCnpj" type="text" inputmode="numeric"/></div>
+
+              <div class="field"><label for="hasRetirement">Possui aposentadoria? *</label>
+                <select id="hasRetirement" name="hasRetirement" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasRetirement=Sim"><label for="retirementDate">Data da concessão da aposentadoria *</label><input id="retirementDate" name="retirementDate" type="date"/></div>
+
+              <div class="field"><label for="hasRelativeAtSnd">Possui algum parente na SND? *</label>
+                <select id="hasRelativeAtSnd" name="hasRelativeAtSnd" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim"><label for="relativeName">Nome do parente *</label><input id="relativeName" name="relativeName" type="text"/></div>
+              <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim"><label for="relationshipDegree">Grau de parentesco *</label><input id="relationshipDegree" name="relationshipDegree" type="text"/></div>
+
+              <div class="field"><label for="hasItauAccount">Possui conta corrente no Banco Itaú? *</label>
+                <select id="hasItauAccount" name="hasItauAccount" required><option value="">Selecione</option><option>Sim</option><option>Não</option></select>
+              </div>
+              <div class="field conditional" data-show-when="hasItauAccount=Sim"><label for="itauAgency">Agência nº *</label><input id="itauAgency" name="itauAgency" type="text" inputmode="numeric"/></div>
+              <div class="field conditional" data-show-when="hasItauAccount=Sim"><label for="itauAccountNumber">Conta-corrente nº *</label><input id="itauAccountNumber" name="itauAccountNumber" type="text" inputmode="numeric"/></div>
+            </div>
+          </section>
+
+          <!-- STEP 4 – Uploads -->
+          <section class="step-card panel-surface" data-step="4">
+            <div class="section-head"><div><span class="section-tag">Tela 4</span><h3>Documentos Obrigatórios</h3></div><span class="badge-soft">Uploads</span></div>
+            <div class="upload-grid upload-grid-stacked">
+              <div class="upload-card" data-required="true">
+                <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho <span class="doc-badge required">Obrigatório</span></label>
+                <p>Preferencialmente em PDF com os dados da carteira digital.</p>
+                <input id="workCard" name="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card" data-required="true">
+                <label for="identityUpload"><span class="upload-icon">🪪</span>Documento de Identidade <span class="doc-badge required">Obrigatório</span></label>
+                <p>Frente e verso. Até 2 arquivos.</p>
+                <input id="identityUpload" name="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple required />
+                <small class="file-meta">2 arquivos · até 10MB cada</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="true">
+                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <span class="doc-badge required">Obrigatório</span></label>
+                <input id="cpfUpload" name="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasReservist=Sim" data-required="true">
+                <label for="reservistUpload"><span class="upload-icon">🎖️</span>Certificado de Reservista <span class="doc-badge required">Obrigatório</span></label>
+                <input id="reservistUpload" name="reservistUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="true">
+                <label for="voterTitleUpload"><span class="upload-icon">🗳️</span>Título de Eleitor <span class="doc-badge required">Obrigatório</span></label>
+                <input id="voterTitleUpload" name="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasPis=Sim" data-required="true">
+                <label for="pisUpload"><span class="upload-icon">📎</span>PIS <span class="doc-badge required">Obrigatório</span></label>
+                <input id="pisUpload" name="pisUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="true">
+                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <span class="doc-badge required">Obrigatório</span></label>
+                <input id="proofOfAddress" name="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="true">
+                <label for="educationUpload"><span class="upload-icon">🎓</span>Diploma/Declaração de Escolaridade <span class="doc-badge required">Obrigatório</span></label>
+                <input id="educationUpload" name="educationUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="true">
+                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <span class="doc-badge required">Obrigatório</span></label>
+                <input id="marriageCertificate" name="marriageCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="true">
+                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <span class="doc-badge required">Obrigatório</span></label>
+                <input id="spouseCpfUpload" name="spouseCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="true">
+                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <span class="doc-badge required">Obrigatório</span></label>
+                <input id="childrenBirthUpload" name="childrenBirthUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <small class="file-meta">Múltiplos · até 10MB</small><small class="file-feedback"></small>
+              </div>
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="true">
+                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <span class="doc-badge required">Obrigatório</span></label>
+                <input id="childrenCpfUpload" name="childrenCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <small class="file-meta">Múltiplos · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasItauAccount=Sim" data-required="true">
+                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <span class="doc-badge required">Obrigatório</span></label>
+                <input id="itauProofUpload" name="itauProofUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="false">
+                <label for="referenceLetterUpload"><span class="upload-icon">✉️</span>Carta de Referência do Último Emprego <span class="doc-badge optional">Opcional</span></label>
+                <input id="referenceLetterUpload" name="referenceLetterUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+
+              <div class="upload-card" data-required="false">
+                <label for="professionalLicenseUpload"><span class="upload-icon">🪪</span>Carteira de Registro Profissional <span class="doc-badge optional">Opcional</span></label>
+                <input id="professionalLicenseUpload" name="professionalLicenseUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback"></small>
+              </div>
+            </div>
+
+            <div class="technical-panel">
+              <div class="sub-head"><div><h4>Pré-visualização técnica</h4><p>Payload preparado para o Flow.</p></div><button type="button" class="btn btn-ghost small" id="togglePayloadBtn">Exibir payload</button></div>
+              <pre id="payloadPreview" class="collapsed">{}</pre>
+            </div>
+          </section>
+        </div>
+
+        <section id="successScreen" class="success-screen panel-surface hidden">
+          <span class="section-tag">Finalização</span>
+          <h3>Cadastro recebido com sucesso</h3>
+          <p>Os dados foram enviados para processamento institucional.</p>
+          <div class="success-actions"><button type="button" class="btn btn-secondary" id="restartBtn">Preencher novamente</button><button type="button" class="btn btn-primary" id="successSummaryBtn">Ver resumo enviado</button></div>
+        </section>
+
+        <div class="footer-actions panel-surface">
+          <button type="button" class="btn btn-ghost" id="prevBtn">Voltar</button>
+          <div class="footer-info"><strong id="footerTitle">Etapa inicial</strong><span id="footerText">Avance para iniciar o preenchimento.</span></div>
+          <button type="button" class="btn btn-primary" id="nextBtn">Próxima etapa</button>
+          <button type="submit" class="btn btn-primary hidden" id="submitBtn">Concluir cadastro</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <dialog id="summaryDialog" class="summary-dialog">
+    <div class="summary-surface">
+      <div class="dialog-head">
+        <div><span class="eyebrow">Resumo consolidado</span><h3>Visão executiva do cadastro</h3></div>
+        <button type="button" class="icon-btn" id="closeSummaryBtn" aria-label="Fechar resumo">×</button>
+      </div>
+      <div class="summary-content" id="summaryContent"></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+  <!-- **IMPORTANTE**: carregue o JS correto -->
+  <script src="app.js"></script>
+</body>
+</html>
