@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="./styles.css?v=1" />
+  <link rel="stylesheet" href="./styles.css?v=2" />
 </head>
 <body>
   <!-- Ornamentos de fundo -->
@@ -25,7 +25,6 @@
     <aside class="sidebar">
       <div class="brand-panel panel-surface">
         <div class="brand-media">
-          <!-- Imagem da marca -->
           <img src="./snd-hero.png" alt="SND" class="brand-image" />
           <div class="brand-mask"></div>
         </div>
@@ -102,13 +101,13 @@
             <div class="welcome-clean">
               <span class="section-tag">Tela inicial</span>
               <h3>Seja bem-vindo(a) à SND</h3>
-              <p>Olá! Estamos felizes por ter você aqui. Para garantir velocidade, preencha os dados com atenção e anexe os documentos quando puder — você poderá complementar depois na “Minha Área”.</p>
+              <p>Preencha os dados com atenção. Os documentos podem ser enviados depois pela “Minha Área”.</p>
               <div class="welcome-actions">
                 <button type="button" class="btn btn-primary" id="startFlowBtn">Iniciar preenchimento</button>
                 <button type="button" class="btn btn-ghost" id="previewBtn">Ver resumo</button>
               </div>
 
-              <!-- ====== LOGINS RÁPIDOS (CANDIDATO / CONSULTOR) ====== -->
+              <!-- ====== LOGINS RÁPIDOS ====== -->
               <section class="panel-surface" style="margin-top:20px; padding:18px">
                 <div class="grid cols-2" style="gap:18px">
                   <!-- Acesso do Candidato -->
@@ -128,11 +127,13 @@
                     <small id="qlCandMsg" class="muted" role="status" aria-live="polite"></small>
                   </div>
 
-                  <!-- Acesso do Consultor -->
+                  <!-- Acesso do Consultor (LINHAS + Primeiro acesso) -->
                   <div class="panel-surface" style="padding:16px">
                     <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Consultor</h4>
                     <p class="muted" style="margin:0 0 12px">Entre com e‑mail e senha para abrir o Portal do Consultor.</p>
-                    <form id="quickLoginConsultor" class="grid" style="grid-template-columns:1fr 1fr auto; gap:10px">
+
+                    <!-- LOGIN (linhas) -->
+                    <form id="quickLoginConsultor" class="grid" style="gap:10px; grid-template-columns:1fr">
                       <div class="field" style="margin:0">
                         <label for="qlConsEmail">E‑mail *</label>
                         <input id="qlConsEmail" name="email" type="email" required placeholder="consultor@empresa.com"/>
@@ -141,12 +142,48 @@
                         <label for="qlConsPass">Senha *</label>
                         <input id="qlConsPass" name="password" type="password" required placeholder="••••••••"/>
                       </div>
-                      <div class="field" style="margin:0; align-self:end">
-                        <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-secondary">Entrar</button>
+                      <div class="field" style="margin:0">
+                        <button type="submit" class="btn btn-secondary" style="width:100%">Entrar</button>
                       </div>
                     </form>
-                    <small id="qlConsMsg" class="muted" role="status" aria-live="polite"></small>
+
+                    <div class="row" style="display:flex;gap:10px;align-items:center;margin-top:8px">
+                      <small id="qlConsMsg" class="muted" role="status" aria-live="polite"></small>
+                      <button type="button" class="btn btn-ghost" id="btnPrimeiroAcesso">Primeiro acesso</button>
+                    </div>
+
+                    <!-- MODAL de primeiro acesso -->
+                    <dialog id="dlgPrimeiroAcesso" class="summary-dialog">
+                      <div class="summary-surface" style="max-width:560px">
+                        <div class="dialog-head">
+                          <div>
+                            <span class="eyebrow">Cadastro de Consultor</span>
+                            <h3>Primeiro acesso</h3>
+                            <p class="muted">Crie seu usuário com nome, e‑mail e senha.</p>
+                          </div>
+                          <button type="button" class="icon-btn" id="dlgFecharPrimeiroAcesso" aria-label="Fechar">×</button>
+                        </div>
+
+                        <form id="formPrimeiroAcesso" class="grid" style="gap:12px">
+                          <div class="field">
+                            <label for="paNome">Nome *</label>
+                            <input id="paNome" name="nome" type="text" required placeholder="Seu nome completo"/>
+                          </div>
+                          <div class="field">
+                            <label for="paEmail">E‑mail corporativo *</label>
+                            <input id="paEmail" name="email" type="email" required placeholder="consultor@empresa.com"/>
+                          </div>
+                          <div class="field">
+                            <label for="paSenha">Senha *</label>
+                            <input id="paSenha" name="senha" type="password" required placeholder="Crie uma senha"/>
+                          </div>
+                          <div class="field">
+                            <button type="submit" class="btn btn-primary">Criar conta</button>
+                          </div>
+                          <small id="paMsg" class="muted" role="status" aria-live="polite"></small>
+                        </form>
+                      </div>
+                    </dialog>
                   </div>
                 </div>
               </section>
@@ -364,14 +401,13 @@
             </div>
           </section>
 
-          <!-- ========== STEP 4 – UPLOADS (OPCIONAIS) ========== -->
+          <!-- ========== STEP 4 – UPLOADS (todos OPCIONAIS) ========== -->
           <section class="step-card panel-surface" data-step="4">
             <div class="section-head">
               <div><span class="section-tag">Tela 4</span><h3>Documentos (todos opcionais)</h3></div>
               <span class="badge-soft">Uploads</span>
             </div>
 
-            <!-- GRID DE UPLOADS (TODOS OPCIONAIS) -->
             <div class="upload-grid upload-grid-stacked">
               <div class="upload-card" data-required="false">
                 <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho <span class="doc-badge optional">Opcional</span></label>
@@ -463,7 +499,6 @@
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
             </div>
-            <!-- /GRID DE UPLOADS -->
 
             <!-- Painel técnico -->
             <div class="technical-panel">
@@ -515,6 +550,6 @@
   <div class="toast" id="toast"></div>
 
   <!-- JS -->
-  <script src="./app.js?v=1" defer></script>
+  <script src="./app.js?v=2" defer></script>
 </body>
 </html>
