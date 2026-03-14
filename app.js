@@ -1,8 +1,5 @@
 /* SND – Portal Admissional V2.3 (app.js)
-   -> Mantém SEU layout premium e a UX do wizard.
-   -> Adiciona: integração com Power Automate (HTTP), validações e anexos em base64.
-   -> Validação especial: uploads de filhos >= quantidade informada.
-   -> Dependentes: enviados no payload em dados.filhos[] (Flow grava na tabela BD_DEPENDENTES).
+   Layout premium + integração Power Automate (HTTP) + regras + dependentes.
 */
 
 let ENDPOINT_URL = null;
@@ -10,7 +7,7 @@ fetch('config.json').then(r=>r.ok?r.json():null).then(cfg=>{
   if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl;
 });
 
-// ========= Seletores base =========
+// ===== Base =====
 const form = document.getElementById('admissionForm');
 const steps = Array.from(document.querySelectorAll('.step-card'));
 const timelineItems = Array.from(document.querySelectorAll('#timeline .step-nav-btn'));
@@ -45,15 +42,13 @@ const stepMeta = [
 ];
 
 let currentStep = 0;
-
-// ========= Utils =========
 const q = name => form.elements[name];
 const gid = id => document.getElementById(id);
 const onlyDigits = v => (v||'').replace(/\D+/g,'');
-function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2600); }
+function showToast(m){ toast.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2600); }
 function isVisibleField(el){ if(!el) return false; const card=el.closest('.step-card'); const hidden=el.closest('.hidden-by-rule'); return card?.classList.contains('active') && !hidden && !el.disabled; }
 
-// ========= Navegação =========
+// ===== Navegação =====
 function bindEvents(){
   prevBtn.addEventListener('click', ()=>{ if(currentStep>0) showStep(currentStep-1); });
   nextBtn.addEventListener('click', ()=>{ if(!validateCurrentStep()) return; if(currentStep<steps.length-1) showStep(currentStep+1); });
@@ -79,7 +74,6 @@ function bindEvents(){
   form.addEventListener('input', onFieldChange);
   form.addEventListener('change', onFieldChange);
 
-  // SUBMIT REAL → envia ao Flow
   form.addEventListener('submit', onSubmit);
 }
 function showStep(i){
@@ -105,7 +99,7 @@ function onFieldChange(e){
   if(t.matches('select, input')){ refreshConditionals(); updatePayloadPreview(); }
 }
 
-// ========= Condicionais =========
+// ===== Condicionais =====
 function refreshConditionals(){
   document.querySelectorAll('.conditional').forEach(block=>{
     const [field, expected] = (block.dataset.showWhen||'').split('=');
@@ -119,33 +113,25 @@ function refreshConditionals(){
 function syncRequired(){
   const req = {
     spouseName: q('maritalStatus')?.value==='Casado(a)',
-
-    // Filhos
     childrenCount: q('hasChildren')?.value==='Sim',
 
-    // Reservista
     hasReservist: q('biologicalSex')?.value==='Masculino',
     reservistNumber: q('hasReservist')?.value==='Sim',
     dispenseReason: q('hasReservist')?.value==='Sim',
 
-    // CTPS
     ctpsNumber: q('ctpsType')?.value==='Físico',
     ctpsSeries: q('ctpsType')?.value==='Físico',
 
-    // PIS
     pisNumber: q('hasPis')?.value==='Sim',
 
-    // Complementares
     otherJobCnpj: q('hasOtherJob')?.value==='Sim',
     retirementDate: q('hasRetirement')?.value==='Sim',
     relativeName: q('hasRelativeAtSnd')?.value==='Sim',
     relationshipDegree: q('hasRelativeAtSnd')?.value==='Sim',
 
-    // Itaú
     itauAgency: q('hasItauAccount')?.value==='Sim',
     itauAccountNumber: q('hasItauAccount')?.value==='Sim',
 
-    // Uploads
     reservistUpload: q('hasReservist')?.value==='Sim',
     pisUpload: q('hasPis')?.value==='Sim',
     marriageCertificate: q('maritalStatus')?.value==='Casado(a)',
@@ -155,7 +141,7 @@ function syncRequired(){
     educationUpload: true,
     itauProofUpload: q('hasItauAccount')?.value==='Sim'
   };
-  Object.entries(req).forEach(([name,required])=>{ const f=q(name); if(f) f.required = required; });
+  Object.entries(req).forEach(([name,required])=>{ const f=q(name); if(f) f.required=required; });
   childrenRows.querySelectorAll('input').forEach(inp=> inp.required = (q('hasChildren')?.value==='Sim'));
 }
 function clearHiddenFields(container){
@@ -165,7 +151,7 @@ function clearHiddenFields(container){
   });
 }
 
-// ========= Filhos =========
+// ===== Filhos =====
 function renderChildrenRows(){
   const count = Math.min(Math.max(Number(q('childrenCount')?.value||0),0),10);
   childrenRows.innerHTML='';
@@ -193,42 +179,37 @@ function collectChildrenData(){
   return arr;
 }
 
-// ========= Upload feedback =========
+// ===== Upload feedback =====
 function initFileUploads(){ form.querySelectorAll('input[type="file"]').forEach(updateFileFeedback); }
 function updateFileFeedback(input){
-  const card = input.closest('.upload-card'); if(!card) return;
-  const fb = card.querySelector('.file-feedback');
-  const files = Array.from(input.files||[]);
+  const card=input.closest('.upload-card'); if(!card) return;
+  const fb=card.querySelector('.file-feedback');
+  const files=Array.from(input.files||[]);
   card.classList.toggle('has-file', files.length>0);
   if(!fb) return;
-  fb.textContent = files.length ? (files.length===1 ? `✔ ${files[0].name}` : `✔ ${files.length} arquivo(s)`) : '';
+  fb.textContent = files.length ? (files.length===1?`✔ ${files[0].name}`:`✔ ${files.length} arquivo(s)`) : '';
 }
 
-// ========= Validações =========
+// ===== Validações =====
 function validateFileInput(input){
   const files=Array.from(input.files||[]);
   if(input.required && files.length===0) return false;
-  return files.every(f=>{
-    const ext=(f.name.split('.').pop()||'').toLowerCase();
-    const sizeOk = f.size<=10*1024*1024;
-    return ALLOWED_EXT.includes(ext) && sizeOk;
-  });
+  return files.every(f=> ALLOWED_EXT.includes((f.name.split('.').pop()||'').toLowerCase()) && f.size<=10*1024*1024 );
 }
 function clearErrors(panel){
   panel.querySelectorAll('.invalid').forEach(el=>el.classList.remove('invalid'));
   panel.querySelectorAll('.error-text').forEach(el=>el.remove());
 }
 function setFieldError(field,message){
-  const w = field.closest('.field, .upload-card'); if(!w) return;
+  const w=field.closest('.field, .upload-card'); if(!w) return;
   w.classList.add('invalid');
-  const s=document.createElement('small'); s.className='error-text'; s.textContent=message;
-  w.appendChild(s);
+  const s=document.createElement('small'); s.className='error-text'; s.textContent=message; w.appendChild(s);
 }
 function validateCurrentStep(){
-  const panel = steps[currentStep];
+  const panel=steps[currentStep];
   clearErrors(panel);
-  let valid = true;
-  const fields = Array.from(panel.querySelectorAll('input, select')).filter(isVisibleField);
+  let valid=true;
+  const fields=Array.from(panel.querySelectorAll('input, select')).filter(isVisibleField);
   fields.forEach(field=>{
     if(field.disabled) return;
     if(field.type==='file'){
@@ -250,19 +231,19 @@ function validateCurrentStep(){
   return valid;
 }
 
-// ========= Rascunho =========
+// ===== Rascunho =====
 function saveDraft(){
   const snap={};
-  Array.from(form.elements).forEach(f=>{ if(!f.name || f.type==='file') return; snap[f.name]=f.value; });
+  Array.from(form.elements).forEach(f=>{ if(!f.name||f.type==='file') return; snap[f.name]=f.value; });
   localStorage.setItem('sndAdmissionDraftV2', JSON.stringify(snap));
   showToast('Rascunho salvo.');
 }
 function restoreDraft(){
   const raw=localStorage.getItem('sndAdmissionDraftV2'); if(!raw) return;
-  try{ const data=JSON.parse(raw); Object.entries(data).forEach(([n,v])=>{ const f=q(n); if(f&&f.type!=='file') f.value=v; }); }catch{}
+  try{ const s=JSON.parse(raw); Object.entries(s).forEach(([n,v])=>{ const f=q(n); if(f&&f.type!=='file') f.value=v; }); }catch{}
 }
 
-// ========= Resumo técnico =========
+// ===== Resumo técnico =====
 function openSummary(){ updatePayloadPreview(); const p=buildPayloadPreview(); summaryContent.innerHTML=buildSummaryMarkup(p); summaryDialog.showModal(); }
 function buildSummaryMarkup(p){
   const ch=p.dadosPessoais.filhos||[];
@@ -317,13 +298,13 @@ function buildPayloadPreview(){
 }
 function updatePayloadPreview(){ payloadPreview.textContent = JSON.stringify(buildPayloadPreview(), null, 2); }
 
-// ========= SUBMIT → FLOW =========
+// ===== Submit → Flow =====
 async function onSubmit(ev){
   ev.preventDefault();
   if(!validateCurrentStep()) return;
   if(!ENDPOINT_URL){ showToast('Erro: config.json ausente.'); return; }
 
-  // validação extra: filhos x uploads
+  // regra: número de uploads de filhos >= quantidade
   if(q('hasChildren')?.value==='Sim'){
     const n=Number(q('childrenCount')?.value||0);
     const cert = gid('childrenBirthUpload')?.files||[];
@@ -335,7 +316,7 @@ async function onSubmit(ev){
 
   submitBtn.disabled=true; submitBtn.textContent='Enviando…';
   try{
-    const payload = await buildFlowPayload(); // inclui anexos
+    const payload = await buildFlowPayload();
     const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     if(resp.ok){
       showSuccessScreen();
@@ -345,14 +326,13 @@ async function onSubmit(ev){
     }
   }catch(e){
     console.error(e);
-    showToast(e?.message || 'Erro de rede.');
+    showToast(e?.message||'Erro de rede.');
   }finally{
     submitBtn.disabled=false; submitBtn.textContent='Concluir cadastro';
   }
 }
 
 async function buildFlowPayload(){
-  // DADOS
   const dados = {
     // Tela 1
     nomeCompleto:q('fullName')?.value?.trim(),
@@ -370,6 +350,7 @@ async function buildFlowPayload(){
     possuiFilhos:q('hasChildren')?.value,
     qtdFilhos:Number(q('childrenCount')?.value||0),
     filhos: collectChildrenData(),
+
     endereco:q('street')?.value?.trim(),
     numero:q('number')?.value?.trim(),
     complemento:q('complement')?.value?.trim(),
@@ -382,21 +363,27 @@ async function buildFlowPayload(){
     hasReservista:q('hasReservist')?.value,
     reservistaCodigo:q('reservistNumber')?.value?.trim(),
     dispensaMotivo:q('dispenseReason')?.value?.trim(),
+
     rgNumero:q('identityDoc')?.value?.trim(),
     rgOrgaoUf:q('issuer')?.value?.trim(),
     rgData:q('identityIssueDate')?.value,
+
     cpf:onlyDigits(q('cpf')?.value||''),
+
     ctpsTipo:q('ctpsType')?.value,
     ctpsNumero:onlyDigits(q('ctpsNumber')?.value||''),
     ctpsSerie:onlyDigits(q('ctpsSeries')?.value||''),
+
     regProfTem:q('hasProfessionalRecord')?.value,
     registroProfissional:q('professionalRecord')?.value?.trim(),
     regProfOrgaoUf:q('professionalIssuer')?.value?.trim(),
     regProfData:q('professionalIssueDate')?.value,
+
     tituloNumero:onlyDigits(q('voterTitle')?.value||''),
     tituloZona:onlyDigits(q('voterZone')?.value||''),
     tituloSecao:onlyDigits(q('voterSection')?.value||''),
     tituloData:q('voterIssueDate')?.value,
+
     possuiPis:q('hasPis')?.value,
     pisNumero:onlyDigits(q('pisNumber')?.value||''),
 
@@ -408,10 +395,12 @@ async function buildFlowPayload(){
     temParenteSnd:q('hasRelativeAtSnd')?.value==='Sim' ? 'sim':'nao',
     nomeParente:q('relativeName')?.value?.trim(),
     parentesco:q('relationshipDegree')?.value?.trim(),
+
     contaItauTem:q('hasItauAccount')?.value==='Sim' ? 'sim':'nao',
     agencia:onlyDigits(q('itauAgency')?.value||''),
     contaCorrente:onlyDigits(q('itauAccountNumber')?.value||''),
 
+    // Compatibilidade antiga
     checklist:{ rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false }
   };
 
@@ -426,10 +415,8 @@ async function buildFlowPayload(){
     { id:'proofOfAddress', label:'Comprovante_Residencia', max:1 },
     { id:'marriageCertificate', label:'Certidao_Casamento', max:1, required:()=> q('maritalStatus')?.value==='Casado(a)' },
     { id:'spouseCpfUpload', label:'CPF_Conjuge', max:1, required:()=> q('maritalStatus')?.value==='Casado(a)' },
-    { id:'childrenBirthUpload', label:'Certidao_Nascimento_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim',
-      min: ()=> Number(q('childrenCount')?.value||0) },
-    { id:'childrenCpfUpload', label:'CPF_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim',
-      min: ()=> Number(q('childrenCount')?.value||0) },
+    { id:'childrenBirthUpload', label:'Certidao_Nascimento_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim', min:()=> Number(q('childrenCount')?.value||0) },
+    { id:'childrenCpfUpload', label:'CPF_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim', min:()=> Number(q('childrenCount')?.value||0) },
     { id:'itauProofUpload', label:'Dados_Conta_Bancaria', max:1, required:()=> q('hasItauAccount')?.value==='Sim' },
     { id:'referenceLetterUpload', label:'Carta_Referencia', max:1, required:()=> q('hasOtherJob')?.value==='Sim' },
     { id:'professionalLicenseUpload', label:'Carteira_Registro_Prof', max:1, required:()=> false }
@@ -437,8 +424,8 @@ async function buildFlowPayload(){
 
   const anexos=[];
   for(const item of map){
-    const input = gid(item.id); if(!input) continue;
-    const files = Array.from(input.files||[]);
+    const input=gid(item.id); if(!input) continue;
+    const files=Array.from(input.files||[]);
     const need = typeof item.required==='function' ? item.required() : (input.required===true);
     const min = typeof item.min==='function' ? item.min() : 0;
 
@@ -458,9 +445,7 @@ async function buildFlowPayload(){
     }
   }
 
-  // DECLARAÇÃO (sem assinatura neste layout; mantemos compatibilidade)
   const declaracao = { texto:'Declaro veracidade das informações.', aceito:true, assinadoEm:new Date().toISOString(), assinatura:null };
-
   const payload = { metadata:{ fonte:'form-web-snd', versao:'3.3.0', enviadoEm:new Date().toISOString(), modo:'cadastro' }, dados, anexos, declaracao };
   payloadPreview.textContent = JSON.stringify(payload, null, 2);
   return payload;
@@ -473,7 +458,7 @@ async function fileToBase64(f){
   });
 }
 
-// ========= Tela final =========
+// ===== Tela final =====
 function showSuccessScreen(){
   if(successScreen) successScreen.classList.remove('hidden');
   if(form) form.classList.add('flow-complete');
@@ -488,13 +473,13 @@ function showSuccessScreen(){
 }
 function restartFlow(){ if(successScreen) successScreen.classList.add('hidden'); document.querySelector('.footer-actions')?.classList.remove('hidden'); showStep(0); }
 
-// ========= Draft/Resumo =========
+// ===== Draft/Resumo =====
 function saveDraft(){ const s={}; Array.from(form.elements).forEach(f=>{ if(!f.name||f.type==='file')return; s[f.name]=f.value;}); localStorage.setItem('sndAdmissionDraftV2',JSON.stringify(s)); showToast('Rascunho salvo.'); }
 function restoreDraft(){ const raw=localStorage.getItem('sndAdmissionDraftV2'); if(!raw) return; try{ const s=JSON.parse(raw); Object.entries(s).forEach(([n,v])=>{ const f=q(n); if(f&&f.type!=='file') f.value=v; }); }catch{} }
 
 function openSummary(){ updatePayloadPreview(); const prev=buildPayloadPreview(); summaryContent.innerHTML=buildSummaryMarkup(prev); summaryDialog.showModal(); }
 function updatePayloadPreview(){ payloadPreview.textContent = JSON.stringify(buildPayloadPreview(), null, 2); }
 
-// ========= Init =========
+// ===== Init =====
 function init(){ bindEvents(); restoreDraft(); showStep(0); refreshConditionals(); renderChildrenRows(); initFileUploads(); updatePayloadPreview(); }
 init();
