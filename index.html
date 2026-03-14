@@ -11,11 +11,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- CSS (usa o nome do seu repositório: styles.css) -->
+  <!-- CSS -->
   <link rel="stylesheet" href="./styles.css?v=1" />
 </head>
 <body>
-  <!-- Orbes de fundo -->
+  <!-- Ornamentos de fundo -->
   <div class="bg-orb orb-a"></div>
   <div class="bg-orb orb-b"></div>
   <div class="bg-grid"></div>
@@ -25,8 +25,8 @@
     <aside class="sidebar">
       <div class="brand-panel panel-surface">
         <div class="brand-media">
-          <!-- IMAGEM (na raiz do repo) -->
-          <img src="./snd-hero.png" alt="SND Soluções em Tecnologia" class="brand-image" />
+          <!-- Imagem da marca -->
+          <img src="./snd-hero.png" alt="SND" class="brand-image" />
           <div class="brand-mask"></div>
         </div>
         <div class="brand-copy">
@@ -68,7 +68,7 @@
           </button>
           <button type="button" class="step-nav-btn" data-go-step="4">
             <span>05</span>
-            <div><strong>Uploads</strong><small>Documentos obrigatórios</small></div>
+            <div><strong>Uploads</strong><small>Documentos (opcionais)</small></div>
           </button>
         </div>
       </div>
@@ -102,11 +102,55 @@
             <div class="welcome-clean">
               <span class="section-tag">Tela inicial</span>
               <h3>Seja bem-vindo(a) à SND</h3>
-              <p>Olá! Estamos felizes por ter você aqui. Para garantir velocidade, preencha os dados com atenção e anexe todos os documentos solicitados.</p>
+              <p>Olá! Estamos felizes por ter você aqui. Para garantir velocidade, preencha os dados com atenção e anexe os documentos quando puder — você poderá complementar depois na “Minha Área”.</p>
               <div class="welcome-actions">
                 <button type="button" class="btn btn-primary" id="startFlowBtn">Iniciar preenchimento</button>
                 <button type="button" class="btn btn-ghost" id="previewBtn">Ver resumo</button>
               </div>
+
+              <!-- ====== LOGINS RÁPIDOS (CANDIDATO / CONSULTOR) ====== -->
+              <section class="panel-surface" style="margin-top:20px; padding:18px">
+                <div class="grid cols-2" style="gap:18px">
+                  <!-- Acesso do Candidato -->
+                  <div class="panel-surface" style="padding:16px">
+                    <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Candidato</h4>
+                    <p class="muted" style="margin:0 0 12px">Informe seu e‑mail para abrir a Minha Área.</p>
+                    <form id="quickLoginCandidate" class="grid" style="grid-template-columns:1fr auto; gap:10px">
+                      <div class="field" style="margin:0">
+                        <label for="qlCandEmail">E‑mail *</label>
+                        <input id="qlCandEmail" name="email" type="email" required placeholder="seuemail@exemplo.com"/>
+                      </div>
+                      <div class="field" style="margin:0; align-self:end">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary">Minha Área</button>
+                      </div>
+                    </form>
+                    <small id="qlCandMsg" class="muted" role="status" aria-live="polite"></small>
+                  </div>
+
+                  <!-- Acesso do Consultor -->
+                  <div class="panel-surface" style="padding:16px">
+                    <h4 style="margin:0 0 8px; color:var(--primary)">Acesso do Consultor</h4>
+                    <p class="muted" style="margin:0 0 12px">Entre com e‑mail e senha para abrir o Portal do Consultor.</p>
+                    <form id="quickLoginConsultor" class="grid" style="grid-template-columns:1fr 1fr auto; gap:10px">
+                      <div class="field" style="margin:0">
+                        <label for="qlConsEmail">E‑mail *</label>
+                        <input id="qlConsEmail" name="email" type="email" required placeholder="consultor@empresa.com"/>
+                      </div>
+                      <div class="field" style="margin:0">
+                        <label for="qlConsPass">Senha *</label>
+                        <input id="qlConsPass" name="password" type="password" required placeholder="••••••••"/>
+                      </div>
+                      <div class="field" style="margin:0; align-self:end">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-secondary">Entrar</button>
+                      </div>
+                    </form>
+                    <small id="qlConsMsg" class="muted" role="status" aria-live="polite"></small>
+                  </div>
+                </div>
+              </section>
+              <!-- ====== /LOGINS RÁPIDOS ====== -->
             </div>
           </section>
 
@@ -320,88 +364,89 @@
             </div>
           </section>
 
-          <!-- ========== STEP 4 – UPLOADS ========== -->
+          <!-- ========== STEP 4 – UPLOADS (OPCIONAIS) ========== -->
           <section class="step-card panel-surface" data-step="4">
             <div class="section-head">
-              <div><span class="section-tag">Tela 4</span><h3>Documentos Obrigatórios</h3></div>
+              <div><span class="section-tag">Tela 4</span><h3>Documentos (todos opcionais)</h3></div>
               <span class="badge-soft">Uploads</span>
             </div>
 
+            <!-- GRID DE UPLOADS (TODOS OPCIONAIS) -->
             <div class="upload-grid upload-grid-stacked">
-              <div class="upload-card" data-required="true">
-                <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card" data-required="false">
+                <label for="workCard"><span class="upload-icon">📄</span>Carteira de Trabalho <span class="doc-badge optional">Opcional</span></label>
                 <p>Preferencialmente em PDF com os dados da carteira digital.</p>
-                <input id="workCard" name="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png" required/>
+                <input id="workCard" name="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card" data-required="true">
-                <label for="identityUpload"><span class="upload-icon">🪪</span>Documento de Identidade <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card" data-required="false">
+                <label for="identityUpload"><span class="upload-icon">🪪</span>Documento de Identidade <span class="doc-badge optional">Opcional</span></label>
                 <p>Frente e verso. Até 2 arquivos.</p>
-                <input id="identityUpload" name="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple required/>
+                <input id="identityUpload" name="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
                 <small class="file-meta">2 arquivos · até 10MB cada</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card" data-required="true">
-                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <span class="doc-badge required">Obrigatório</span></label>
-                <input id="cpfUpload" name="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required/>
+              <div class="upload-card" data-required="false">
+                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <span class="doc-badge optional">Opcional</span></label>
+                <input id="cpfUpload" name="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card conditional" data-show-when="hasReservist=Sim" data-required="true">
-                <label for="reservistUpload"><span class="upload-icon">🎖️</span>Certificado de Reservista <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="hasReservist=Sim" data-required="false">
+                <label for="reservistUpload"><span class="upload-icon">🎖️</span>Certificado de Reservista <span class="doc-badge optional">Opcional</span></label>
                 <input id="reservistUpload" name="reservistUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card" data-required="true">
-                <label for="voterTitleUpload"><span class="upload-icon">🗳️</span>Título de Eleitor <span class="doc-badge required">Obrigatório</span></label>
-                <input id="voterTitleUpload" name="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required/>
+              <div class="upload-card" data-required="false">
+                <label for="voterTitleUpload"><span class="upload-icon">🗳️</span>Título de Eleitor <span class="doc-badge optional">Opcional</span></label>
+                <input id="voterTitleUpload" name="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card conditional" data-show-when="hasPis=Sim" data-required="true">
-                <label for="pisUpload"><span class="upload-icon">📎</span>PIS <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="hasPis=Sim" data-required="false">
+                <label for="pisUpload"><span class="upload-icon">📎</span>PIS <span class="doc-badge optional">Opcional</span></label>
                 <input id="pisUpload" name="pisUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card" data-required="true">
-                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <span class="doc-badge required">Obrigatório</span></label>
-                <input id="proofOfAddress" name="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png" required/>
+              <div class="upload-card" data-required="false">
+                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <span class="doc-badge optional">Opcional</span></label>
+                <input id="proofOfAddress" name="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card" data-required="true">
-                <label for="educationUpload"><span class="upload-icon">🎓</span>Diploma/Declaração de Escolaridade <span class="doc-badge required">Obrigatório</span></label>
-                <input id="educationUpload" name="educationUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" required/>
+              <div class="upload-card" data-required="false">
+                <label for="educationUpload"><span class="upload-icon">🎓</span>Diploma/Declaração de Escolaridade <span class="doc-badge optional">Opcional</span></label>
+                <input id="educationUpload" name="educationUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="true">
-                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="false">
+                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <span class="doc-badge optional">Opcional</span></label>
                 <input id="marriageCertificate" name="marriageCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
-              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="true">
-                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)" data-required="false">
+                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <span class="doc-badge optional">Opcional</span></label>
                 <input id="spouseCpfUpload" name="spouseCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="true">
-                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="false">
+                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <span class="doc-badge optional">Opcional</span></label>
                 <input id="childrenBirthUpload" name="childrenBirthUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
                 <small class="file-meta">Múltiplos arquivos · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
-              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="true">
-                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim" data-required="false">
+                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <span class="doc-badge optional">Opcional</span></label>
                 <input id="childrenCpfUpload" name="childrenCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
                 <small class="file-meta">Múltiplos arquivos · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
 
-              <div class="upload-card conditional" data-show-when="hasItauAccount=Sim" data-required="true">
-                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <span class="doc-badge required">Obrigatório</span></label>
+              <div class="upload-card conditional" data-show-when="hasItauAccount=Sim" data-required="false">
+                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <span class="doc-badge optional">Opcional</span></label>
                 <input id="itauProofUpload" name="itauProofUpload" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
@@ -418,7 +463,9 @@
                 <small class="file-meta">1 arquivo · até 10MB</small><small class="file-feedback" aria-live="polite"></small>
               </div>
             </div>
+            <!-- /GRID DE UPLOADS -->
 
+            <!-- Painel técnico -->
             <div class="technical-panel">
               <div class="sub-head">
                 <div><h4>Pré-visualização técnica</h4><p>Payload preparado para o Flow.</p></div>
@@ -468,7 +515,6 @@
   <div class="toast" id="toast"></div>
 
   <!-- JS -->
-  <script defer src="./app.js?v=1"></script>
+  <script src="./app.js?v=1" defer></script>
 </body>
 </html>
-``
