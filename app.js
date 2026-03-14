@@ -1,5 +1,9 @@
-/* SND – Portal Admissional V2.3 (app.js)
-   Layout premium + integração Power Automate (HTTP) + regras + dependentes.
+/* SND – Portal Admissional (app.js)
+   - Navegação por etapas + validações de dados
+   - Uploads opcionais (nenhum arquivo obrigatório)
+   - Integração Flow (HTTP POST via config.json)
+   - Logins rápidos na tela inicial (Candidato / Consultor em linhas)
+   - Primeiro acesso do Consultor (cadastro) -> metadata.modo = "consultor_registrar"
 */
 
 let ENDPOINT_URL = null;
@@ -7,7 +11,7 @@ fetch('config.json').then(r=>r.ok?r.json():null).then(cfg=>{
   if(cfg) ENDPOINT_URL = cfg.endpointUrl || cfg.flowUrl;
 });
 
-// ===== Base =====
+// ===== Elementos base =====
 const form = document.getElementById('admissionForm');
 const steps = Array.from(document.querySelectorAll('.step-card'));
 const timelineItems = Array.from(document.querySelectorAll('#timeline .step-nav-btn'));
@@ -38,7 +42,7 @@ const stepMeta = [
   { title:'Dados pessoais', desc:'Preencha informações pessoais, dependentes e endereço.' },
   { title:'Documentação admissional', desc:'Informe documentação civil, PIS, CTPS e dados eleitorais.' },
   { title:'Dados complementares', desc:'Registre informações adicionais para o processo interno.' },
-  { title:'Documentos obrigatórios', desc:'Envie os anexos com validação de formato e regras condicionais.' }
+  { title:'Documentos (opcionais)', desc:'Envie anexos; você poderá complementar depois pela Minha Área.' }
 ];
 
 let currentStep = 0;
@@ -52,7 +56,7 @@ function isVisibleField(el){ if(!el) return false; const card=el.closest('.step-
 function bindEvents(){
   prevBtn.addEventListener('click', ()=>{ if(currentStep>0) showStep(currentStep-1); });
   nextBtn.addEventListener('click', ()=>{ if(!validateCurrentStep()) return; if(currentStep<steps.length-1) showStep(currentStep+1); });
-  saveDraftBtn.addEventListener('click', saveDraft);
+  saveDraftBtn?.addEventListener('click', saveDraft);
   previewBtn?.addEventListener('click', openSummary);
   startFlowBtn?.addEventListener('click', ()=> showStep(1));
   timelineItems.forEach((btn, idx)=>{
@@ -62,11 +66,11 @@ function bindEvents(){
       showStep(idx);
     });
   });
-  closeSummaryBtn.addEventListener('click', ()=> summaryDialog.close());
+  closeSummaryBtn?.addEventListener('click', ()=> summaryDialog.close());
   restartBtn?.addEventListener('click', restartFlow);
   successSummaryBtn?.addEventListener('click', openSummary);
 
-  togglePayloadBtn.addEventListener('click', ()=>{
+  togglePayloadBtn?.addEventListener('click', ()=>{
     payloadPreview.classList.toggle('collapsed');
     togglePayloadBtn.textContent = payloadPreview.classList.contains('collapsed') ? 'Exibir payload' : 'Ocultar payload';
   });
@@ -75,7 +79,11 @@ function bindEvents(){
   form.addEventListener('change', onFieldChange);
 
   form.addEventListener('submit', onSubmit);
+
+  // Logins rápidos (Tela 0)
+  bindQuickLogins();
 }
+
 function showStep(i){
   if(successScreen) successScreen.classList.add('hidden');
   form?.classList.remove('flow-complete');
@@ -111,6 +119,7 @@ function refreshConditionals(){
   syncRequired();
 }
 function syncRequired(){
+  // Campos de dados que permanecem obrigatórios conforme regras
   const req = {
     spouseName: q('maritalStatus')?.value==='Casado(a)',
     childrenCount: q('hasChildren')?.value==='Sim',
@@ -130,18 +139,13 @@ function syncRequired(){
     relationshipDegree: q('hasRelativeAtSnd')?.value==='Sim',
 
     itauAgency: q('hasItauAccount')?.value==='Sim',
-    itauAccountNumber: q('hasItauAccount')?.value==='Sim',
-
-    reservistUpload: q('hasReservist')?.value==='Sim',
-    pisUpload: q('hasPis')?.value==='Sim',
-    marriageCertificate: q('maritalStatus')?.value==='Casado(a)',
-    spouseCpfUpload: q('maritalStatus')?.value==='Casado(a)',
-    childrenBirthUpload: q('hasChildren')?.value==='Sim',
-    childrenCpfUpload: q('hasChildren')?.value==='Sim',
-    educationUpload: true,
-    itauProofUpload: q('hasItauAccount')?.value==='Sim'
+    itauAccountNumber: q('hasItauAccount')?.value==='Sim'
   };
   Object.entries(req).forEach(([name,required])=>{ const f=q(name); if(f) f.required=required; });
+
+  // Todos os inputs de arquivo NÃO são obrigatórios
+  form.querySelectorAll('input[type="file"]').forEach(inp=> inp.required = false);
+  // Filhos (dados) obrigatórios apenas quando hasChildren = "Sim"
   childrenRows.querySelectorAll('input').forEach(inp=> inp.required = (q('hasChildren')?.value==='Sim'));
 }
 function clearHiddenFields(container){
@@ -191,11 +195,6 @@ function updateFileFeedback(input){
 }
 
 // ===== Validações =====
-function validateFileInput(input){
-  const files=Array.from(input.files||[]);
-  if(input.required && files.length===0) return false;
-  return files.every(f=> ALLOWED_EXT.includes((f.name.split('.').pop()||'').toLowerCase()) && f.size<=10*1024*1024 );
-}
 function clearErrors(panel){
   panel.querySelectorAll('.invalid').forEach(el=>el.classList.remove('invalid'));
   panel.querySelectorAll('.error-text').forEach(el=>el.remove());
@@ -204,6 +203,11 @@ function setFieldError(field,message){
   const w=field.closest('.field, .upload-card'); if(!w) return;
   w.classList.add('invalid');
   const s=document.createElement('small'); s.className='error-text'; s.textContent=message; w.appendChild(s);
+}
+function validateFileInput(input){
+  const files=Array.from(input.files||[]);
+  if(files.length===0) return true; // opcional
+  return files.every(f=> ALLOWED_EXT.includes((f.name.split('.').pop()||'').toLowerCase()) && f.size<=10*1024*1024 );
 }
 function validateCurrentStep(){
   const panel=steps[currentStep];
@@ -214,7 +218,6 @@ function validateCurrentStep(){
     if(field.disabled) return;
     if(field.type==='file'){
       if(!validateFileInput(field)){ valid=false; setFieldError(field,'Envie PDF/JPG/JPEG/PNG até 10MB.'); }
-      if(field.id==='identityUpload' && field.files.length>2){ valid=false; setFieldError(field,'Máximo 2 arquivos para Identidade.'); }
       return;
     }
     if(field.required && !String(field.value||'').trim()){ valid=false; setFieldError(field,'Preenchimento obrigatório.'); }
@@ -303,16 +306,6 @@ async function onSubmit(ev){
   ev.preventDefault();
   if(!validateCurrentStep()) return;
   if(!ENDPOINT_URL){ showToast('Erro: config.json ausente.'); return; }
-
-  // regra: número de uploads de filhos >= quantidade
-  if(q('hasChildren')?.value==='Sim'){
-    const n=Number(q('childrenCount')?.value||0);
-    const cert = gid('childrenBirthUpload')?.files||[];
-    const cpfF = gid('childrenCpfUpload')?.files||[];
-    if(n<1){ showToast('Informe a quantidade de filhos.'); return; }
-    if(cert.length<n){ showToast(`Anexe ao menos ${n} certidão(ões) de nascimento.`); return; }
-    if(cpfF.length<n){ showToast(`Anexe ao menos ${n} CPF(s) dos filhos.`); return; }
-  }
 
   submitBtn.disabled=true; submitBtn.textContent='Enviando…';
   try{
@@ -404,33 +397,29 @@ async function buildFlowPayload(){
     checklist:{ rg:false, cpf:false, comprovEndereco:false, carteiraTrabalho:false, certidao:false, comprovEscolaridade:false }
   };
 
-  // ANEXOS
+  // ANEXOS (todos opcionais)
   const map = [
     { id:'workCard', label:'CTPS', max:1 },
     { id:'identityUpload', label:'RG', max:2 },
     { id:'cpfUpload', label:'CPF', max:1 },
-    { id:'reservistUpload', label:'Certificado_Reservista', max:1, required:()=> q('biologicalSex')?.value==='Masculino' && q('hasReservist')?.value==='Sim' },
+    { id:'reservistUpload', label:'Certificado_Reservista', max:1 },
     { id:'voterTitleUpload', label:'Titulo_Eleitor', max:1 },
-    { id:'pisUpload', label:'PIS', max:1, required:()=> q('hasPis')?.value==='Sim' },
+    { id:'pisUpload', label:'PIS', max:1 },
     { id:'proofOfAddress', label:'Comprovante_Residencia', max:1 },
-    { id:'marriageCertificate', label:'Certidao_Casamento', max:1, required:()=> q('maritalStatus')?.value==='Casado(a)' },
-    { id:'spouseCpfUpload', label:'CPF_Conjuge', max:1, required:()=> q('maritalStatus')?.value==='Casado(a)' },
-    { id:'childrenBirthUpload', label:'Certidao_Nascimento_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim', min:()=> Number(q('childrenCount')?.value||0) },
-    { id:'childrenCpfUpload', label:'CPF_Filho', max:10, required:()=> q('hasChildren')?.value==='Sim', min:()=> Number(q('childrenCount')?.value||0) },
-    { id:'itauProofUpload', label:'Dados_Conta_Bancaria', max:1, required:()=> q('hasItauAccount')?.value==='Sim' },
-    { id:'referenceLetterUpload', label:'Carta_Referencia', max:1, required:()=> q('hasOtherJob')?.value==='Sim' },
-    { id:'professionalLicenseUpload', label:'Carteira_Registro_Prof', max:1, required:()=> false }
+    { id:'marriageCertificate', label:'Certidao_Casamento', max:1 },
+    { id:'spouseCpfUpload', label:'CPF_Conjuge', max:1 },
+    { id:'childrenBirthUpload', label:'Certidao_Nascimento_Filho', max:10 },
+    { id:'childrenCpfUpload', label:'CPF_Filho', max:10 },
+    { id:'itauProofUpload', label:'Dados_Conta_Bancaria', max:1 },
+    { id:'referenceLetterUpload', label:'Carta_Referencia', max:1 },
+    { id:'professionalLicenseUpload', label:'Carteira_Registro_Prof', max:1 }
   ];
 
   const anexos=[];
   for(const item of map){
     const input=gid(item.id); if(!input) continue;
     const files=Array.from(input.files||[]);
-    const need = typeof item.required==='function' ? item.required() : (input.required===true);
-    const min = typeof item.min==='function' ? item.min() : 0;
-
-    if(need && files.length===0) throw new Error(`Falta documento obrigatório: ${item.label}.`);
-    if(min && files.length<min) throw new Error(`"${item.label}": anexe ao menos ${min} arquivo(s).`);
+    if(!files.length) continue; // opcional
     if(files.length > (item.max||1)) throw new Error(`"${item.label}": máximo ${item.max} arquivo(s).`);
 
     let idx=1;
@@ -473,12 +462,60 @@ function showSuccessScreen(){
 }
 function restartFlow(){ if(successScreen) successScreen.classList.add('hidden'); document.querySelector('.footer-actions')?.classList.remove('hidden'); showStep(0); }
 
-// ===== Draft/Resumo =====
-function saveDraft(){ const s={}; Array.from(form.elements).forEach(f=>{ if(!f.name||f.type==='file')return; s[f.name]=f.value;}); localStorage.setItem('sndAdmissionDraftV2',JSON.stringify(s)); showToast('Rascunho salvo.'); }
-function restoreDraft(){ const raw=localStorage.getItem('sndAdmissionDraftV2'); if(!raw) return; try{ const s=JSON.parse(raw); Object.entries(s).forEach(([n,v])=>{ const f=q(n); if(f&&f.type!=='file') f.value=v; }); }catch{} }
+// ===== Logins rápidos =====
+function bindQuickLogins(){
+  // Candidato -> abre Minha Área com o e-mail
+  const qlCandForm = document.getElementById('quickLoginCandidate');
+  qlCandForm?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = document.getElementById('qlCandEmail')?.value?.trim();
+    if(!email){ showToast('Informe o e‑mail do candidato.'); return; }
+    window.location.href = `minha-area.html?email=${encodeURIComponent(email)}`;
+  });
 
-function openSummary(){ updatePayloadPreview(); const prev=buildPayloadPreview(); summaryContent.innerHTML=buildSummaryMarkup(prev); summaryDialog.showModal(); }
-function updatePayloadPreview(){ payloadPreview.textContent = JSON.stringify(buildPayloadPreview(), null, 2); }
+  // Consultor -> abre Portal do Consultor (login acontece lá)
+  const qlConsForm = document.getElementById('quickLoginConsultor');
+  qlConsForm?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = document.getElementById('qlConsEmail')?.value?.trim();
+    const pass  = document.getElementById('qlConsPass')?.value||'';
+    if(!email || !pass){ showToast('Informe e‑mail e senha do consultor.'); return; }
+    window.location.href = `consultor.html?email=${encodeURIComponent(email)}`;
+  });
+
+  // Modal "Primeiro acesso"
+  const dlgPA = document.getElementById('dlgPrimeiroAcesso');
+  document.getElementById('btnPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.showModal());
+  document.getElementById('dlgFecharPrimeiroAcesso')?.addEventListener('click', ()=> dlgPA?.close());
+
+  // Enviar cadastro do consultor (primeiro acesso) -> Flow: consultor_registrar
+  const formPA = document.getElementById('formPrimeiroAcesso');
+  formPA?.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const paMsg = document.getElementById('paMsg');
+    paMsg.textContent = '';
+    if(!ENDPOINT_URL){ paMsg.textContent='Erro: config.json ausente.'; return; }
+    const nome = document.getElementById('paNome')?.value?.trim();
+    const email= document.getElementById('paEmail')?.value?.trim().toLowerCase();
+    const senha= document.getElementById('paSenha')?.value||'';
+    if(!nome || !email || !senha){ paMsg.textContent='Preencha nome, e‑mail e senha.'; return; }
+    const hash = await sha256Hex(senha);
+    const payload = { metadata:{ modo:'consultor_registrar', enviadoEm:new Date().toISOString() }, novo:{ nome, email, hash } };
+    try{
+      const resp = await fetch(ENDPOINT_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      const data = await resp.json().catch(()=> ({}));
+      if(resp.ok && data?.ok){ paMsg.textContent='Conta criada com sucesso. Você já pode entrar.'; formPA.reset(); }
+      else { paMsg.textContent = data?.mensagem||'Falha ao criar a conta.'; }
+    }catch(err){ console.error(err); paMsg.textContent='Erro de rede ao criar conta.'; }
+  });
+}
+
+// Web Crypto — SHA-256 (hex)
+async function sha256Hex(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 // ===== Init =====
 function init(){ bindEvents(); restoreDraft(); showStep(0); refreshConditionals(); renderChildrenRows(); initFileUploads(); updatePayloadPreview(); }
