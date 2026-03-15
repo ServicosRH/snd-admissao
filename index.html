@@ -63,7 +63,7 @@
           </button>
           <button type="button" class="step-nav-btn" data-go-step="5">
             <span>05</span>
-            <div><strong>Declaração &amp; Assinatura</strong><small>Aceite formal</small></div>
+            <div><strong>Declaração & Assinatura</strong><small>Aceite formal</small></div>
           </button>
           <!-- IMPORTANTE: botões 06 e 07 removidos da barra, mas telas 6 e 7 continuam existindo -->
         </div>
@@ -138,7 +138,7 @@
                   </div>
                   <div class="row-actions span-2">
                     <button type="submit" class="btn btn-secondary">Entrar</button>
-                    <button type="button" class="btn btn-ghost" id="btnPrimeiroAcesso">Primeiro acesso</button>
+                    <!-- Botão "Primeiro acesso" removido -->
                   </div>
                 </form>
                 <small id="qlConsMsg" class="muted" role="status" aria-live="polite"></small>
@@ -155,7 +155,6 @@
                 <p>Informações pessoais, composição familiar e endereço do colaborador.</p>
               </div>
             </div>
-
             <div class="grid cols-2">
               <div class="field"><label for="fullName">Nome completo *</label><input id="fullName" name="fullName" type="text" required /></div>
               <div class="field"><label for="email">E-mail *</label><input id="email" name="email" type="email" required /></div>
@@ -260,7 +259,6 @@
               <div class="field"><label for="zipCode">CEP *</label><input id="zipCode" name="zipCode" type="text" inputmode="numeric" required /></div>
             </div>
 
-            <!-- Navegação interna da tela 1 -->
             <div class="row-actions nav-row top-gap">
               <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
               <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
@@ -276,7 +274,6 @@
                 <p>Documentos de identificação, registro profissional, título eleitoral e dados de PIS.</p>
               </div>
             </div>
-
             <div class="grid cols-2">
               <div class="field conditional" data-show-when="biologicalSex=Masculino">
                 <label for="hasReservist">Possui Certificado de Reservista? *</label>
@@ -352,7 +349,6 @@
               </div>
             </div>
 
-            <!-- Navegação interna da tela 2 -->
             <div class="row-actions nav-row top-gap">
               <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
               <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
@@ -428,7 +424,6 @@
               </div>
             </div>
 
-            <!-- Navegação interna da tela 3 -->
             <div class="row-actions nav-row top-gap">
               <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
               <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
@@ -471,7 +466,7 @@
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
               <div class="upload-card">
-                <label for="voterTitleUpload"><span class="upload-icon">🗳</span>Título de Eleitor <em>Obrigatório</em></label>
+                <label for="voterTitleUpload"><span class="upload-icon">🟳</span>Título de Eleitor <em>Obrigatório</em></label>
                 <input id="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
@@ -538,7 +533,6 @@
               </div>
             </div>
 
-            <!-- Navegação interna da tela 4 -->
             <div class="row-actions nav-row top-gap">
               <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
               <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
@@ -550,7 +544,7 @@
             <div class="section-head">
               <div>
                 <span class="section-tag">Tela 5</span>
-                <h3>Declaração &amp; Assinatura</h3>
+                <h3>Declaração & Assinatura</h3>
                 <p>Confirme a veracidade das informações e registre sua assinatura para finalizar o cadastro.</p>
               </div>
             </div>
@@ -565,7 +559,9 @@
                 </div>
                 <label class="checkline">
                   <input id="declAgree" type="checkbox" />
-                  <p style="text-align: justify; text-indent: 2em;">Declaramos para os devidos fins que as informações constantes desse formulário são fiéis a verdade e condizentes com a realidade dos fatos à época. Declaro que todas as informações mencionadas nesse formulário foram extraídas dos meus documentos e são da minha inteira responsabilidade. Além disso, fui informado que se houver qualquer alteração nos dados desta Declaração, a mesma deverá ser modificada junto ao Departamento Pessoal. Por fim, fico ciente das responsabilidades pelas declarações prestada e firmo a presente.</p>
+                  <p style="text-align: justify; text-indent: 2em;">
+                    Declaramos para os devidos fins que as informações constantes desse formulário são fiéis a verdade e condizentes com a realidade dos fatos à época. Declaro que todas as informações mencionadas nesse formulário foram extraídas dos meus documentos e são da minha inteira responsabilidade. Além disso, fui informado que se houver qualquer alteração nos dados desta Declaração, a mesma deverá ser modificada junto ao Departamento Pessoal. Por fim, fico ciente das responsabilidades pelas declarações prestada e firmo a presente.
+                  </p>
                 </label>
               </section>
 
@@ -590,14 +586,13 @@
               </section>
             </div>
 
-            <!-- Navegação interna da tela 5 -->
             <div class="row-actions nav-row top-gap">
               <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
               <button type="submit" class="btn btn-primary" data-nav="finish">Concluir cadastro</button>
             </div>
           </section>
 
-          <!-- ========== TELA 6 - MINHA ÁREA (CANDIDATO) – permanece igual ========== -->
+          <!-- ========== TELA 6 - MINHA ÁREA (CANDIDATO) ========== -->
           <section class="step-card panel" data-step="6">
             <div class="section-head">
               <div>
@@ -606,6 +601,7 @@
                 <p>Consulte o cadastro por e-mail e envie documentos adicionais quando necessário.</p>
               </div>
             </div>
+
             <section class="panel inner-panel">
               <form id="candLoginForm" class="grid cols-2 compact-grid">
                 <div class="field">
@@ -619,6 +615,7 @@
               </form>
               <output id="candLoginMsg" class="status-text" role="status" aria-live="polite"></output>
             </section>
+
             <section class="panel inner-panel hidden" id="candArea">
               <div class="sub-head">
                 <div>
@@ -627,12 +624,14 @@
                 </div>
               </div>
               <div id="candResumo" class="grid cols-2"></div>
+
               <div class="sub-head top-gap">
                 <div>
                   <span class="eyebrow">Envio adicional</span>
                   <h4>Novos documentos</h4>
                 </div>
               </div>
+
               <form id="candUploadForm" class="grid">
                 <input type="hidden" name="email" />
                 <div class="upload-card">
@@ -649,7 +648,7 @@
             </section>
           </section>
 
-          <!-- ========== TELA 7 - PORTAL DO CONSULTOR – permanece igual ========== -->
+          <!-- ========== TELA 7 - PORTAL DO CONSULTOR ========== -->
           <section class="step-card panel" data-step="7">
             <div class="section-head">
               <div>
@@ -658,6 +657,7 @@
                 <p>Acompanhe candidatos, consulte pendências e envie notificações de regularização.</p>
               </div>
             </div>
+
             <section class="panel inner-panel">
               <form id="consLoginForm2" class="grid cols-2 compact-grid">
                 <div class="field">
@@ -674,6 +674,7 @@
               </form>
               <output id="consLoginMsg2" class="status-text" role="status" aria-live="polite"></output>
             </section>
+
             <section id="consDash" class="hidden">
               <section class="panel inner-panel">
                 <div class="consultor-top">
@@ -688,6 +689,7 @@
                   <div id="drop2" class="search-drop hidden"></div>
                 </div>
               </section>
+
               <section id="candPanel2" class="panel inner-panel hidden">
                 <div class="candidate-head">
                   <div>
@@ -697,10 +699,12 @@
                   </div>
                   <div class="status-pill" id="candStatus2">Em andamento</div>
                 </div>
+
                 <div class="consultor-progress">
                   <div class="progress-track slim"><div id="progFill2" class="progress-fill"></div></div>
                   <strong id="progPct2">0%</strong>
                 </div>
+
                 <div class="grid cols-2 top-gap">
                   <section class="panel soft-panel checklist-card">
                     <h5>Documentos pendentes</h5>
@@ -711,6 +715,7 @@
                     <ul id="chkPresent2" class="checklist"></ul>
                   </section>
                 </div>
+
                 <section class="panel soft-panel top-gap">
                   <div class="sub-head">
                     <div>
@@ -718,6 +723,7 @@
                       <h4>Comunicar pendências</h4>
                     </div>
                   </div>
+
                   <form id="notifyForm2" class="grid cols-2">
                     <div class="field">
                       <label for="prazo2">Prazo *</label>
@@ -738,6 +744,47 @@
                   </form>
                 </section>
               </section>
+            </section>
+          </section>
+
+          <!-- ========== TELA 8 - ALTERAR SENHA DO CONSULTOR (NOVO) ========== -->
+          <section class="step-card panel" data-step="8">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 8</span>
+                <h3>Alterar senha do consultor</h3>
+                <p>Por segurança, defina uma nova senha para continuar utilizando o portal.</p>
+              </div>
+            </div>
+
+            <section class="panel inner-panel soft-panel">
+              <form id="changePassForm" class="grid cols-2 compact-grid">
+                <div class="field span-2">
+                  <label for="cpEmail">E-mail (não editável)</label>
+                  <input id="cpEmail" name="email" type="email" readonly />
+                </div>
+
+                <div class="field span-2">
+                  <label for="cpCurrent">Senha atual *</label>
+                  <input id="cpCurrent" name="currentPassword" type="password" required />
+                </div>
+
+                <div class="field">
+                  <label for="cpNew">Nova senha *</label>
+                  <input id="cpNew" name="newPassword" type="password" required />
+                </div>
+
+                <div class="field">
+                  <label for="cpConfirm">Repetir nova senha *</label>
+                  <input id="cpConfirm" name="confirmPassword" type="password" required />
+                </div>
+
+                <div class="row-actions span-2">
+                  <button type="submit" class="btn btn-primary">Confirmar nova senha</button>
+                </div>
+
+                <output id="cpMsg" class="status-text span-2" role="status" aria-live="polite"></output>
+              </form>
             </section>
           </section>
         </div>
@@ -768,27 +815,7 @@
     </div>
   </dialog>
 
-  <dialog id="dlgPrimeiroAcesso" class="summary-dialog">
-    <div class="summary-surface small-surface">
-      <div class="dialog-head">
-        <div>
-          <span class="eyebrow">Cadastro de consultor</span>
-          <h3>Primeiro acesso</h3>
-          <p class="soft-text">Crie seu usuário para acessar o painel de acompanhamento.</p>
-        </div>
-        <button type="button" class="icon-btn" id="dlgFecharPrimeiroAcesso" aria-label="Fechar">×</button>
-      </div>
-      <form id="formPrimeiroAcesso" class="grid">
-        <div class="field"><label for="paNome">Nome *</label><input id="paNome" name="nome" type="text" required /></div>
-        <div class="field"><label for="paEmail">E-mail *</label><input id="paEmail" name="email" type="email" required /></div>
-        <div class="field"><label for="paSenha">Senha *</label><input id="paSenha" name="senha" type="password" required /></div>
-        <div class="row-actions">
-          <button type="submit" class="btn btn-primary">Criar conta</button>
-        </div>
-        <output id="paMsg" class="status-text" role="status" aria-live="polite"></output>
-      </form>
-    </div>
-  </dialog>
+  <!-- Dialog de primeiro acesso REMOVIDO -->
 
   <div class="toast" id="toast"></div>
   <script src="./app.js?v=5"></script>
