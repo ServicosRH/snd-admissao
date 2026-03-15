@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=5">
+  <link rel="stylesheet" href="./styles.css?v=5" />
 </head>
 <body>
   <div class="page-glow glow-a"></div>
@@ -23,10 +23,9 @@
         <div class="brand-hero">
           <img src="./snd-hero.png" alt="SND - Soluções em tecnologia" />
           <div class="brand-overlay"></div>
-</div>
+        </div>
         <div class="brand-copy">
           <span class="eyebrow">SND · Processo Admissional</span>
-          
           <p>Uma jornada digital orientada para preenchimento, envio de documentos, acompanhamento do candidato e apoio ao consultor.</p>
         </div>
       </section>
@@ -64,16 +63,9 @@
           </button>
           <button type="button" class="step-nav-btn" data-go-step="5">
             <span>05</span>
-            <div><strong>Declaração & Assinatura</strong><small>Aceite formal</small></div>
+            <div><strong>Declaração &amp; Assinatura</strong><small>Aceite formal</small></div>
           </button>
-          <button type="button" class="step-nav-btn" data-go-step="6">
-            <span>06</span>
-            <div><strong>Minha Área</strong><small>Candidato</small></div>
-          </button>
-          <button type="button" class="step-nav-btn" data-go-step="7">
-            <span>07</span>
-            <div><strong>Portal do Consultor</strong><small>Gestão</small></div>
-          </button>
+          <!-- IMPORTANTE: botões 06 e 07 removidos da barra, mas telas 6 e 7 continuam existindo -->
         </div>
       </section>
     </aside>
@@ -93,7 +85,7 @@
 
       <form id="admissionForm" novalidate>
         <div class="wizard-stage">
-
+          <!-- ========== TELA 0 - BOAS-VINDAS ========== -->
           <section class="step-card panel active" data-step="0">
             <div class="welcome-grid">
               <div class="welcome-copy">
@@ -122,7 +114,7 @@
                     <input id="qlCandEmail" name="email" type="email" placeholder="seuemail@exemplo.com" required />
                   </div>
                   <div class="field field-action">
-                    <label>&nbsp;</label>
+                    <label> </label>
                     <button type="submit" class="btn btn-primary btn-block">Abrir Minha Área</button>
                   </div>
                 </form>
@@ -156,6 +148,7 @@
             </div>
           </section>
 
+          <!-- ========== TELA 1 - DADOS PESSOAIS ========== -->
           <section class="step-card panel" data-step="1">
             <div class="section-head">
               <div>
@@ -171,7 +164,6 @@
               <div class="field"><label for="phone">Telefone *</label><input id="phone" name="phone" type="tel" inputmode="numeric" required /></div>
               <div class="field"><label for="birthDate">Data de nascimento *</label><input id="birthDate" name="birthDate" type="date" required /></div>
               <div class="field"><label for="birthPlace">Local de nascimento *</label><input id="birthPlace" name="birthPlace" type="text" required /></div>
-
               <div class="field">
                 <label for="maritalStatus">Estado civil *</label>
                 <select id="maritalStatus" name="maritalStatus" required>
@@ -187,7 +179,6 @@
                 <label for="spouseName">Nome do cônjuge *</label>
                 <input id="spouseName" name="spouseName" type="text" />
               </div>
-
               <div class="field">
                 <label for="education">Escolaridade *</label>
                 <select id="education" name="education" required>
@@ -212,10 +203,8 @@
                   <option>Indígena</option>
                 </select>
               </div>
-
               <div class="field"><label for="fatherName">Nome do pai *</label><input id="fatherName" name="fatherName" type="text" required /></div>
               <div class="field"><label for="motherName">Nome da mãe *</label><input id="motherName" name="motherName" type="text" required /></div>
-
               <div class="field">
                 <label for="biologicalSex">Sexo biológico *</label>
                 <select id="biologicalSex" name="biologicalSex" required>
@@ -232,7 +221,6 @@
                   <option>Não</option>
                 </select>
               </div>
-
               <div class="field conditional" data-show-when="hasChildren=Sim">
                 <label for="childrenCount">Quantidade de filhos *</label>
                 <input id="childrenCount" name="childrenCount" type="number" min="1" max="10" />
@@ -273,8 +261,15 @@
               </div>
               <div class="field"><label for="zipCode">CEP *</label><input id="zipCode" name="zipCode" type="text" inputmode="numeric" required /></div>
             </div>
+
+            <!-- Navegação interna da tela 1 -->
+            <div class="row-actions nav-row top-gap">
+              <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
+              <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
+            </div>
           </section>
 
+          <!-- ========== TELA 2 - DOCUMENTAÇÃO ========== -->
           <section class="step-card panel" data-step="2">
             <div class="section-head">
               <div>
@@ -301,12 +296,10 @@
                 <label for="dispenseReason">Motivo da Dispensa *</label>
                 <input id="dispenseReason" name="dispenseReason" type="text" />
               </div>
-
               <div class="field"><label for="identityDoc">RG / Documento de identidade *</label><input id="identityDoc" name="identityDoc" type="text" required /></div>
               <div class="field"><label for="issuer">Órgão emissor / UF *</label><input id="issuer" name="issuer" type="text" required /></div>
               <div class="field"><label for="identityIssueDate">Data de emissão *</label><input id="identityIssueDate" name="identityIssueDate" type="date" required /></div>
               <div class="field"><label for="cpf">CPF *</label><input id="cpf" name="cpf" type="text" inputmode="numeric" required /></div>
-
               <div class="field">
                 <label for="ctpsType">Tipo de CTPS *</label>
                 <select id="ctpsType" name="ctpsType" required>
@@ -323,7 +316,6 @@
                 <label for="ctpsSeries">Série da CTPS *</label>
                 <input id="ctpsSeries" name="ctpsSeries" type="text" inputmode="numeric" />
               </div>
-
               <div class="field">
                 <label for="hasProfessionalRecord">Possui Registro Profissional? *</label>
                 <select id="hasProfessionalRecord" name="hasProfessionalRecord" required>
@@ -344,12 +336,10 @@
                 <label for="professionalIssueDate">Data do Registro *</label>
                 <input id="professionalIssueDate" name="professionalIssueDate" type="date" />
               </div>
-
               <div class="field"><label for="voterTitle">Título de Eleitor *</label><input id="voterTitle" name="voterTitle" type="text" inputmode="numeric" required /></div>
               <div class="field"><label for="voterZone">Zona Eleitoral *</label><input id="voterZone" name="voterZone" type="text" inputmode="numeric" required /></div>
               <div class="field"><label for="voterSection">Seção Eleitoral *</label><input id="voterSection" name="voterSection" type="text" inputmode="numeric" required /></div>
               <div class="field"><label for="voterIssueDate">Data de emissão do título *</label><input id="voterIssueDate" name="voterIssueDate" type="date" required /></div>
-
               <div class="field">
                 <label for="hasPis">Possui PIS? *</label>
                 <select id="hasPis" name="hasPis" required>
@@ -363,8 +353,15 @@
                 <input id="pisNumber" name="pisNumber" type="text" inputmode="numeric" />
               </div>
             </div>
+
+            <!-- Navegação interna da tela 2 -->
+            <div class="row-actions nav-row top-gap">
+              <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
+              <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
+            </div>
           </section>
 
+          <!-- ========== TELA 3 - COMPLEMENTARES ========== -->
           <section class="step-card panel" data-step="3">
             <div class="section-head">
               <div>
@@ -387,7 +384,6 @@
                 <label for="otherJobCnpj">CNPJ da empresa *</label>
                 <input id="otherJobCnpj" name="otherJobCnpj" type="text" inputmode="numeric" />
               </div>
-
               <div class="field">
                 <label for="hasRetirement">É aposentado(a)? *</label>
                 <select id="hasRetirement" name="hasRetirement" required>
@@ -400,7 +396,6 @@
                 <label for="retirementDate">Data de aposentadoria *</label>
                 <input id="retirementDate" name="retirementDate" type="date" />
               </div>
-
               <div class="field">
                 <label for="hasRelativeAtSnd">Possui parente na SND? *</label>
                 <select id="hasRelativeAtSnd" name="hasRelativeAtSnd" required>
@@ -417,7 +412,6 @@
                 <label for="relationshipDegree">Grau de parentesco *</label>
                 <input id="relationshipDegree" name="relationshipDegree" type="text" />
               </div>
-
               <div class="field">
                 <label for="hasItauAccount">Possui conta corrente no Banco Itaú? *</label>
                 <select id="hasItauAccount" name="hasItauAccount" required>
@@ -435,8 +429,15 @@
                 <input id="itauAccountNumber" name="itauAccountNumber" type="text" inputmode="numeric" />
               </div>
             </div>
+
+            <!-- Navegação interna da tela 3 -->
+            <div class="row-actions nav-row top-gap">
+              <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
+              <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
+            </div>
           </section>
 
+          <!-- ========== TELA 4 - UPLOADS ========== -->
           <section class="step-card panel" data-step="4">
             <div class="section-head">
               <div>
@@ -448,103 +449,89 @@
 
             <div class="uploads-list">
               <div class="upload-card">
-                <label for="workCard"><span class="upload-icon">🗂</span>CTPS <em>Obrigatório</em></label>
+                <label for="workCard"><span class="upload-icon">📂</span>CTPS <em>Obrigatório</em></label>
                 <input id="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="identityUpload"><span class="upload-icon">🪪</span>RG <em>Obrigatório</em></label>
                 <input id="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
                 <small class="file-meta">Até 2 arquivos</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <em>Obrigatório</em></label>
                 <input id="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="hasReservist=Sim">
-                <label for="reservistUpload"><span class="upload-icon">🎖</span>Certificado de Reservista <em>Obrigatório</em></label>
+                <label for="reservistUpload"><span class="upload-icon">🏖</span>Certificado de Reservista <em>Obrigatório</em></label>
                 <input id="reservistUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Exibido quando Reservista = Sim</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="voterTitleUpload"><span class="upload-icon">🗳</span>Título de Eleitor <em>Obrigatório</em></label>
                 <input id="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="hasPis=Sim">
                 <label for="pisUpload"><span class="upload-icon">🔢</span>PIS <em>Obrigatório</em></label>
                 <input id="pisUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Exibido quando Possui PIS = Sim</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <em>Obrigatório</em></label>
                 <input id="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)">
                 <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <em>Obrigatório</em></label>
                 <input id="marriageCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Exibido quando Estado civil = Casado(a)</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)">
                 <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <em>Obrigatório</em></label>
                 <input id="spouseCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Exibido quando Estado civil = Casado(a)</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="hasChildren=Sim">
                 <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <em>Obrigatório</em></label>
                 <input id="childrenBirthUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
                 <small class="file-meta">Múltiplos arquivos</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="hasChildren=Sim">
                 <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <em>Obrigatório</em></label>
                 <input id="childrenCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
                 <small class="file-meta">Múltiplos arquivos</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card conditional" data-show-when="hasItauAccount=Sim">
                 <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <em>Obrigatório</em></label>
                 <input id="itauProofUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Exibido quando Conta Itaú = Sim</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="diplomaUpload"><span class="upload-icon">🎓</span>Diploma de Conclusão ou Declaração de Escolaridade <em>Obrigatório</em></label>
                 <input id="diplomaUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">1 arquivo</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="referenceLetterUpload"><span class="upload-icon">✉</span>Carta de Referência do Último Emprego <span class="optional-tag">Opcional</span></label>
                 <input id="referenceLetterUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
                 <small class="file-meta">Documento opcional</small>
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
-
               <div class="upload-card">
                 <label for="professionalLicenseUpload"><span class="upload-icon">📘</span>Carteira de Registro Profissional <span class="optional-tag">Opcional</span></label>
                 <input id="professionalLicenseUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
@@ -552,13 +539,20 @@
                 <small class="file-feedback" aria-live="polite"></small>
               </div>
             </div>
+
+            <!-- Navegação interna da tela 4 -->
+            <div class="row-actions nav-row top-gap">
+              <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
+              <button type="button" class="btn btn-secondary" data-nav="next">Próxima tela</button>
+            </div>
           </section>
 
+          <!-- ========== TELA 5 - DECLARAÇÃO & ASSINATURA ========== -->
           <section class="step-card panel" data-step="5">
             <div class="section-head">
               <div>
                 <span class="section-tag">Tela 5</span>
-                <h3>Declaração & Assinatura</h3>
+                <h3>Declaração &amp; Assinatura</h3>
                 <p>Confirme a veracidade das informações e registre sua assinatura para finalizar o cadastro.</p>
               </div>
             </div>
@@ -597,8 +591,15 @@
                 </div>
               </section>
             </div>
+
+            <!-- Navegação interna da tela 5 -->
+            <div class="row-actions nav-row top-gap">
+              <button type="button" class="btn btn-ghost" data-nav="prev">Voltar</button>
+              <button type="submit" class="btn btn-primary" data-nav="finish">Concluir cadastro</button>
+            </div>
           </section>
 
+          <!-- ========== TELA 6 - MINHA ÁREA (CANDIDATO) – permanece igual ========== -->
           <section class="step-card panel" data-step="6">
             <div class="section-head">
               <div>
@@ -607,7 +608,6 @@
                 <p>Consulte o cadastro por e-mail e envie documentos adicionais quando necessário.</p>
               </div>
             </div>
-
             <section class="panel inner-panel">
               <form id="candLoginForm" class="grid cols-2 compact-grid">
                 <div class="field">
@@ -615,13 +615,12 @@
                   <input id="candEmail" name="email" type="email" required />
                 </div>
                 <div class="field field-action">
-                  <label>&nbsp;</label>
+                  <label> </label>
                   <button type="submit" class="btn btn-primary btn-block">Consultar cadastro</button>
                 </div>
               </form>
               <output id="candLoginMsg" class="status-text" role="status" aria-live="polite"></output>
             </section>
-
             <section class="panel inner-panel hidden" id="candArea">
               <div class="sub-head">
                 <div>
@@ -630,14 +629,12 @@
                 </div>
               </div>
               <div id="candResumo" class="grid cols-2"></div>
-
               <div class="sub-head top-gap">
                 <div>
                   <span class="eyebrow">Envio adicional</span>
                   <h4>Novos documentos</h4>
                 </div>
               </div>
-
               <form id="candUploadForm" class="grid">
                 <input type="hidden" name="email" />
                 <div class="upload-card">
@@ -654,6 +651,7 @@
             </section>
           </section>
 
+          <!-- ========== TELA 7 - PORTAL DO CONSULTOR – permanece igual ========== -->
           <section class="step-card panel" data-step="7">
             <div class="section-head">
               <div>
@@ -662,7 +660,6 @@
                 <p>Acompanhe candidatos, consulte pendências e envie notificações de regularização.</p>
               </div>
             </div>
-
             <section class="panel inner-panel">
               <form id="consLoginForm2" class="grid cols-2 compact-grid">
                 <div class="field">
@@ -679,7 +676,6 @@
               </form>
               <output id="consLoginMsg2" class="status-text" role="status" aria-live="polite"></output>
             </section>
-
             <section id="consDash" class="hidden">
               <section class="panel inner-panel">
                 <div class="consultor-top">
@@ -688,14 +684,12 @@
                     <h4 id="consTag">Consultor</h4>
                   </div>
                 </div>
-
                 <div class="field search-field">
                   <label for="searchBox2">Buscar candidato</label>
                   <input id="searchBox2" type="text" placeholder="Digite nome ou e-mail" autocomplete="off" />
                   <div id="drop2" class="search-drop hidden"></div>
                 </div>
               </section>
-
               <section id="candPanel2" class="panel inner-panel hidden">
                 <div class="candidate-head">
                   <div>
@@ -705,12 +699,10 @@
                   </div>
                   <div class="status-pill" id="candStatus2">Em andamento</div>
                 </div>
-
                 <div class="consultor-progress">
                   <div class="progress-track slim"><div id="progFill2" class="progress-fill"></div></div>
                   <strong id="progPct2">0%</strong>
                 </div>
-
                 <div class="grid cols-2 top-gap">
                   <section class="panel soft-panel checklist-card">
                     <h5>Documentos pendentes</h5>
@@ -721,7 +713,6 @@
                     <ul id="chkPresent2" class="checklist"></ul>
                   </section>
                 </div>
-
                 <section class="panel soft-panel top-gap">
                   <div class="sub-head">
                     <div>
@@ -753,26 +744,15 @@
           </section>
         </div>
 
-        <div class="footer-actions panel">
-          <div class="footer-info">
-            <span>Navegue pelas telas para concluir o processo.</span>
+        <section id="successScreen" class="panel success-screen hidden">
+          <span class="section-tag">Concluído</span>
+          <h3>Cadastro enviado com sucesso.</h3>
+          <p>Os dados e documentos foram organizados para processamento no fluxo institucional.</p>
+          <div class="row-actions">
+            <button type="button" class="btn btn-primary" id="restartBtn">Iniciar novo processo</button>
           </div>
-          <div class="footer-buttons">
-            <button type="button" class="btn btn-ghost" id="prevBtn">Voltar</button>
-            <button type="button" class="btn btn-secondary" id="nextBtn">Próxima tela</button>
-            <button type="submit" class="btn btn-primary hidden" id="submitBtn">Concluir cadastro</button>
-          </div>
-        </div>
+        </section>
       </form>
-
-      <section id="successScreen" class="panel success-screen hidden">
-        <span class="section-tag">Concluído</span>
-        <h3>Cadastro enviado com sucesso.</h3>
-        <p>Os dados e documentos foram organizados para processamento no fluxo institucional.</p>
-        <div class="row-actions">
-          <button type="button" class="btn btn-primary" id="restartBtn">Iniciar novo processo</button>
-        </div>
-      </section>
     </main>
   </div>
 
