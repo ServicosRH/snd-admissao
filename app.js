@@ -11,7 +11,7 @@
 const ENDPOINT_URL =
   "https://b35122430f23e4409d91713fc00cbf.e4.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3e4cdb53156244a19e84085f43f7d984/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PTLmCKrbX5qghBpHs-8g04eCrlygIMrwtz_ZhbLHuf8";
 
-// Flow específico para ALTERAR SENHA DO CONSULTOR (já existia no config.json)
+// Flow específico para ALTERAR SENHA DO CONSULTOR
 const PASSWORD_CHANGE_URL =
   "https://deb285e085e3ef0f9a83cd1a5098d7.ec.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1000a6f1ddb74ce19130b8d3c34f5eb3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wZvw2JZ9NrlRSF7rzidaV9X_5-AUu0J0fpPYRF7cUnw";
 
@@ -158,20 +158,20 @@ function refreshConditionals(){
 function syncRequired(){
   // Campos de dados obrigatórios por regra
   const req = {
-    spouseName:      q('maritalStatus')?.value==='Casado(a)',
-    childrenCount:   q('hasChildren')?.value==='Sim',
-    hasReservist:    q('biologicalSex')?.value==='Masculino',
-    reservistNumber: q('hasReservist')?.value==='Sim',
-    dispenseReason:  q('hasReservist')?.value==='Sim',
-    ctpsNumber:      q('ctpsType')?.value==='Físico',
-    ctpsSeries:      q('ctpsType')?.value==='Físico',
-    pisNumber:       q('hasPis')?.value==='Sim',
-    otherJobCnpj:    q('hasOtherJob')?.value==='Sim',
-    retirementDate:  q('hasRetirement')?.value==='Sim',
-    relativeName:    q('hasRelativeAtSnd')?.value==='Sim',
+    spouseName:         q('maritalStatus')?.value==='Casado(a)',
+    childrenCount:      q('hasChildren')?.value==='Sim',
+    hasReservist:       q('biologicalSex')?.value==='Masculino',
+    reservistNumber:    q('hasReservist')?.value==='Sim',
+    dispenseReason:     q('hasReservist')?.value==='Sim',
+    ctpsNumber:         q('ctpsType')?.value==='Físico',
+    ctpsSeries:         q('ctpsType')?.value==='Físico',
+    pisNumber:          q('hasPis')?.value==='Sim',
+    otherJobCnpj:       q('hasOtherJob')?.value==='Sim',
+    retirementDate:     q('hasRetirement')?.value==='Sim',
+    relativeName:       q('hasRelativeAtSnd')?.value==='Sim',
     relationshipDegree: q('hasRelativeAtSnd')?.value==='Sim',
-    itauAgency:      q('hasItauAccount')?.value==='Sim',
-    itauAccountNumber: q('hasItauAccount')?.value==='Sim'
+    itauAgency:         q('hasItauAccount')?.value==='Sim',
+    itauAccountNumber:  q('hasItauAccount')?.value==='Sim'
   };
 
   Object.entries(req).forEach(([name,required])=>{
@@ -179,10 +179,10 @@ function syncRequired(){
     if(f) f.required = required;
   });
 
-  // Todos os inputs de arquivo NÃO são obrigatórios (regra do front)
+  // Todos os inputs de arquivo NÃO são obrigatórios
   form.querySelectorAll('input[type="file"]').forEach(inp=> inp.required = false);
 
-  // Filhos (dados) obrigatórios quando hasChildren = "Sim"
+  // Filhos obrigatórios quando hasChildren = "Sim"
   const childrenRows = document.getElementById('childrenRows');
   childrenRows?.querySelectorAll('input').forEach(inp=>{
     inp.required = (q('hasChildren')?.value==='Sim');
@@ -222,9 +222,9 @@ function collectChildrenData(){
   const arr=[];
   for(let i=0;i<qty;i++){
     arr.push({
-      nomeCompleto:    q(`childName_${i}`)?.value || '',
-      dataNascimento:  q(`childBirth_${i}`)?.value || '',
-      cpf:             onlyDigits(q(`childCpf_${i}`)?.value || '')
+      nomeCompleto:   q(`childName_${i}`)?.value || '',
+      dataNascimento: q(`childBirth_${i}`)?.value || '',
+      cpf:            onlyDigits(q(`childCpf_${i}`)?.value || '')
     });
   }
   return arr;
@@ -647,7 +647,6 @@ function hasSignatureSelected(){
   return hasStroke; // desenho no canvas
 }
 async function getSignatureDataUrl(){
-  // Prioridade: upload de assinatura
   const file = gid('signUpload')?.files?.[0];
   if(file){
     const ext=(file.name.split('.').pop() || '').toLowerCase();
@@ -656,9 +655,8 @@ async function getSignatureDataUrl(){
     if(file.size>10*1024*1024)
       throw new Error('Assinatura: arquivo >10MB.');
     const data = await fileToBase64(file);
-    return data.dataUrl; // data:image/...
+    return data.dataUrl;
   }
-  // Se não houver upload, usa o canvas (se houver traço)
   const signPad = gid('signPad');
   if(signPad && hasStroke) return signPad.toDataURL('image/png');
   return null;
@@ -785,7 +783,7 @@ function bindCandidateArea(){
 
 // ====== Portal do Consultor ======
 const DEFAULT_PASSWORD_HASH =
-  "d033e22ae348aeb5660fc2140aec35850c4da997"; // exemplo: "admin" SHA‑1 (apenas ilustrativo)
+  "d033e22ae348aeb5660fc2140aec35850c4da997"; // exemplo qualquer
 
 function openChangePasswordDialog(email) {
   if(!dlgAlterarSenha) return;
@@ -1032,7 +1030,7 @@ function bindConsultantPortal(){
   });
 }
 
-// ====== Logins rápidos da tela inicial (navegam para as telas internas) ======
+// ====== Logins rápidos da tela inicial ======
 function bindQuickLogins(){
   const qlCandForm = gid('quickLoginCandidate');
   qlCandForm?.addEventListener('submit', (e)=>{
