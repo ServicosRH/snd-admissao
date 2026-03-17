@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=5" />
+  <link rel="stylesheet" href="./styles.css?v=6">
 </head>
 <body>
   <div class="page-glow glow-a"></div>
@@ -23,10 +23,10 @@
         <div class="brand-hero">
           <img src="./snd-hero.png" alt="SND - Soluções em tecnologia" />
           <div class="brand-overlay"></div>
-        </div>
+</div>
         <div class="brand-copy">
           <span class="eyebrow">SND · Processo Admissional</span>
-          <p style="text-align: justify; text-indent: 2em;">Uma jornada digital orientada para preenchimento, envio de documentos, acompanhamento do candidato e apoio ao consultor.</p>
+<p style="text-align: justify; text-indent: 2em;">Uma jornada digital orientada para preenchimento, envio de documentos, acompanhamento do candidato e apoio ao consultor.</p>
         </div>
       </section>
 
@@ -83,15 +83,12 @@
       <form id="admissionForm" novalidate>
         <div class="wizard-stage">
 
-          <!-- ========== TELA 0 - BOAS-VINDAS ========== -->
           <section class="step-card panel active" data-step="0">
             <div class="welcome-grid">
               <div class="welcome-copy">
                 <span class="section-tag">Tela inicial</span>
                 <h3>Bem-vindo.</h3>
-                <p style="text-align: justify; text-indent: 2em;">
-                  Isso significa que você venceu grandes obstáculos para chegar até aqui. Para garantir velocidade, preencha os dados com atenção e anexe todos os documentos solicitados para este processo admissional.
-                </p>
+                <p>Isso significa que você venceu grandes obstáculos para chegar até aqui. Para garantir velocidade, preencha os dados com atenção e anexe todos os documentos solicitados para este processo admissional.</p>
                 <div class="welcome-actions">
                   <button type="button" class="btn btn-primary" id="startFlowBtn">Iniciar preenchimento</button>
                   <button type="button" class="btn btn-ghost" id="previewBtn">Visualizar estrutura</button>
@@ -100,8 +97,6 @@
             </div>
 
             <div class="access-grid">
-
-              <!-- ACESSO CANDIDATO -->
               <section class="panel inner-panel">
                 <div class="panel-head">
                   <div>
@@ -110,21 +105,19 @@
                   </div>
                 </div>
                 <p class="soft-text">Use seu e-mail para abrir a Minha Área e consultar status ou enviar documentos adicionais.</p>
-
                 <form id="quickLoginCandidate" class="grid cols-2 compact-grid">
                   <div class="field">
                     <label for="qlCandEmail">E-mail *</label>
                     <input id="qlCandEmail" name="email" type="email" placeholder="seuemail@exemplo.com" required />
                   </div>
                   <div class="field field-action">
-                    <label> </label>
+                    <label>&nbsp;</label>
                     <button type="submit" class="btn btn-primary btn-block">Abrir Minha Área</button>
                   </div>
                 </form>
                 <small id="qlCandMsg" class="muted" role="status" aria-live="polite"></small>
               </section>
 
-              <!-- ACESSO CONSULTOR -->
               <section class="panel inner-panel">
                 <div class="panel-head">
                   <div>
@@ -133,7 +126,6 @@
                   </div>
                 </div>
                 <p class="soft-text">Entre com e-mail e senha para acessar o painel de acompanhamento dos candidatos.</p>
-
                 <form id="quickLoginConsultor" class="grid compact-grid">
                   <div class="field">
                     <label for="qlConsEmail">E-mail *</label>
@@ -143,79 +135,632 @@
                     <label for="qlConsPass">Senha *</label>
                     <input id="qlConsPass" name="password" type="password" placeholder="••••••••" required />
                   </div>
-
                   <div class="row-actions span-2">
                     <button type="submit" class="btn btn-secondary">Entrar</button>
                   </div>
                 </form>
-
                 <small id="qlConsMsg" class="muted" role="status" aria-live="polite"></small>
               </section>
-
             </div>
           </section>
 
-          <!-- (AS TELAS 1 A 7 FICAM EXATAMENTE COMO VOCÊ enviou) -->
-
-          <!-- ========================================= -->
-          <!-- ========== TELA 8 — ALTERAR SENHA ========= -->
-          <!-- ========================================= -->
-
-          <section class="step-card panel" data-step="8">
+          <section class="step-card panel" data-step="1">
             <div class="section-head">
               <div>
-                <span class="section-tag">Tela 8</span>
-                <h3>Alterar senha do consultor</h3>
-                <p>Por segurança, defina uma nova senha para continuar utilizando o portal.</p>
+                <span class="section-tag">Tela 1</span>
+                <h3>Dados Pessoais</h3>
+                <p>Informações pessoais, composição familiar e endereço do colaborador.</p>
               </div>
             </div>
 
-            <section class="panel inner-panel soft-panel">
-              <form id="changePassForm" class="grid cols-2 compact-grid">
+            <div class="grid cols-2">
+              <div class="field"><label for="fullName">Nome completo *</label><input id="fullName" name="fullName" type="text" required /></div>
+              <div class="field"><label for="email">E-mail *</label><input id="email" name="email" type="email" required /></div>
+              <div class="field"><label for="phone">Telefone *</label><input id="phone" name="phone" type="tel" inputmode="numeric" required /></div>
+              <div class="field"><label for="birthDate">Data de nascimento *</label><input id="birthDate" name="birthDate" type="date" required /></div>
+              <div class="field"><label for="birthPlace">Local de nascimento *</label><input id="birthPlace" name="birthPlace" type="text" required /></div>
 
-                <div class="field span-2">
-                  <label for="cpEmail">E-mail (não editável)</label>
-                  <input id="cpEmail" name="email" type="email" readonly />
+              <div class="field">
+                <label for="maritalStatus">Estado civil *</label>
+                <select id="maritalStatus" name="maritalStatus" required>
+                  <option value="">Selecione</option>
+                  <option>Solteiro(a)</option>
+                  <option>Casado(a)</option>
+                  <option>União estável</option>
+                  <option>Divorciado(a)</option>
+                  <option>Viúvo(a)</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="maritalStatus=Casado(a)">
+                <label for="spouseName">Nome do cônjuge *</label>
+                <input id="spouseName" name="spouseName" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="education">Escolaridade *</label>
+                <select id="education" name="education" required>
+                  <option value="">Selecione</option>
+                  <option>Fundamental</option>
+                  <option>Médio</option>
+                  <option>Técnico</option>
+                  <option>Superior</option>
+                  <option>Pós-graduação</option>
+                  <option>Mestrado</option>
+                  <option>Doutorado</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="raceColor">Raça/Cor *</label>
+                <select id="raceColor" name="raceColor" required>
+                  <option value="">Selecione</option>
+                  <option>Parda</option>
+                  <option>Branca</option>
+                  <option>Negra</option>
+                  <option>Asiático</option>
+                  <option>Indígena</option>
+                </select>
+              </div>
+
+              <div class="field"><label for="fatherName">Nome do pai *</label><input id="fatherName" name="fatherName" type="text" required /></div>
+              <div class="field"><label for="motherName">Nome da mãe *</label><input id="motherName" name="motherName" type="text" required /></div>
+
+              <div class="field">
+                <label for="biologicalSex">Sexo biológico *</label>
+                <select id="biologicalSex" name="biologicalSex" required>
+                  <option value="">Selecione</option>
+                  <option>Masculino</option>
+                  <option>Feminino</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="hasChildren">Possui filhos? *</label>
+                <select id="hasChildren" name="hasChildren" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+
+              <div class="field conditional" data-show-when="hasChildren=Sim">
+                <label for="childrenCount">Quantidade de filhos *</label>
+                <input id="childrenCount" name="childrenCount" type="number" min="1" max="10" />
+              </div>
+            </div>
+
+            <div class="children-panel conditional" data-show-when="hasChildren=Sim">
+              <div class="sub-head">
+                <div>
+                  <span class="eyebrow">Dependentes</span>
+                  <h4>Dados dos filhos</h4>
                 </div>
+              </div>
+              <div id="childrenRows" class="grid cols-3"></div>
+            </div>
 
-                <div class="field span-2">
-                  <label for="cpCurrent">Senha atual *</label>
-                  <input id="cpCurrent" name="currentPassword" type="password" required />
+            <div class="sub-head top-gap">
+              <div>
+                <span class="eyebrow">Endereço</span>
+                <h4>Residência</h4>
+              </div>
+            </div>
+
+            <div class="grid cols-2">
+              <div class="field"><label for="street">Logradouro *</label><input id="street" name="street" type="text" required /></div>
+              <div class="field"><label for="number">Número *</label><input id="number" name="number" type="text" required /></div>
+              <div class="field"><label for="complement">Complemento</label><input id="complement" name="complement" type="text" /></div>
+              <div class="field"><label for="district">Bairro *</label><input id="district" name="district" type="text" required /></div>
+              <div class="field"><label for="city">Cidade *</label><input id="city" name="city" type="text" required /></div>
+              <div class="field">
+                <label for="state">Estado *</label>
+                <select id="state" name="state" required>
+                  <option value="">Selecione</option>
+                  <option>SP</option><option>RJ</option><option>MG</option><option>ES</option>
+                  <option>PR</option><option>SC</option><option>RS</option><option>BA</option>
+                  <option>PE</option><option>GO</option><option>DF</option><option>AM</option>
+                </select>
+              </div>
+              <div class="field"><label for="zipCode">CEP *</label><input id="zipCode" name="zipCode" type="text" inputmode="numeric" required /></div>
+            </div>
+          </section>
+
+          <section class="step-card panel" data-step="2">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 2</span>
+                <h3>Documentação Admissional</h3>
+                <p>Documentos de identificação, registro profissional, título eleitoral e dados de PIS.</p>
+              </div>
+            </div>
+
+            <div class="grid cols-2">
+              <div class="field conditional" data-show-when="biologicalSex=Masculino">
+                <label for="hasReservist">Possui Certificado de Reservista? *</label>
+                <select id="hasReservist" name="hasReservist">
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasReservist=Sim">
+                <label for="reservistNumber">Nº do Certificado *</label>
+                <input id="reservistNumber" name="reservistNumber" type="text" />
+              </div>
+              <div class="field conditional" data-show-when="hasReservist=Sim">
+                <label for="dispenseReason">Motivo da Dispensa *</label>
+                <input id="dispenseReason" name="dispenseReason" type="text" />
+              </div>
+
+              <div class="field"><label for="identityDoc">RG / Documento de identidade *</label><input id="identityDoc" name="identityDoc" type="text" required /></div>
+              <div class="field"><label for="issuer">Órgão emissor / UF *</label><input id="issuer" name="issuer" type="text" required /></div>
+              <div class="field"><label for="identityIssueDate">Data de emissão *</label><input id="identityIssueDate" name="identityIssueDate" type="date" required /></div>
+              <div class="field"><label for="cpf">CPF *</label><input id="cpf" name="cpf" type="text" inputmode="numeric" required /></div>
+
+              <div class="field">
+                <label for="ctpsType">Tipo de CTPS *</label>
+                <select id="ctpsType" name="ctpsType" required>
+                  <option value="">Selecione</option>
+                  <option>Digital</option>
+                  <option>Físico</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="ctpsType=Físico">
+                <label for="ctpsNumber">Número da CTPS *</label>
+                <input id="ctpsNumber" name="ctpsNumber" type="text" inputmode="numeric" />
+              </div>
+              <div class="field conditional" data-show-when="ctpsType=Físico">
+                <label for="ctpsSeries">Série da CTPS *</label>
+                <input id="ctpsSeries" name="ctpsSeries" type="text" inputmode="numeric" />
+              </div>
+
+              <div class="field">
+                <label for="hasProfessionalRecord">Possui Registro Profissional? *</label>
+                <select id="hasProfessionalRecord" name="hasProfessionalRecord" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim">
+                <label for="professionalRecord">Registro Profissional *</label>
+                <input id="professionalRecord" name="professionalRecord" type="text" />
+              </div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim">
+                <label for="professionalIssuer">Órgão / UF *</label>
+                <input id="professionalIssuer" name="professionalIssuer" type="text" />
+              </div>
+              <div class="field conditional" data-show-when="hasProfessionalRecord=Sim">
+                <label for="professionalIssueDate">Data do Registro *</label>
+                <input id="professionalIssueDate" name="professionalIssueDate" type="date" />
+              </div>
+
+              <div class="field"><label for="voterTitle">Título de Eleitor *</label><input id="voterTitle" name="voterTitle" type="text" inputmode="numeric" required /></div>
+              <div class="field"><label for="voterZone">Zona Eleitoral *</label><input id="voterZone" name="voterZone" type="text" inputmode="numeric" required /></div>
+              <div class="field"><label for="voterSection">Seção Eleitoral *</label><input id="voterSection" name="voterSection" type="text" inputmode="numeric" required /></div>
+              <div class="field"><label for="voterIssueDate">Data de emissão do título *</label><input id="voterIssueDate" name="voterIssueDate" type="date" required /></div>
+
+              <div class="field">
+                <label for="hasPis">Possui PIS? *</label>
+                <select id="hasPis" name="hasPis" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasPis=Sim">
+                <label for="pisNumber">PIS Nº *</label>
+                <input id="pisNumber" name="pisNumber" type="text" inputmode="numeric" />
+              </div>
+            </div>
+          </section>
+
+          <section class="step-card panel" data-step="3">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 3</span>
+                <h3>Dados Complementares</h3>
+                <p>Vínculos adicionais, informações previdenciárias, parentesco interno e dados bancários.</p>
+              </div>
+            </div>
+
+            <div class="grid cols-2">
+              <div class="field">
+                <label for="hasOtherJob">Possui emprego anterior? *</label>
+                <select id="hasOtherJob" name="hasOtherJob" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasOtherJob=Sim">
+                <label for="otherJobCnpj">CNPJ da empresa *</label>
+                <input id="otherJobCnpj" name="otherJobCnpj" type="text" inputmode="numeric" />
+              </div>
+
+              <div class="field">
+                <label for="hasRetirement">É aposentado(a)? *</label>
+                <select id="hasRetirement" name="hasRetirement" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasRetirement=Sim">
+                <label for="retirementDate">Data de aposentadoria *</label>
+                <input id="retirementDate" name="retirementDate" type="date" />
+              </div>
+
+              <div class="field">
+                <label for="hasRelativeAtSnd">Possui parente na SND? *</label>
+                <select id="hasRelativeAtSnd" name="hasRelativeAtSnd" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim">
+                <label for="relativeName">Nome do parente *</label>
+                <input id="relativeName" name="relativeName" type="text" />
+              </div>
+              <div class="field conditional" data-show-when="hasRelativeAtSnd=Sim">
+                <label for="relationshipDegree">Grau de parentesco *</label>
+                <input id="relationshipDegree" name="relationshipDegree" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="hasItauAccount">Possui conta corrente no Banco Itaú? *</label>
+                <select id="hasItauAccount" name="hasItauAccount" required>
+                  <option value="">Selecione</option>
+                  <option>Sim</option>
+                  <option>Não</option>
+                </select>
+              </div>
+              <div class="field conditional" data-show-when="hasItauAccount=Sim">
+                <label for="itauAgency">Agência nº *</label>
+                <input id="itauAgency" name="itauAgency" type="text" inputmode="numeric" />
+              </div>
+              <div class="field conditional" data-show-when="hasItauAccount=Sim">
+                <label for="itauAccountNumber">Conta-corrente nº *</label>
+                <input id="itauAccountNumber" name="itauAccountNumber" type="text" inputmode="numeric" />
+              </div>
+            </div>
+          </section>
+
+          <section class="step-card panel" data-step="4">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 4</span>
+                <h3>Uploads de Documentos</h3>
+                <p>Envie os anexos do processo. Todos os arquivos aceitam PDF, JPG, JPEG e PNG com até 10MB por arquivo.</p>
+              </div>
+            </div>
+
+            <div class="uploads-list">
+              <div class="upload-card">
+                <label for="workCard"><span class="upload-icon">🗂</span>CTPS <em>Obrigatório</em></label>
+                <input id="workCard" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="identityUpload"><span class="upload-icon">🪪</span>RG <em>Obrigatório</em></label>
+                <input id="identityUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <small class="file-meta">Até 2 arquivos</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="cpfUpload"><span class="upload-icon">🧾</span>CPF <em>Obrigatório</em></label>
+                <input id="cpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasReservist=Sim">
+                <label for="reservistUpload"><span class="upload-icon">🎖</span>Certificado de Reservista <em>Obrigatório</em></label>
+                <input id="reservistUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Exibido quando Reservista = Sim</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="voterTitleUpload"><span class="upload-icon">🗳</span>Título de Eleitor <em>Obrigatório</em></label>
+                <input id="voterTitleUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasPis=Sim">
+                <label for="pisUpload"><span class="upload-icon">🔢</span>PIS <em>Obrigatório</em></label>
+                <input id="pisUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Exibido quando Possui PIS = Sim</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="proofOfAddress"><span class="upload-icon">🏠</span>Comprovante de Residência <em>Obrigatório</em></label>
+                <input id="proofOfAddress" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)">
+                <label for="marriageCertificate"><span class="upload-icon">💍</span>Certidão de Casamento <em>Obrigatório</em></label>
+                <input id="marriageCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Exibido quando Estado civil = Casado(a)</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="maritalStatus=Casado(a)">
+                <label for="spouseCpfUpload"><span class="upload-icon">👤</span>CPF do Cônjuge <em>Obrigatório</em></label>
+                <input id="spouseCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Exibido quando Estado civil = Casado(a)</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim">
+                <label for="childrenBirthUpload"><span class="upload-icon">👶</span>Certidão de Nascimento (Filhos) <em>Obrigatório</em></label>
+                <input id="childrenBirthUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <small class="file-meta">Múltiplos arquivos</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasChildren=Sim">
+                <label for="childrenCpfUpload"><span class="upload-icon">🧒</span>CPF (Filhos) <em>Obrigatório</em></label>
+                <input id="childrenCpfUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <small class="file-meta">Múltiplos arquivos</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card conditional" data-show-when="hasItauAccount=Sim">
+                <label for="itauProofUpload"><span class="upload-icon">🏦</span>Comprovante Conta Itaú <em>Obrigatório</em></label>
+                <input id="itauProofUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Exibido quando Conta Itaú = Sim</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="diplomaUpload"><span class="upload-icon">🎓</span>Diploma de Conclusão ou Declaração de Escolaridade <em>Obrigatório</em></label>
+                <input id="diplomaUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">1 arquivo</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="referenceLetterUpload"><span class="upload-icon">✉</span>Carta de Referência do Último Emprego <span class="optional-tag">Opcional</span></label>
+                <input id="referenceLetterUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Documento opcional</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+
+              <div class="upload-card">
+                <label for="professionalLicenseUpload"><span class="upload-icon">📘</span>Carteira de Registro Profissional <span class="optional-tag">Opcional</span></label>
+                <input id="professionalLicenseUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                <small class="file-meta">Documento opcional</small>
+                <small class="file-feedback" aria-live="polite"></small>
+              </div>
+            </div>
+          </section>
+
+          <section class="step-card panel" data-step="5">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 5</span>
+                <h3>Declaração & Assinatura</h3>
+                <p>Confirme a veracidade das informações e registre sua assinatura para finalizar o cadastro.</p>
+              </div>
+            </div>
+
+            <div class="grid cols-2">
+              <section class="panel inner-panel soft-panel">
+                <div class="sub-head">
+                  <div>
+                    <span class="eyebrow">Declaração</span>
+                    <h4>Aceite formal</h4>
+                  </div>
                 </div>
+                <label class="checkline">
+                  <input id="declAgree" type="checkbox" />
+                  <span>Declaro que todas as informações prestadas são verdadeiras e de minha responsabilidade.</span>
+                </label>
+              </section>
 
+              <section class="panel inner-panel soft-panel">
+                <div class="sub-head">
+                  <div>
+                    <span class="eyebrow">Assinatura</span>
+                    <h4>Desenhe ou envie imagem</h4>
+                  </div>
+                </div>
+                <div class="signature-box">
+                  <canvas id="signPad" width="520" height="220"></canvas>
+                </div>
+                <div class="signature-actions">
+                  <button type="button" class="btn btn-ghost" id="clearSignBtn">Limpar assinatura</button>
+                </div>
+                <div class="upload-card compact-upload">
+                  <label for="signUpload"><span class="upload-icon">✍</span>Upload da assinatura (JPG/JPEG/PNG)</label>
+                  <input id="signUpload" type="file" accept=".jpg,.jpeg,.png" />
+                  <small class="file-feedback" aria-live="polite"></small>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="step-card panel" data-step="6">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 6</span>
+                <h3>Minha Área (Candidato)</h3>
+                <p>Consulte o cadastro por e-mail e envie documentos adicionais quando necessário.</p>
+              </div>
+            </div>
+
+            <section class="panel inner-panel">
+              <form id="candLoginForm" class="grid cols-2 compact-grid">
                 <div class="field">
-                  <label for="cpNew">Nova senha *</label>
-                  <input id="cpNew" name="newPassword" type="password" required />
+                  <label for="candEmail">E-mail *</label>
+                  <input id="candEmail" name="email" type="email" required />
                 </div>
-
-                <div class="field">
-                  <label for="cpConfirm">Repetir nova senha *</label>
-                  <input id="cpConfirm" name="confirmPassword" type="password" required />
+                <div class="field field-action">
+                  <label>&nbsp;</label>
+                  <button type="submit" class="btn btn-primary btn-block">Consultar cadastro</button>
                 </div>
+              </form>
+              <output id="candLoginMsg" class="status-text" role="status" aria-live="polite"></output>
+            </section>
 
-                <div class="row-actions span-2">
-                  <button type="submit" class="btn btn-primary">Confirmar nova senha</button>
+            <section class="panel inner-panel hidden" id="candArea">
+              <div class="sub-head">
+                <div>
+                  <span class="eyebrow">Resumo do candidato</span>
+                  <h4>Dados localizados</h4>
                 </div>
+              </div>
+              <div id="candResumo" class="grid cols-2"></div>
 
-                <output id="cpMsg" class="status-text span-2" role="status" aria-live="polite"></output>
+              <div class="sub-head top-gap">
+                <div>
+                  <span class="eyebrow">Envio adicional</span>
+                  <h4>Novos documentos</h4>
+                </div>
+              </div>
 
+              <form id="candUploadForm" class="grid">
+                <input type="hidden" name="email" />
+                <div class="upload-card">
+                  <label for="candUpFiles"><span class="upload-icon">📎</span>Outros documentos (múltiplos)</label>
+                  <input id="candUpFiles" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                  <small class="file-meta">Múltiplos arquivos · até 10MB cada</small>
+                  <small class="file-feedback" aria-live="polite"></small>
+                </div>
+                <div class="row-actions">
+                  <button type="submit" class="btn btn-primary">Enviar arquivos</button>
+                </div>
+                <output id="candUpMsg" class="status-text" role="status" aria-live="polite"></output>
               </form>
             </section>
           </section>
 
+          <section class="step-card panel" data-step="7">
+            <div class="section-head">
+              <div>
+                <span class="section-tag">Tela 7</span>
+                <h3>Portal do Consultor</h3>
+                <p>Acompanhe candidatos, consulte pendências e envie notificações de regularização.</p>
+              </div>
+            </div>
+
+            <section class="panel inner-panel">
+              <form id="consLoginForm2" class="grid cols-2 compact-grid">
+                <div class="field">
+                  <label for="consEmail2">E-mail *</label>
+                  <input id="consEmail2" type="email" required />
+                </div>
+                <div class="field">
+                  <label for="consPass2">Senha *</label>
+                  <input id="consPass2" type="password" required />
+                </div>
+                <div class="row-actions span-2">
+                  <button type="submit" class="btn btn-primary">Acessar painel</button>
+                </div>
+              </form>
+              <output id="consLoginMsg2" class="status-text" role="status" aria-live="polite"></output>
+            </section>
+
+            <section id="consDash" class="hidden">
+              <section class="panel inner-panel">
+                <div class="consultor-top">
+                  <div>
+                    <span class="eyebrow">Dashboard</span>
+                    <h4 id="consTag">Consultor</h4>
+                  </div>
+                </div>
+
+                <div class="field search-field">
+                  <label for="searchBox2">Buscar candidato</label>
+                  <input id="searchBox2" type="text" placeholder="Digite nome ou e-mail" autocomplete="off" />
+                  <div id="drop2" class="search-drop hidden"></div>
+                </div>
+              </section>
+
+              <section id="candPanel2" class="panel inner-panel hidden">
+                <div class="candidate-head">
+                  <div>
+                    <span class="eyebrow">Candidato</span>
+                    <h4 id="candName2">—</h4>
+                    <p id="candEmail2" class="soft-text">—</p>
+                  </div>
+                  <div class="status-pill" id="candStatus2">Em andamento</div>
+                </div>
+
+                <div class="consultor-progress">
+                  <div class="progress-track slim"><div id="progFill2" class="progress-fill"></div></div>
+                  <strong id="progPct2">0%</strong>
+                </div>
+
+                <div class="grid cols-2 top-gap">
+                  <section class="panel soft-panel checklist-card">
+                    <h5>Documentos pendentes</h5>
+                    <ul id="chkMissing2" class="checklist"></ul>
+                  </section>
+                  <section class="panel soft-panel checklist-card">
+                    <h5>Documentos recebidos</h5>
+                    <ul id="chkPresent2" class="checklist"></ul>
+                  </section>
+                </div>
+
+                <section class="panel soft-panel top-gap">
+                  <div class="sub-head">
+                    <div>
+                      <span class="eyebrow">Notificação</span>
+                      <h4>Comunicar pendências</h4>
+                    </div>
+                  </div>
+                  <form id="notifyForm2" class="grid cols-2">
+                    <div class="field">
+                      <label for="prazo2">Prazo *</label>
+                      <input id="prazo2" name="prazo" type="date" required />
+                    </div>
+                    <div class="field">
+                      <label for="remetente2">Remetente *</label>
+                      <input id="remetente2" name="remetente" type="text" required />
+                    </div>
+                    <div class="field span-2">
+                      <label for="mensagem2">Mensagem</label>
+                      <textarea id="mensagem2" name="mensagem" rows="4" placeholder="Detalhe as pendências ou orientações complementares."></textarea>
+                    </div>
+                    <div class="row-actions span-2">
+                      <button type="submit" class="btn btn-primary">Enviar notificação</button>
+                    </div>
+                    <output id="notifyMsg2" class="status-text span-2" role="status" aria-live="polite"></output>
+                  </form>
+                </section>
+              </section>
+            </section>
+          </section>
         </div>
 
-        <!-- TELA FINAL -->
-        <section id="successScreen" class="panel success-screen hidden">
-          <span class="section-tag">Concluído</span>
-          <h3>Cadastro enviado com sucesso.</h3>
-          <p>Os dados e documentos foram organizados para processamento no fluxo institucional.</p>
-          <div class="row-actions">
-            <button type="button" class="btn btn-primary" id="restartBtn">Iniciar novo processo</button>
+        <div class="footer-actions panel">
+          <div class="footer-info">
+            <span>Navegue pelas telas para concluir o processo.</span>
           </div>
-        </section>
-
+          <div class="footer-buttons">
+            <button type="button" class="btn btn-ghost" id="prevBtn">Voltar</button>
+            <button type="button" class="btn btn-secondary" id="nextBtn">Próxima tela</button>
+            <button type="submit" class="btn btn-primary hidden" id="submitBtn">Concluir cadastro</button>
+          </div>
+        </div>
       </form>
+
+      <section id="successScreen" class="panel success-screen hidden">
+        <span class="section-tag">Concluído</span>
+        <h3>Cadastro enviado com sucesso.</h3>
+        <p>Os dados e documentos foram organizados para processamento no fluxo institucional.</p>
+        <div class="row-actions">
+          <button type="button" class="btn btn-primary" id="restartBtn">Iniciar novo processo</button>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -233,15 +778,43 @@
     </div>
   </dialog>
 
-  <!-- modal antigo removido -->
+  <dialog id="dlgAlterarSenha" class="summary-dialog">
+    <div class="summary-surface small-surface">
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">Segurança do acesso</span>
+          <h3>Alterar senha do consultor</h3>
+          <p class="soft-text">Identificamos o uso da senha padrão. Defina uma nova senha para continuar utilizando o portal.</p>
+        </div>
+        <button type="button" class="icon-btn" id="dlgFecharAlterarSenha" aria-label="Fechar">×</button>
+      </div>
+      <form id="changePassForm" class="grid compact-grid">
+        <div class="field">
+          <label for="cpEmail">E-mail</label>
+          <input id="cpEmail" name="email" type="email" readonly />
+        </div>
+        <div class="field">
+          <label for="cpCurrent">Senha atual *</label>
+          <input id="cpCurrent" name="currentPassword" type="password" required />
+        </div>
+        <div class="field">
+          <label for="cpNew">Nova senha *</label>
+          <input id="cpNew" name="newPassword" type="password" required />
+        </div>
+        <div class="field">
+          <label for="cpConfirm">Repetir nova senha *</label>
+          <input id="cpConfirm" name="confirmPassword" type="password" required />
+        </div>
+        <div class="row-actions">
+          <button type="submit" class="btn btn-primary">Cadastrar nova senha</button>
+        </div>
+        <output id="cpMsg" class="status-text" role="status" aria-live="polite"></output>
+      </form>
+    </div>
+  </dialog>
 
   <div class="toast" id="toast"></div>
 
-  <!-- ==================================== -->
-  <!-- AQUI ESTÁ A CORREÇÃO IMPORTANTE -->
-  <!-- ==================================== -->
-
-  <script src="./app.js?v=1001"></script>
-
+  <script src="./app.js?v=6"></script>
 </body>
 </html>
