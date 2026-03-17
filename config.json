@@ -1,4 +1,4 @@
 {
-  "endpointUrl": "https://deb285e085e3ef0f9a83cd1a5098d7.ec.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/e0dc2eae49c34ef4865aea7f3d4a0aa3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qfmoTNHEBUE_u0ijmLgSLx_Fy6ADKRIJAk88Rw4uR64",
+  "endpointUrl": "https://b35122430f23e4409d91713fc00cbf.e4.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3e4cdb53156244a19e84085f43f7d984/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PTLmCKrbX5qghBpHs-8g04eCrlygIMrwtz_ZhbLHuf8",
   "passwordChangeUrl": "https://deb285e085e3ef0f9a83cd1a5098d7.ec.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1000a6f1ddb74ce19130b8d3c34f5eb3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wZvw2JZ9NrlRSF7rzidaV9X_5-AUu0J0fpPYRF7cUnw"
 }
